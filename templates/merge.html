@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merge PDF - PDF Pro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container" style="text-align: center; margin-top: 50px;">
+        <h2>Merge PDF Files</h2>
+        <p>Select multiple PDF files to combine into one.</p>
+        
+        <form action="/merge" method="POST" enctype="multipart/form-data" style="margin-top: 30px;">
+            <input type="file" name="pdf_files" multiple accept=".pdf" required style="margin-bottom: 20px;"><br>
+            <button type="submit" style="padding: 10px 25px; background: #e74c3c; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">Merge PDFs</button>
+        </form>
+        <br>
+        <a href="/" style="color: #3498db; text-decoration: none;">← Back to Home</a>
+    </div>
+</body>
+</html>
