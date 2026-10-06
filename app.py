@@ -4,17 +4,15 @@ import time
 import requests
 from flask import Flask, render_template, request, send_file
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-os.chdir(BASE_DIR)
+# Flask app setup - Vercel compatible
+app = Flask(__name__, template_folder='templates', static_folder='static')
 
-app = Flask(__name__, template_folder=os.path.join(BASE_DIR, 'templates'), static_folder=os.path.join(BASE_DIR, 'static'))
-
-UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
-OUTPUT_FOLDER = os.path.join(BASE_DIR, 'outputs')
+# Vercel par /tmp folder use karein
+UPLOAD_FOLDER = '/tmp/uploads'
+OUTPUT_FOLDER = '/tmp/outputs'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-# API Token ko Environment Variable se lena (Secure)
 API_TOKEN = os.environ.get('CONVERT_API_TOKEN', 'TboQIRopPqPw8HlG4hlgULgHmKRK0jzW')
 
 def cleanup_old_files(folder, max_age_seconds=3600):
@@ -33,7 +31,6 @@ def convert_with_api(input_file, input_format, output_format, base_name):
     cleanup_old_files(UPLOAD_FOLDER, 3600)
     cleanup_old_files(OUTPUT_FOLDER, 3600)
     
-    # FIX: Unique ID add ki taake 1000 users ek saath same naam ki file upload karen toh clash na ho
     unique_id = uuid.uuid4().hex[:8]
     out_name = f"{base_name}_{unique_id}.{output_format}"
     
@@ -58,12 +55,7 @@ def convert_with_api(input_file, input_format, output_format, base_name):
                 with open(output_path, 'wb') as f:
                     f.write(download_response.content)
                 return send_file(output_path, as_attachment=True, download_name=out_name)
-            else:
-                return f"API Error: URL not found.", 500
-        else:
-            return f"API Error: No files in response.", 500
-    else:
-        return f"API Error (Status {response.status_code}): {response.text}", 500
+    return f"API Error", 500
 
 @app.route('/')
 def home():
@@ -75,8 +67,7 @@ def merge_pdf():
         try:
             from pypdf import PdfWriter
             files = request.files.getlist('pdf_files')
-            if not files:
-                return "No files selected", 400
+            if not files: return "No files selected", 400
             merger = PdfWriter()
             for file in files:
                 if file and file.filename.endswith('.pdf'):
@@ -98,8 +89,7 @@ def split_pdf():
             from pypdf import PdfReader, PdfWriter
             import zipfile
             file = request.files.get('pdf_file')
-            if not file:
-                return "No file selected", 400
+            if not file: return "No file selected", 400
             base_name = get_base_name(file.filename)
             unique_id = uuid.uuid4().hex[:8]
             reader = PdfReader(file)
@@ -125,8 +115,7 @@ def compress_pdf():
         try:
             from pypdf import PdfReader, PdfWriter
             file = request.files.get('pdf_file')
-            if not file:
-                return "No file selected", 400
+            if not file: return "No file selected", 400
             base_name = get_base_name(file.filename)
             unique_id = uuid.uuid4().hex[:8]
             reader = PdfReader(file)
@@ -142,10 +131,6 @@ def compress_pdf():
         except Exception as e:
             return f"Error: {str(e)}", 500
     return render_template('tool.html', title="Compress PDF", action="/compress", accept=".pdf", multiple=False)
-
-# ==================== CONVERT PDF TOOLS ====================
-# (Baaki saare routes /pdf-to-word, /word-to-pdf, etc. bilkul waise hi rahenge, 
-# sirf itna yaad rakhein ke wo sab 'convert_with_api' function use kar rahe hain jo ab safe hai)
 
 @app.route('/pdf-to-word', methods=['GET', 'POST'])
 def pdf_to_word():
@@ -251,5 +236,5 @@ def organize_pdf():
         return convert_with_api(file, 'pdf', 'pdf', get_base_name(file.filename))
     return render_template('tool.html', title="Organize PDF", action="/organize-pdf", accept=".pdf", multiple=False)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# Vercel ke liye handler - ye line sab se zaroori hai
+handler = app
