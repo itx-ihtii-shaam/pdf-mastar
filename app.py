@@ -86,7 +86,7 @@ def merge_pdf():
             output_path = os.path.join(OUTPUT_FOLDER, out_name)
             merger.write(output_path)
             merger.close()
-            return render_template('tool.html', title="Merge PDF", action="/merge", accept=".pdf", multiple=True, success=True, download_filename=out_name, output_format="Merged PDF", button_text="Merge PDFs")
+            return render_template('tool.html', title="Merge PDF", action="/merge", accept=".pdf", multiple=True, success=True, download_filename=out_name, output_format="Merged PDF", button_text="Merge PDFs", auto_download=True)
         except Exception as e:
             return f"Error: {str(e)}", 500
     return render_template('tool.html', title="Merge PDF", action="/merge", accept=".pdf", multiple=True, button_text="Merge PDFs")
@@ -113,7 +113,7 @@ def split_pdf():
                         writer.write(f)
                     zipf.write(temp_pdf, f"page_{i+1}.pdf")
                     os.remove(temp_pdf)
-            return render_template('tool.html', title="Split PDF", action="/split", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Split PDFs (ZIP)", button_text="Split PDF")
+            return render_template('tool.html', title="Split PDF", action="/split", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Split PDFs (ZIP)", button_text="Split PDF", auto_download=True)
         except Exception as e:
             return f"Error: {str(e)}", 500
     return render_template('tool.html', title="Split PDF", action="/split", accept=".pdf", multiple=False, button_text="Split PDF")
@@ -136,7 +136,7 @@ def compress_pdf():
             output_path = os.path.join(OUTPUT_FOLDER, out_name)
             with open(output_path, 'wb') as f:
                 writer.write(f)
-            return render_template('tool.html', title="Compress PDF", action="/compress", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Compressed PDF", button_text="Compress PDF")
+            return render_template('tool.html', title="Compress PDF", action="/compress", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Compressed PDF", button_text="Compress PDF", auto_download=True)
         except Exception as e:
             return f"Error: {str(e)}", 500
     return render_template('tool.html', title="Compress PDF", action="/compress", accept=".pdf", multiple=False, button_text="Compress PDF")
@@ -148,7 +148,7 @@ def pdf_to_word():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'pdf', 'docx', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="PDF to Word", action="/pdf-to-word", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Word Document", button_text="Convert to Word")
+            return render_template('tool.html', title="PDF to Word", action="/pdf-to-word", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Word Document", button_text="Convert to Word", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="PDF to Word", action="/pdf-to-word", accept=".pdf", multiple=False, button_text="Convert to Word")
 
@@ -159,7 +159,7 @@ def word_to_pdf():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'docx', 'pdf', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="Word to PDF", action="/word-to-pdf", accept=".docx,.doc", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF")
+            return render_template('tool.html', title="Word to PDF", action="/word-to-pdf", accept=".docx,.doc", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="Word to PDF", action="/word-to-pdf", accept=".docx,.doc", multiple=False, button_text="Convert to PDF")
 
@@ -170,7 +170,7 @@ def jpg_to_pdf():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'jpg', 'pdf', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="JPG to PDF", action="/jpg-to-pdf", accept=".jpg,.jpeg,.png", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF")
+            return render_template('tool.html', title="JPG to PDF", action="/jpg-to-pdf", accept=".jpg,.jpeg,.png", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="JPG to PDF", action="/jpg-to-pdf", accept=".jpg,.jpeg,.png", multiple=False, button_text="Convert to PDF")
 
@@ -181,7 +181,7 @@ def pdf_to_jpg():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'pdf', 'jpg', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="PDF to JPG", action="/pdf-to-jpg", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="JPG Images", button_text="Convert to JPG")
+            return render_template('tool.html', title="PDF to JPG", action="/pdf-to-jpg", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="JPG Images", button_text="Convert to JPG", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="PDF to JPG", action="/pdf-to-jpg", accept=".pdf", multiple=False, button_text="Convert to JPG")
 
@@ -192,7 +192,7 @@ def excel_to_pdf():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'xlsx', 'pdf', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="Excel to PDF", action="/excel-to-pdf", accept=".xlsx,.xls", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF")
+            return render_template('tool.html', title="Excel to PDF", action="/excel-to-pdf", accept=".xlsx,.xls", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="Excel to PDF", action="/excel-to-pdf", accept=".xlsx,.xls", multiple=False, button_text="Convert to PDF")
 
@@ -203,7 +203,7 @@ def pdf_to_excel():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'pdf', 'xlsx', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="PDF to Excel", action="/pdf-to-excel", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Excel Spreadsheet", button_text="Convert to Excel")
+            return render_template('tool.html', title="PDF to Excel", action="/pdf-to-excel", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Excel Spreadsheet", button_text="Convert to Excel", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="PDF to Excel", action="/pdf-to-excel", accept=".pdf", multiple=False, button_text="Convert to Excel")
 
@@ -214,7 +214,7 @@ def pdf_to_powerpoint():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'pdf', 'pptx', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="PDF to PowerPoint", action="/pdf-to-powerpoint", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="PowerPoint Presentation", button_text="Convert to PowerPoint")
+            return render_template('tool.html', title="PDF to PowerPoint", action="/pdf-to-powerpoint", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="PowerPoint Presentation", button_text="Convert to PowerPoint", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="PDF to PowerPoint", action="/pdf-to-powerpoint", accept=".pdf", multiple=False, button_text="Convert to PowerPoint")
 
@@ -225,7 +225,7 @@ def powerpoint_to_pdf():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'pptx', 'pdf', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="PowerPoint to PDF", action="/powerpoint-to-pdf", accept=".pptx,.ppt", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF")
+            return render_template('tool.html', title="PowerPoint to PDF", action="/powerpoint-to-pdf", accept=".pptx,.ppt", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="PowerPoint to PDF", action="/powerpoint-to-pdf", accept=".pptx,.ppt", multiple=False, button_text="Convert to PDF")
 
@@ -236,7 +236,7 @@ def pdf_to_png():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'pdf', 'png', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="PDF to PNG", action="/pdf-to-png", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="PNG Images", button_text="Convert to PNG")
+            return render_template('tool.html', title="PDF to PNG", action="/pdf-to-png", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="PNG Images", button_text="Convert to PNG", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="PDF to PNG", action="/pdf-to-png", accept=".pdf", multiple=False, button_text="Convert to PNG")
 
@@ -247,7 +247,7 @@ def rotate_pdf():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'pdf', 'pdf', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="Rotate PDF", action="/rotate-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Rotated PDF", button_text="Rotate PDF")
+            return render_template('tool.html', title="Rotate PDF", action="/rotate-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Rotated PDF", button_text="Rotate PDF", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="Rotate PDF", action="/rotate-pdf", accept=".pdf", multiple=False, button_text="Rotate PDF")
 
@@ -258,7 +258,7 @@ def protect_pdf():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'pdf', 'pdf', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="Protect PDF", action="/protect-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Protected PDF", button_text="Protect PDF")
+            return render_template('tool.html', title="Protect PDF", action="/protect-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Protected PDF", button_text="Protect PDF", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="Protect PDF", action="/protect-pdf", accept=".pdf", multiple=False, button_text="Protect PDF")
 
@@ -269,7 +269,7 @@ def unlock_pdf():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'pdf', 'pdf', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="Unlock PDF", action="/unlock-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Unlocked PDF", button_text="Unlock PDF")
+            return render_template('tool.html', title="Unlock PDF", action="/unlock-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Unlocked PDF", button_text="Unlock PDF", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="Unlock PDF", action="/unlock-pdf", accept=".pdf", multiple=False, button_text="Unlock PDF")
 
@@ -280,7 +280,7 @@ def organize_pdf():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'pdf', 'pdf', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="Organize PDF", action="/organize-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Organized PDF", button_text="Organize PDF")
+            return render_template('tool.html', title="Organize PDF", action="/organize-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Organized PDF", button_text="Organize PDF", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="Organize PDF", action="/organize-pdf", accept=".pdf", multiple=False, button_text="Organize PDF")
 
