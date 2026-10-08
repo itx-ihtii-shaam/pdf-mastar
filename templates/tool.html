@@ -1,329 +1,271 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }} - PDF MASTAR</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
-        .navbar { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 0 40px; position: sticky; top: 0; z-index: 1000; }
-        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 70px; }
-        .logo { font-size: 22px; font-weight: 900; text-decoration: none; display: flex; align-items: center; gap: 5px; }
-        .nav-menu { display: flex; list-style: none; gap: 0; }
-        .nav-item { position: relative; }
-        .nav-link { display: block; padding: 25px 18px; text-decoration: none; color: #4a5568; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.3s; }
-        .nav-link:hover { color: #e74c3c; }
-        .mega-menu { position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(-10px); background: white; box-shadow: 0 15px 50px rgba(0,0,0,0.15); border-radius: 10px; padding: 25px 30px; opacity: 0; visibility: hidden; transition: all 0.3s; min-width: 700px; }
-        .nav-item:hover .mega-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
-        .mega-menu-columns { display: flex; gap: 40px; }
-        .mega-column { flex: 1; min-width: 200px; }
-        .mega-column-title { font-size: 11px; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #edf2f7; }
-        .mega-item { display: flex; align-items: center; gap: 12px; padding: 10px 8px; text-decoration: none; color: #2d3748; font-size: 14px; font-weight: 500; border-radius: 6px; transition: all 0.2s; }
-        .mega-item:hover { background: #f7fafc; color: #e74c3c; padding-left: 12px; }
-        .mega-icon { font-size: 18px; width: 24px; text-align: center; }
-        .mega-menu-large { min-width: 1100px; padding: 30px 35px; }
-        .mega-menu-large .mega-menu-columns { gap: 30px; flex-wrap: wrap; }
-        .mega-menu-large .mega-column { min-width: 180px; flex: 1 1 180px; }
-        .main-content { display: flex; justify-content: center; align-items: center; padding: 60px 20px; min-height: calc(100vh - 70px); }
-        .container { background: white; padding: 50px 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: 100%; max-width: 720px; text-align: center; }
-        h2 { color: #2d3748; margin-bottom: 40px; font-size: 28px; font-weight: 700; }
-        .upload-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 18px 50px; border-radius: 50px; font-size: 18px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); display: inline-flex; align-items: center; gap: 10px; }
-        .upload-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6); }
-        .upload-btn input[type="file"] { display: none; }
-        .file-preview { display: none; margin-top: 30px; background: #f7f9fc; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        .file-card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); max-width: 280px; margin: 0 auto; position: relative; }
-        .file-info-bar { background: #e2e8f0; color: #4a5568; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; display: inline-block; margin-bottom: 15px; }
-        .file-thumbnail { width: 100%; height: 180px; background: white; border: 1px solid #e2e8f0; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 12px; }
-        .file-thumbnail canvas, .file-thumbnail img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .file-thumbnail .icon-label { font-size: 24px; font-weight: 900; color: white; letter-spacing: 1px; padding: 10px 20px; border-radius: 6px; }
-        .file-thumbnail .icon-pdf { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
-        .file-thumbnail .icon-word { background: linear-gradient(135deg, #2b579a 0%, #1e3f7a 100%); }
-        .file-thumbnail .icon-img { background: linear-gradient(135deg, #27ae60 0%, #1e8449 100%); }
-        .file-thumbnail .icon-excel { background: linear-gradient(135deg, #217346 0%, #185c37 100%); }
-        .file-thumbnail .icon-powerpoint { background: linear-gradient(135deg, #d24726 0%, #b73a1f 100%); }
-        .file-thumbnail .icon-default { background: linear-gradient(135deg, #7f8c8d 0%, #5d6d7e 100%); }
-        .file-name-display { font-size: 13px; color: #2d3748; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .remove-file-btn { position: absolute; top: -10px; right: -10px; background: #e53e3e; color: white; border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; box-shadow: 0 2px 6px rgba(229, 62, 62, 0.4); }
-        .remove-file-btn:hover { transform: scale(1.1); background: #c53030; }
-        .loading-spinner { width: 30px; height: 30px; border: 3px solid #f3f3f3; border-top: 3px solid #e74c3c; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .submit-btn { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: white; border: none; padding: 18px 40px; border-radius: 50px; font-size: 18px; font-weight: 600; cursor: pointer; margin-top: 30px; width: 100%; display: none; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(72, 187, 120, 0.4); }
-        .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(72, 187, 120, 0.6); }
-        .back-link { display: inline-block; margin-top: 25px; color: #718096; text-decoration: none; font-size: 14px; transition: color 0.3s; }
-        .back-link:hover { color: #667eea; }
-        @media (max-width: 1200px) { .mega-menu, .mega-menu-large { min-width: 600px; } .mega-menu-large .mega-menu-columns { gap: 20px; } }
-        @media (max-width: 900px) { .nav-menu { display: none; } .mega-menu, .mega-menu-large { display: none !important; } }
-    </style>
-</head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="/" class="logo">
-                <span style="font-weight: 900; color: #2d3748; font-size: 24px;">PDF <span style="color: #e74c3c;">MASTAR</span></span>
-            </a>
-            <ul class="nav-menu">
-                <li class="nav-item"><a href="/merge" class="nav-link">Merge PDF</a></li>
-                <li class="nav-item"><a href="/split" class="nav-link">Split PDF</a></li>
-                <li class="nav-item"><a href="/compress" class="nav-link">Compress PDF</a></li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">Convert PDF ▾</a>
-                    <div class="mega-menu">
-                        <div class="mega-menu-columns">
-                            <div class="mega-column">
-                                <div class="mega-column-title">Convert to PDF</div>
-                                <a href="/jpg-to-pdf" class="mega-item"><span class="mega-icon">🖼️</span> JPG to PDF</a>
-                                <a href="/word-to-pdf" class="mega-item"><span class="mega-icon">📝</span> Word to PDF</a>
-                                <a href="/powerpoint-to-pdf" class="mega-item"><span class="mega-icon">📊</span> PowerPoint to PDF</a>
-                                <a href="/excel-to-pdf" class="mega-item"><span class="mega-icon"></span> Excel to PDF</a>
-                            </div>
-                            <div class="mega-column">
-                                <div class="mega-column-title">Convert from PDF</div>
-                                <a href="/pdf-to-jpg" class="mega-item"><span class="mega-icon">🖼️</span> PDF to JPG</a>
-                                <a href="/pdf-to-word" class="mega-item"><span class="mega-icon">📝</span> PDF to Word</a>
-                                <a href="/pdf-to-powerpoint" class="mega-item"><span class="mega-icon">📊</span> PDF to PowerPoint</a>
-                                <a href="/pdf-to-excel" class="mega-item"><span class="mega-icon"></span> PDF to Excel</a>
-                                <a href="/pdf-to-png" class="mega-item"><span class="mega-icon">🎨</span> PDF to PNG</a>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">All PDF Tools ▾</a>
-                    <div class="mega-menu mega-menu-large">
-                        <div class="mega-menu-columns">
-                            <div class="mega-column">
-                                <div class="mega-column-title">Organize PDF</div>
-                                <a href="/merge" class="mega-item"><span class="mega-icon">➕</span> Merge PDF</a>
-                                <a href="/split" class="mega-item"><span class="mega-icon">✂️</span> Split PDF</a>
-                                <a href="/organize-pdf" class="mega-item"><span class="mega-icon">📑</span> Organize PDF</a>
-                            </div>
-                            <div class="mega-column">
-                                <div class="mega-column-title">Optimize PDF</div>
-                                <a href="/compress" class="mega-item"><span class="mega-icon">🗜️</span> Compress PDF</a>
-                            </div>
-                            <div class="mega-column">
-                                <div class="mega-column-title">Convert to PDF</div>
-                                <a href="/jpg-to-pdf" class="mega-item"><span class="mega-icon">🖼️</span> JPG to PDF</a>
-                                <a href="/word-to-pdf" class="mega-item"><span class="mega-icon">📝</span> Word to PDF</a>
-                                <a href="/excel-to-pdf" class="mega-item"><span class="mega-icon">📈</span> Excel to PDF</a>
-                                <a href="/powerpoint-to-pdf" class="mega-item"><span class="mega-icon">📊</span> PowerPoint to PDF</a>
-                            </div>
-                            <div class="mega-column">
-                                <div class="mega-column-title">Convert from PDF</div>
-                                <a href="/pdf-to-word" class="mega-item"><span class="mega-icon">📝</span> PDF to Word</a>
-                                <a href="/pdf-to-excel" class="mega-item"><span class="mega-icon">📈</span> PDF to Excel</a>
-                                <a href="/pdf-to-powerpoint" class="mega-item"><span class="mega-icon">📊</span> PDF to PPT</a>
-                                <a href="/pdf-to-jpg" class="mega-item"><span class="mega-icon">🖼️</span> PDF to JPG</a>
-                                <a href="/pdf-to-png" class="mega-item"><span class="mega-icon"></span> PDF to PNG</a>
-                            </div>
-                            <div class="mega-column">
-                                <div class="mega-column-title">Edit PDF</div>
-                                <a href="/rotate-pdf" class="mega-item"><span class="mega-icon">🔄</span> Rotate PDF</a>
-                            </div>
-                            <div class="mega-column">
-                                <div class="mega-column-title">PDF Security</div>
-                                <a href="/protect-pdf" class="mega-item"><span class="mega-icon"></span> Protect PDF</a>
-                                <a href="/unlock-pdf" class="mega-item"><span class="mega-icon">🔓</span> Unlock PDF</a>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </nav>
+{% extends "base.html" %}
 
-    <div class="main-content">
-        <div class="container">
-            <h2>{{ title }}</h2>
-            
-            {% if success %}
-                <div class="success-container" style="text-align: center; padding: 20px;">
-                    <div style="font-size: 64px; margin-bottom: 20px;">🎉</div>
-                    <h3 style="color: #2d3748; margin-bottom: 15px; font-size: 24px;">Conversion Successful!</h3>
-                    <p style="color: #4a5568; font-size: 16px; margin-bottom: 30px; line-height: 1.6;">
-                        Your file has been successfully converted to <strong>{{ output_format }}</strong>.
-                    </p>
-                    
-                    <a href="{{ action }}" class="submit-btn" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; width: auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                        <span>🔄</span> Convert Another File
-                    </a>
-                </div>
-                
-                {% if auto_download %}
-                <script>
-                    // Auto-download trigger
-                    window.addEventListener('load', function() {
-                        const downloadLink = document.createElement('a');
-                        downloadLink.href = '/download/{{ download_filename }}';
-                        downloadLink.download = '{{ download_filename }}';
-                        document.body.appendChild(downloadLink);
-                        downloadLink.click();
-                        document.body.removeChild(downloadLink);
-                    });
-                </script>
-                {% endif %}
+{% block title %}{{ tool.title }} Online Free - {{ SITE_NAME }}{% endblock %}
+{% block desc %}{{ tool.desc }} Free, fast and no sign-up.{% endblock %}
+
+{% block css %}
+.crumbs { padding: 22px 0 0; color: var(--muted); font-size: .9rem; }
+.crumbs a:hover { color: var(--brand); }
+.head { text-align: center; padding: 18px 0 26px; }
+.head .ico { width: 68px; height: 68px; font-size: 32px; margin: 0 auto 14px; border-radius: 20px; background: color-mix(in srgb, var(--brand) 12%, transparent); display: grid; place-items: center; }
+.head h1 { margin: 0 0 6px; font-size: clamp(1.7rem, 4vw, 2.4rem); letter-spacing: -.02em; }
+.head p { margin: 0; color: var(--muted); font-size: 1.05rem; }
+.box { max-width: 720px; margin: 0 auto; }
+.drop { display: block; border: 2px dashed var(--line); border-radius: var(--radius); padding: 46px 20px; text-align: center; cursor: pointer; background: var(--card); transition: border-color .15s, background .15s; }
+.drop:hover, .drop.over, .drop:focus-within { border-color: var(--brand); background: color-mix(in srgb, var(--brand) 6%, var(--card)); }
+.drop .big { font-size: 42px; line-height: 1; margin-bottom: 10px; }
+.drop strong { display: block; font-size: 1.1rem; }
+.drop small { color: var(--muted); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.files { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 10px; }
+.file { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
+.file[draggable=true] { cursor: grab; }
+.file.dragging { opacity: .4; }
+.file.target { border-color: var(--brand); }
+.thumb { flex: none; width: 44px; height: 44px; border-radius: 10px; background: color-mix(in srgb, var(--brand) 14%, transparent); color: var(--brand); display: grid; place-items: center; font-weight: 800; font-size: .72rem; overflow: hidden; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+.meta { flex: 1; min-width: 0; }
+.meta b { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.meta span { color: var(--muted); font-size: .85rem; }
+.acts { display: flex; gap: 6px; }
+.mini { border: 1px solid var(--line); background: var(--bg); color: var(--text); width: 32px; height: 32px; border-radius: 9px; cursor: pointer; font-size: 13px; display: grid; place-items: center; }
+.mini:hover { border-color: var(--brand); }
+.mini.del:hover { border-color: var(--err); color: var(--err); }
+.opts { margin-top: 18px; display: grid; gap: 14px; }
+.field label { display: block; font-weight: 600; margin-bottom: 6px; font-size: .95rem; }
+.field input, .field select { width: 100%; padding: 13px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-size: 1rem; font-family: inherit; }
+.field input:focus, .field select:focus { outline: none; border-color: var(--brand); }
+.field small { display: block; color: var(--muted); margin-top: 5px; }
+.note { margin-top: 14px; color: var(--muted); font-size: .85rem; text-align: center; }
+.actions { margin-top: 22px; text-align: center; }
+.actions .btn { min-width: 240px; padding: 14px 24px; border-radius: 12px; border: 0; background: var(--brand); color: #fff; font-weight: 700; font-size: 1.1rem; cursor: pointer; }
+.actions .btn:disabled { opacity: .6; cursor: not-allowed; }
+.progress { height: 10px; background: var(--line); border-radius: 99px; overflow: hidden; margin-top: 20px; display: none; }
+.bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--brand), var(--brand2)); transition: width .2s; }
+.bar.busy { width: 100% !important; background-size: 200% 100%; background-image: linear-gradient(90deg, var(--brand), var(--brand2), var(--brand)); animation: slide 1.1s linear infinite; }
+@keyframes slide { to { background-position: -200% 0; } }
+.status { text-align: center; color: var(--muted); margin-top: 8px; font-size: .92rem; }
+.result { text-align: center; padding: 34px 22px; }
+.result .ok { width: 70px; height: 70px; border-radius: 50%; background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); display: grid; place-items: center; font-size: 34px; margin: 0 auto 12px; }
+.result h2 { margin: 0 0 4px; }
+.result .fn { color: var(--muted); word-break: break-all; }
+.result .row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+.result .row .btn { background: var(--card); color: var(--text); border: 1px solid var(--line); padding: 12px 20px; border-radius: 10px; font-weight: 600; }
+.result .row .btn.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+.next { max-width: 720px; margin: 44px auto 0; }
+.next h2 { font-size: 1.05rem; margin: 0 0 14px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.next .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.next .tool { padding: 14px; }
+.next .ico { width: 40px; height: 40px; font-size: 19px; }
+{% endblock %}
+
+{% block content %}
+<div class="crumbs">
+    <a href="/">All tools</a> › {{ tool.title }}
+</div>
+
+<div class="head">
+    <div class="ico">{{ tool.icon }}</div>
+    <h1>{{ tool.title }}</h1>
+    <p>{{ tool.desc }}</p>
+</div>
+
+<div class="box">
+    <form id="toolForm" action="/{{ tool.slug }}" method="POST" enctype="multipart/form-data">
+        <label class="drop" id="dropZone">
+            <div class="big">📂</div>
+            <strong>{% if tool.multiple %}Choose files or drop them here{% else %}Choose a file or drop it here{% endif %}</strong>
+            <small>{{ tool.accept.replace(',', ', ') }} · up to {{ max_mb }} MB{% if tool.multiple %} in total{% endif %}</small>
+            <input type="file" name="files" class="sr" accept="{{ tool.accept }}" {% if tool.multiple %}multiple{% endif %} required>
+        </label>
+
+        <ul class="files" id="fileList"></ul>
+
+        {% if tool.fields %}
+        <div class="opts" id="optionsZone" style="display:none;">
+          {% for f in tool.fields %}
+          <div class="field">
+            <label for="{{ f.name }}">{{ f.label }} {% if f.required %}<span style="color:var(--err)">*</span>{% endif %}</label>
+            {% if f.type == 'select' %}
+            <select name="{{ f.name }}" id="{{ f.name }}" {% if f.required %}required{% endif %}>
+              {% for v, l in f.options %}
+              <option value="{{ v }}">{{ l }}</option>
+              {% endfor %}
+            </select>
             {% else %}
-                <form action="{{ action }}" method="POST" enctype="multipart/form-data">
-                    <label class="upload-btn" id="uploadBtn">
-                        <span>📁</span>
-                        <span>Select File</span>
-                        <input type="file" id="fileInput" name="{{ 'pdf_files' if multiple else 'pdf_file' }}" accept="{{ accept }}" {{ 'multiple' if multiple else '' }} required>
-                    </label>
-
-                    <div class="file-preview" id="filePreview">
-                        <div class="file-card">
-                            <button type="button" class="remove-file-btn" id="removeBtn">×</button>
-                            <div class="file-info-bar" id="fileInfoBar">0 KB</div>
-                            <div class="file-thumbnail" id="fileThumbnail">
-                                <div class="loading-spinner" id="loadingSpinner"></div>
-                                <span class="icon-label" id="iconText" style="display: none;">PDF</span>
-                                <img id="imagePreview" style="display: none;" alt="Preview">
-                                <canvas id="pdfCanvas" style="display: none;"></canvas>
-                            </div>
-                            <div class="file-name-display" id="fileNameDisplay">filename.pdf</div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="submit-btn" id="submitBtn">{{ button_text or 'Process File' }}</button>
-                </form>
-                
-                <a href="/" class="back-link">← Back to Home</a>
+            <input type="{{ f.type }}" name="{{ f.name }}" id="{{ f.name }}" placeholder="{{ f.placeholder or '' }}" {% if f.required %}required{% endif %}>
             {% endif %}
+            {% if f.hint %}<small>{{ f.hint }}</small>{% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="actions">
+            <button type="submit" class="btn" id="submitBtn" disabled>{{ tool.button }} →</button>
+        </div>
+        
+        <div class="progress" id="progressBar">
+            <div class="bar" id="progressFill"></div>
+        </div>
+        <div class="status" id="statusText"></div>
+
+        {% if tool.note %}
+        <div class="note">⚠️ {{ tool.note }}</div>
+        {% endif %}
+    </form>
+
+    <div class="result" id="resultZone" style="display:none;">
+        <div class="ok">✓</div>
+        <h2>Success!</h2>
+        <p class="fn">Your {{ tool.label }} is ready! 🎉</p>
+        <div class="row">
+            <a href="#" class="btn primary" id="downloadBtn" download>⬇ Download again</a>
+            <a href="/{{ tool.slug }}" class="btn">Process another file</a>
         </div>
     </div>
+</div>
 
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-        const fileInput = document.getElementById('fileInput');
-        const filePreview = document.getElementById('filePreview');
-        const fileInfoBar = document.getElementById('fileInfoBar');
-        const fileNameDisplay = document.getElementById('fileNameDisplay');
-        const iconText = document.getElementById('iconText');
-        const imagePreview = document.getElementById('imagePreview');
-        const pdfCanvas = document.getElementById('pdfCanvas');
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const uploadBtn = document.getElementById('uploadBtn');
-        const submitBtn = document.getElementById('submitBtn');
-        const removeBtn = document.getElementById('removeBtn');
+<div class="next">
+    <h2>What next?</h2>
+    <div class="grid">
+      {% for t in related %}
+      <a href="/{{ t.slug }}" class="tool-card">
+        <div class="ico">{{ t.icon }}</div>
+        <h3>{{ t.title }}</h3>
+      </a>
+      {% endfor %}
+    </div>
+</div>
+{% endblock %}
 
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+{% block scripts %}
+<script>
+const form = document.getElementById('toolForm');
+const dropZone = document.getElementById('dropZone');
+const fileInput = dropZone.querySelector('input[type="file"]');
+const fileList = document.getElementById('fileList');
+const optionsZone = document.getElementById('optionsZone');
+const submitBtn = document.getElementById('submitBtn');
+const progressBar = document.getElementById('progressBar');
+const progressFill = document.getElementById('progressFill');
+const statusText = document.getElementById('statusText');
+const resultZone = document.getElementById('resultZone');
+
+let filesArray = [];
+
+function updateFiles() {
+    fileList.innerHTML = '';
+    filesArray.forEach((file, index) => {
+        const li = document.createElement('li');
+        li.className = 'file';
+        li.innerHTML = `
+            <div class="thumb">${file.name.split('.').pop().toUpperCase().substring(0,4)}</div>
+            <div class="meta">
+                <b>${file.name}</b>
+                <span>${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+            </div>
+            <div class="acts">
+                <button type="button" class="mini del" onclick="removeFile(${index})">✕</button>
+            </div>
+        `;
+        fileList.appendChild(li);
+    });
+    
+    if (filesArray.length > 0) {
+        submitBtn.disabled = false;
+        if (optionsZone) optionsZone.style.display = 'grid';
+    } else {
+        submitBtn.disabled = true;
+        if (optionsZone) optionsZone.style.display = 'none';
+    }
+}
+
+window.removeFile = function(index) {
+    filesArray.splice(index, 1);
+    updateFiles();
+};
+
+fileInput.addEventListener('change', (e) => {
+    const newFiles = Array.from(e.target.files);
+    {% if tool.multiple %}
+    filesArray = filesArray.concat(newFiles);
+    {% else %}
+    filesArray = newFiles.slice(0, 1);
+    {% endif %}
+    updateFiles();
+});
+
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, preventDefaults, false);
+});
+function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+['dragenter', 'dragover'].forEach(eventName => {
+    dropZone.addEventListener(eventName, () => dropZone.classList.add('over'), false);
+});
+['dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, () => dropZone.classList.remove('over'), false);
+});
+dropZone.addEventListener('drop', (e) => {
+    const dt = e.dataTransfer;
+    const newFiles = Array.from(dt.files);
+    {% if tool.multiple %}
+    filesArray = filesArray.concat(newFiles);
+    {% else %}
+    filesArray = newFiles.slice(0, 1);
+    {% endif %}
+    updateFiles();
+});
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    progressBar.style.display = 'block';
+    progressFill.classList.add('busy');
+    statusText.textContent = 'Processing your file...';
+
+    const formData = new FormData(form);
+    formData.delete('files');
+    filesArray.forEach(f => formData.append('files', f));
+
+    try {
+        const response = await fetch(form.action, { method: 'POST', body: formData });
+        if (!response.ok) throw new Error(await response.text() || 'Processing failed');
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        
+        const disposition = response.headers.get('Content-Disposition');
+        let filename = 'processed_file';
+        if (disposition && disposition.includes('filename=')) {
+            filename = disposition.split('filename=')[1].replace(/["']/g, '');
+        } else {
+            filename = filesArray[0].name.replace(/\.[^/.]+$/, "") + "_processed." + filesArray[0].name.split('.').pop();
         }
+        
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
 
-        async function renderPDFThumbnail(file) {
-            iconText.style.display = 'none';
-            imagePreview.style.display = 'none';
-            pdfCanvas.style.display = 'none';
-            loadingSpinner.style.display = 'block';
-            try {
-                const arrayBuffer = await file.arrayBuffer();
-                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-                const page = await pdf.getPage(1);
-                const pageCount = pdf.numPages;
-                const fileSize = formatFileSize(file.size);
-                fileInfoBar.textContent = `${fileSize} - ${pageCount} page${pageCount > 1 ? 's' : ''}`;
-                const scale = 2;
-                const viewport = page.getViewport({ scale: scale });
-                pdfCanvas.width = viewport.width;
-                pdfCanvas.height = viewport.height;
-                const context = pdfCanvas.getContext('2d');
-                context.fillStyle = 'white';
-                context.fillRect(0, 0, pdfCanvas.width, pdfCanvas.height);
-                await page.render({ canvasContext: context, viewport: viewport }).promise;
-                loadingSpinner.style.display = 'none';
-                pdfCanvas.style.display = 'block';
-            } catch (error) {
-                loadingSpinner.style.display = 'none';
-                iconText.style.display = 'block';
-                iconText.textContent = 'PDF';
-                iconText.className = 'icon-label icon-pdf';
-            }
-        }
-
-        fileInput.addEventListener('change', function(e) {
-            if (this.files && this.files.length > 0) {
-                filePreview.style.display = 'block';
-                uploadBtn.style.display = 'none';
-                submitBtn.style.display = 'block';
-                if (this.files.length === 1) {
-                    const file = this.files[0];
-                    const ext = file.name.split('.').pop().toLowerCase();
-                    fileNameDisplay.textContent = file.name;
-                    if (ext === 'pdf') {
-                        renderPDFThumbnail(file);
-                    } else if (ext === 'doc' || ext === 'docx') {
-                        loadingSpinner.style.display = 'none';
-                        iconText.style.display = 'block';
-                        imagePreview.style.display = 'none';
-                        pdfCanvas.style.display = 'none';
-                        iconText.textContent = 'DOC';
-                        iconText.className = 'icon-label icon-word';
-                        fileInfoBar.textContent = formatFileSize(file.size);
-                    } else if (ext === 'xls' || ext === 'xlsx') {
-                        loadingSpinner.style.display = 'none';
-                        iconText.style.display = 'block';
-                        imagePreview.style.display = 'none';
-                        pdfCanvas.style.display = 'none';
-                        iconText.textContent = 'XLS';
-                        iconText.className = 'icon-label icon-excel';
-                        fileInfoBar.textContent = formatFileSize(file.size);
-                    } else if (ext === 'ppt' || ext === 'pptx') {
-                        loadingSpinner.style.display = 'none';
-                        iconText.style.display = 'block';
-                        imagePreview.style.display = 'none';
-                        pdfCanvas.style.display = 'none';
-                        iconText.textContent = 'PPT';
-                        iconText.className = 'icon-label icon-powerpoint';
-                        fileInfoBar.textContent = formatFileSize(file.size);
-                    } else if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
-                        loadingSpinner.style.display = 'none';
-                        iconText.style.display = 'none';
-                        pdfCanvas.style.display = 'none';
-                        imagePreview.style.display = 'block';
-                        const reader = new FileReader();
-                        reader.onload = function(e) { imagePreview.src = e.target.result; };
-                        reader.readAsDataURL(file);
-                        fileInfoBar.textContent = formatFileSize(file.size);
-                    } else {
-                        loadingSpinner.style.display = 'none';
-                        iconText.style.display = 'block';
-                        imagePreview.style.display = 'none';
-                        pdfCanvas.style.display = 'none';
-                        iconText.textContent = 'FILE';
-                        iconText.className = 'icon-label icon-default';
-                        fileInfoBar.textContent = formatFileSize(file.size);
-                    }
-                } else {
-                    loadingSpinner.style.display = 'none';
-                    iconText.style.display = 'block';
-                    imagePreview.style.display = 'none';
-                    pdfCanvas.style.display = 'none';
-                    iconText.textContent = '📁';
-                    iconText.className = 'icon-label icon-default';
-                    fileNameDisplay.textContent = `${this.files.length} files selected`;
-                    let totalSize = 0;
-                    for (let f of this.files) totalSize += f.size;
-                    fileInfoBar.textContent = formatFileSize(totalSize);
-                }
-            }
-        });
-
-        removeBtn.addEventListener('click', function() {
-            fileInput.value = '';
-            filePreview.style.display = 'none';
-            uploadBtn.style.display = 'inline-flex';
-            submitBtn.style.display = 'none';
-            iconText.style.display = 'none';
-            imagePreview.style.display = 'none';
-            pdfCanvas.style.display = 'none';
-            loadingSpinner.style.display = 'block';
-        });
-    </script>
-</body>
-</html>
+        form.style.display = 'none';
+        resultZone.style.display = 'block';
+        document.getElementById('downloadBtn').href = url;
+        document.getElementById('downloadBtn').download = filename;
+        statusText.textContent = '';
+        
+    } catch (error) {
+        statusText.textContent = 'Error: ' + error.message;
+        statusText.style.color = 'var(--err)';
+        submitBtn.disabled = false;
+    } finally {
+        progressBar.style.display = 'none';
+        progressFill.classList.remove('busy');
+    }
+});
+</script>
+{% endblock %}
