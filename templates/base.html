@@ -3,33 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{{ SITE_NAME }} - Free online PDF tools{% endblock %}</title>
+    <title>{% block title %}PDF MASTAR - Free online PDF tools{% endblock %}</title>
     <meta name="description" content="{% block desc %}Free, fast and secure online PDF tools.{% endblock %}">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath d='M25 15 L70 15 L85 30 L85 95 L25 95 Z' fill='%23e74c3c'/%3E%3Cpath d='M70 15 L70 30 L85 30 Z' fill='%23c0392b'/%3E%3Ctext x='52' y='55' font-family='Arial' font-size='24' font-weight='bold' fill='white' text-anchor='middle'%3EPDF%3C/text%3E%3Ccircle cx='72' cy='72' r='14' fill='%233498db' stroke='white' stroke-width='3'/%3E%3Ccircle cx='72' cy='72' r='6' fill='white'/%3E%3C/svg%3E">
     <style>
         :root {
-            --brand: #5b5bf0; --brand2: #8b5cf6; --ok: #10b981; --err: #ef4444;
-            --bg: #f6f7fb; --card: #ffffff; --text: #1e293b; --muted: #64748b; --line: #e2e8f0;
-            --radius: 16px; --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+            --brand: #5b5bf0;
+            --brand2: #8b5cf6;
+            --ok: #10b981;
+            --err: #ef4444;
+            --bg: #f6f7fb;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --line: #e2e8f0;
+            --radius: 16px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; min-height: 100vh; display: flex; flex-direction: column; }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
         a { color: var(--brand); text-decoration: none; }
+        a:hover { text-decoration: underline; }
         .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; width: 100%; }
-        header { background: var(--card); border-bottom: 1px solid var(--line); padding: 16px 0; position: sticky; top: 0; z-index: 100; }
+        header {
+            background: var(--card);
+            border-bottom: 1px solid var(--line);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
         .nav { display: flex; align-items: center; justify-content: space-between; }
-        .logo { font-size: 1.4rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px; }
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
         .logo span { color: var(--brand); }
-        .nav-actions { display: flex; gap: 12px; align-items: center; }
-        .btn { padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: .9rem; cursor: pointer; border: 1px solid var(--line); background: var(--card); color: var(--text); }
-        .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
         main { flex: 1; padding: 20px 0; }
-        footer { background: var(--card); border-top: 1px solid var(--line); padding: 24px 0; text-align: center; color: var(--muted); font-size: .9rem; margin-top: auto; }
-        .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
-        .tool-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; transition: transform .15s, box-shadow .15s; display: flex; flex-direction: column; gap: 8px; }
-        .tool-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--brand); }
-        .tool-card .ico { width: 48px; height: 48px; border-radius: 12px; background: color-mix(in srgb, var(--brand) 12%, transparent); display: grid; place-items: center; font-size: 24px; }
-        .tool-card h3 { font-size: 1.1rem; font-weight: 700; }
+        footer {
+            background: var(--card);
+            border-top: 1px solid var(--line);
+            padding: 24px 0;
+            text-align: center;
+            color: var(--muted);
+            font-size: .9rem;
+            margin-top: auto;
+        }
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 16px;
+        }
+        .tool-card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 20px;
+            transition: transform .15s, box-shadow .15s;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .tool-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            border-color: var(--brand);
+            text-decoration: none;
+        }
+        .tool-card .ico {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: color-mix(in srgb, var(--brand) 12%, transparent);
+            display: grid;
+            place-items: center;
+            font-size: 24px;
+        }
+        .tool-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--text); }
         .tool-card p { font-size: .9rem; color: var(--muted); }
         {% block css %}{% endblock %}
     </style>
@@ -38,9 +100,6 @@
     <header>
         <div class="container nav">
             <a href="/" class="logo">📄 <span>{{ SITE_NAME }}</span></a>
-            <div class="nav-actions">
-                <button class="btn" onclick="alert('Install feature coming soon!')">⬇ Install app</button>
-            </div>
         </div>
     </header>
     <main class="container">
