@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}PDF MASTAR - Free Online PDF Tools{% endblock %}
+{% block css %}
+<style>
+.hero{text-align:center;padding:60px 20px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;margin:0 -20px}
+.hero h1{font-size:42px;margin-bottom:15px;font-weight:800}
+.hero p{font-size:18px;opacity:0.95;max-width:600px;margin:0 auto}
+.tools-section{max-width:1200px;margin:-30px auto 60px;padding:0 20px}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:25px}
+.tool-card{background:var(--card);border-radius:12px;padding:30px 20px;text-align:center;text-decoration:none;color:var(--text);box-shadow:0 4px 15px rgba(0,0,0,0.05);transition:all 0.3s;border:1px solid var(--line)}
+.tool-card:hover{transform:translateY(-8px);box-shadow:0 15px 30px rgba(0,0,0,0.1);border-color:var(--brand)}
+.tool-card .ico{font-size:40px;margin-bottom:15px}
+.tool-card h3{font-size:18px;margin-bottom:10px;font-weight:700}
+.tool-card p{font-size:14px;color:var(--muted)}
+</style>
+{% endblock %}
+{% block content %}
+<div class="hero">
+<h1>Every tool you need to work with PDFs</h1>
+<p>100% Free. No signup required. Merge, split, compress, and convert PDFs.</p>
+</div>
+<div class="tools-section">
+<div class="tools-grid">
+{% for t in tools %}
+<a href="/{{ t.slug }}" class="tool-card">
+<div class="ico">{{ t.icon }}</div>
+<h3>{{ t.title }}</h3>
+<p>{{ t.desc }}</p>
+</a>
+{% endfor %}
+</div>
+</div>
+{% endblock %}
