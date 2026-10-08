@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{{ SITE_NAME }} - Free online PDF tools{% endblock %}</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%3C/text%3E%3C/svg%3E">
+    <meta name="description" content="{% block desc %}Free, fast and secure online PDF tools.{% endblock %}">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📄%3C/text%3E%3C/svg%3E">
     <style>
         :root {
             --brand: #667eea;
@@ -17,17 +18,66 @@
             --muted: #718096;
             --line: #edf2f7;
             --radius: 16px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; min-height: 100vh; display: flex; flex-direction: column; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
         a { color: var(--brand); text-decoration: none; }
+        a:hover { text-decoration: underline; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
-        header { background: var(--card); box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 0 40px; position: sticky; top: 0; z-index: 100; }
-        .nav { display: flex; align-items: center; justify-content: space-between; height: 70px; }
-        .logo { font-size: 1.5rem; font-weight: 900; color: var(--text); }
+        header {
+            background: var(--card);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            padding: 0 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text);
+        }
         .logo span { color: #e74c3c; }
+        .nav-actions { display: flex; gap: 12px; align-items: center; }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: 1px solid var(--line);
+            background: var(--card);
+            color: var(--text);
+        }
+        .btn-primary {
+            background: var(--brand);
+            color: #fff;
+            border-color: var(--brand);
+        }
         main { flex: 1; padding: 20px 0; }
-        footer { background: #2d3748; color: #a0aec0; padding: 30px 20px; text-align: center; font-size: .9rem; margin-top: auto; }
+        footer {
+            background: #2d3748;
+            color: #a0aec0;
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
         {% block css %}{% endblock %}
     </style>
 </head>
@@ -35,13 +85,19 @@
     <header>
         <div class="container nav">
             <a href="/" class="logo">PDF <span>MASTAR</span></a>
+            <div class="nav-actions">
+                <button class="btn" onclick="alert('Install feature coming soon!')">⬇ Install app</button>
+            </div>
         </div>
     </header>
     <main class="container">
         {% block content %}{% endblock %}
     </main>
     <footer>
-        <p>🔒 Files processed in memory · ⚡ Free, no sign-up · © {{ SITE_NAME }}</p>
+        <div class="container">
+            <p>🔒 Files are processed in memory and not saved on our server ·  Free, no sign-up · 📱 Works on mobile</p>
+            <p style="margin-top: 8px;">© {{ SITE_NAME }}</p>
+        </div>
     </footer>
     {% block scripts %}{% endblock %}
 </body>
