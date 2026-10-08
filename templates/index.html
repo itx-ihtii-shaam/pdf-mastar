@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block css %}
+.hero{text-align:center;padding:56px 0 28px}
+.hero h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.12;margin:0 0 12px;letter-spacing:-.02em}
+.hero h1 span{background:linear-gradient(135deg,var(--brand),var(--brand2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);font-size:1.1rem;margin:0 auto 24px;max-width:560px}
+.search{max-width:520px;margin:0 auto;position:relative}
+.search input{width:100%;padding:16px 18px 16px 48px;border-radius:16px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:1rem;box-shadow:var(--shadow);font-family:inherit}
+.search input:focus{outline:none;border-color:var(--brand)}
+.search .s{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-size:18px;opacity:.6}
+.search kbd{position:absolute;right:14px;top:50%;transform:translateY(-50%);border:1px solid var(--line);border-radius:6px;padding:1px 7px;color:var(--muted);font-size:.8rem}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:22px 0 26px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--text);padding:8px 16px;border-radius:99px;cursor:pointer;font-weight:600;font-size:.9rem;font-family:inherit}
+.chip[aria-pressed=true]{background:var(--brand);border-color:var(--brand);color:#fff}
+h2.sec{font-size:1.05rem;margin:0 0 14px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+#recent{margin-bottom:30px}
+/* hero animation: 3 PDFs ek ho jate hain */
+.demo{position:relative;width:320px;height:112px;margin:0 auto 26px}
+.pg{position:absolute;top:12px;width:64px;height:84px;border-radius:12px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:grid;place-items:end center;padding-bottom:10px;font-weight:800;font-size:.7rem;color:var(--muted);overflow:hidden}
+.pg::before{content:"";position:absolute;left:10px;right:10px;top:12px;height:5px;border-radius:3px;background:var(--accent);box-shadow:0 11px 0 var(--line),0 22px 0 var(--line),0 33px 0 var(--line)}
+.pg.p1{left:0;--dx:128px;--r:-9deg;--accent:#5b5bf0;animation:gather 5.5s ease-in-out infinite}
+.pg.p2{left:38px;--dx:90px;--r:0deg;--accent:#0ea5e9;animation:gather 5.5s ease-in-out infinite}
+.pg.p3{left:76px;--dx:52px;--r:9deg;--accent:#10b981;animation:gather 5.5s ease-in-out infinite}
+.pg.out{left:128px;top:6px;width:68px;height:92px;background:linear-gradient(135deg,var(--brand),var(--brand2));border:0;color:#fff;font-size:.78rem;place-items:center;padding:0;opacity:0;animation:pop 5.5s ease-in-out infinite}
+.pg.out::before{display:none}
+@keyframes gather{
+  0%{opacity:0;transform:translateX(0) rotate(var(--r))}
+  10%,26%{opacity:1;transform:translateX(0) rotate(var(--r))}
+  50%,60%{opacity:1;transform:translateX(var(--dx)) rotate(0)}
+  68%,100%{opacity:0;transform:translateX(var(--dx)) rotate(0) scale(.9)}
+}
+@keyframes pop{
+  0%,58%{opacity:0;transform:scale(.6)}
+  66%{opacity:1;transform:scale(1.12)}
+  72%,92%{opacity:1;transform:scale(1)}
+  100%{opacity:0;transform:scale(1)}
+}
+/* streak + badges */
+.statbar{display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:16px 20px;margin-bottom:26px}
+.statbar .nums{display:flex;gap:22px;flex-wrap:wrap}
+.statbar .n b{display:block;font-size:1.5rem;line-height:1.1}
+.statbar .n span{color:var(--muted);font-size:.82rem}
+.badges2{display:flex;gap:8px;flex-wrap:wrap}
+.bdg{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;font-size:.82rem;font-weight:600;border:1px solid color-mix(in srgb,var(--ok) 40%,transparent);background:color-mix(in srgb,var(--ok) 10%,var(--card))}
+.bdg.locked{filter:grayscale(1);opacity:.45;border-color:var(--line);background:var(--card)}
+.empty{text-align:center;color:var(--muted);padding:40px 0}
+{% endblock %}
+
+{% block content %}
+<div class="wrap">
+  <section class="hero">
+    <div class="demo" aria-hidden="true">
+      <div class="pg p1">PDF</div><div class="pg p2">PDF</div><div class="pg p3">PDF</div>
+      <div class="pg out">1 PDF ✓</div>
+    </div>
+    <h1>Every PDF tool you need, <span>in one place</span></h1>
+    <p>Merge, split, compress, convert and protect your PDFs in seconds. Free, fast and no sign-up.</p>
+    <div class="search">
+      <span class="s">🔍</span>
+      <input id="q" type="search" placeholder="Search tools, e.g. merge, Word, compress…" autocomplete="off" aria-label="Search tools">
+      <kbd>/</kbd>
+    </div>
+    <div class="chips" id="chips">
+      {% for key, label in cats %}
+      <button class="chip" type="button" data-cat="{{ key }}" aria-pressed="{{ 'true' if loop.first else 'false' }}">{{ label }}</button>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="card statbar" id="statbar" hidden>
+    <div class="nums">
+      <div class="n"><b id="stStreak">0</b><span>day streak 🔥</span></div>
+      <div class="n"><b id="stTotal">0</b><span>files processed on this device</span></div>
+    </div>
+    <div class="badges2" id="stBadges"></div>
+  </section>
+
+  <section id="recent" hidden>
+    <h2 class="sec">Recently used</h2>
+    <div class="grid" id="recentList"></div>
+  </section>
+
+  <section>
+    <h2 class="sec">All tools</h2>
+    <div class="grid" id="grid">
+      {% for t in tools %}
+      <a class="card tool cat-{{ t.cat }}" href="/{{ t.slug }}" data-slug="{{ t.slug }}" data-cat="{{ t.cat }}" data-search="{{ (t.title ~ ' ' ~ t.desc ~ ' ' ~ t.slug)|lower }}">
+        <div class="ico">{{ t.icon }}</div>
+        <div><h3>{{ t.title }}</h3><p>{{ t.desc }}</p></div>
+      </a>
+      {% endfor %}
+    </div>
+    <div class="empty" id="empty" hidden>No tool matches your search. Try another word.</div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function(){
+  var grid=document.getElementById('grid');
+  var cards=Array.prototype.slice.call(grid.querySelectorAll('.tool'));
+  var q=document.getElementById('q'), cat='all';
+
+  function apply(){
+    var s=q.value.trim().toLowerCase(), n=0;
+    cards.forEach(function(c){
+      var ok=(cat==='all'||c.dataset.cat===cat)&&(!s||c.dataset.search.indexOf(s)>-1);
+      c.hidden=!ok; if(ok) n++;
+    });
+    document.getElementById('empty').hidden=n>0;
+  }
+  q.addEventListener('input',apply);
+  document.getElementById('chips').addEventListener('click',function(e){
+    var b=e.target.closest('.chip'); if(!b) return;
+    cat=b.dataset.cat;
+    document.querySelectorAll('.chip').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
+    apply();
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='/'&&document.activeElement!==q){e.preventDefault();q.focus();}
+  });
+
+  try{
+    var st=Stats.get();
+    if(st.total>0){
+      document.getElementById('stStreak').textContent=st.streak;
+      document.getElementById('stTotal').textContent=st.total;
+      var bx=document.getElementById('stBadges');
+      Stats.BADGES.forEach(function(b){
+        var el=document.createElement('span'),on=st.badges.indexOf(b.id)>-1;
+        el.className='bdg'+(on?'':' locked');
+        el.title=on?b.name:'Locked: '+b.hint;
+        el.textContent=b.icon+' '+b.name;
+        bx.appendChild(el);
+      });
+      document.getElementById('statbar').hidden=false;
+    }
+  }catch(e){}
+
+  try{
+    var recent=JSON.parse(localStorage.getItem('recent')||'[]');
+    var box=document.getElementById('recentList');
+    var found=recent.map(function(s){return cards.filter(function(c){return c.dataset.slug===s})[0]}).filter(Boolean).slice(0,4);
+    if(found.length){
+      found.forEach(function(c){box.appendChild(c.cloneNode(true))});
+      document.getElementById('recent').hidden=false;
+    }
+  }catch(e){}
+})();
+</script>
+{% endblock %}
