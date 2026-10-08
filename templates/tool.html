@@ -29,7 +29,7 @@ h2 { color: var(--text); margin-bottom: 10px; font-size: 28px; font-weight: 700;
 
         <form action="/{{ tool.slug }}" method="POST" enctype="multipart/form-data">
             <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-                <div style="font-size: 48px; margin-bottom: 15px;"></div>
+                <div style="font-size: 48px; margin-bottom: 15px;">📁</div>
                 <p style="color: var(--text); font-weight: 600;">
                     {% if tool.multiple %}Choose files or drop them here{% else %}Choose a file or drop it here{% endif %}
                 </p>
