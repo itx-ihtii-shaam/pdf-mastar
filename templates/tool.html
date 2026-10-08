@@ -1,271 +1,81 @@
 {% extends "base.html" %}
 
-{% block title %}{{ tool.title }} Online Free - {{ SITE_NAME }}{% endblock %}
-{% block desc %}{{ tool.desc }} Free, fast and no sign-up.{% endblock %}
+{% block title %}{{ tool.title }} - PDF MASTAR{% endblock %}
 
 {% block css %}
-.crumbs { padding: 22px 0 0; color: var(--muted); font-size: .9rem; }
-.crumbs a:hover { color: var(--brand); }
-.head { text-align: center; padding: 18px 0 26px; }
-.head .ico { width: 68px; height: 68px; font-size: 32px; margin: 0 auto 14px; border-radius: 20px; background: color-mix(in srgb, var(--brand) 12%, transparent); display: grid; place-items: center; }
-.head h1 { margin: 0 0 6px; font-size: clamp(1.7rem, 4vw, 2.4rem); letter-spacing: -.02em; }
-.head p { margin: 0; color: var(--muted); font-size: 1.05rem; }
-.box { max-width: 720px; margin: 0 auto; }
-.drop { display: block; border: 2px dashed var(--line); border-radius: var(--radius); padding: 46px 20px; text-align: center; cursor: pointer; background: var(--card); transition: border-color .15s, background .15s; }
-.drop:hover, .drop.over, .drop:focus-within { border-color: var(--brand); background: color-mix(in srgb, var(--brand) 6%, var(--card)); }
-.drop .big { font-size: 42px; line-height: 1; margin-bottom: 10px; }
-.drop strong { display: block; font-size: 1.1rem; }
-.drop small { color: var(--muted); }
-.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.files { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 10px; }
-.file { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
-.file[draggable=true] { cursor: grab; }
-.file.dragging { opacity: .4; }
-.file.target { border-color: var(--brand); }
-.thumb { flex: none; width: 44px; height: 44px; border-radius: 10px; background: color-mix(in srgb, var(--brand) 14%, transparent); color: var(--brand); display: grid; place-items: center; font-weight: 800; font-size: .72rem; overflow: hidden; }
-.thumb img { width: 100%; height: 100%; object-fit: cover; }
-.meta { flex: 1; min-width: 0; }
-.meta b { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.meta span { color: var(--muted); font-size: .85rem; }
-.acts { display: flex; gap: 6px; }
-.mini { border: 1px solid var(--line); background: var(--bg); color: var(--text); width: 32px; height: 32px; border-radius: 9px; cursor: pointer; font-size: 13px; display: grid; place-items: center; }
-.mini:hover { border-color: var(--brand); }
-.mini.del:hover { border-color: var(--err); color: var(--err); }
-.opts { margin-top: 18px; display: grid; gap: 14px; }
-.field label { display: block; font-weight: 600; margin-bottom: 6px; font-size: .95rem; }
-.field input, .field select { width: 100%; padding: 13px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-size: 1rem; font-family: inherit; }
-.field input:focus, .field select:focus { outline: none; border-color: var(--brand); }
-.field small { display: block; color: var(--muted); margin-top: 5px; }
-.note { margin-top: 14px; color: var(--muted); font-size: .85rem; text-align: center; }
-.actions { margin-top: 22px; text-align: center; }
-.actions .btn { min-width: 240px; padding: 14px 24px; border-radius: 12px; border: 0; background: var(--brand); color: #fff; font-weight: 700; font-size: 1.1rem; cursor: pointer; }
-.actions .btn:disabled { opacity: .6; cursor: not-allowed; }
-.progress { height: 10px; background: var(--line); border-radius: 99px; overflow: hidden; margin-top: 20px; display: none; }
-.bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--brand), var(--brand2)); transition: width .2s; }
-.bar.busy { width: 100% !important; background-size: 200% 100%; background-image: linear-gradient(90deg, var(--brand), var(--brand2), var(--brand)); animation: slide 1.1s linear infinite; }
-@keyframes slide { to { background-position: -200% 0; } }
-.status { text-align: center; color: var(--muted); margin-top: 8px; font-size: .92rem; }
-.result { text-align: center; padding: 34px 22px; }
-.result .ok { width: 70px; height: 70px; border-radius: 50%; background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); display: grid; place-items: center; font-size: 34px; margin: 0 auto 12px; }
-.result h2 { margin: 0 0 4px; }
-.result .fn { color: var(--muted); word-break: break-all; }
-.result .row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
-.result .row .btn { background: var(--card); color: var(--text); border: 1px solid var(--line); padding: 12px 20px; border-radius: 10px; font-weight: 600; }
-.result .row .btn.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
-.next { max-width: 720px; margin: 44px auto 0; }
-.next h2 { font-size: 1.05rem; margin: 0 0 14px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
-.next .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-.next .tool { padding: 14px; }
-.next .ico { width: 40px; height: 40px; font-size: 19px; }
+.main-content { display: flex; justify-content: center; align-items: center; padding: 60px 20px; min-height: calc(100vh - 70px); }
+.container-box { background: white; padding: 50px 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); width: 100%; max-width: 650px; text-align: center; }
+h2 { color: var(--text); margin-bottom: 10px; font-size: 28px; font-weight: 700; }
+.desc { color: var(--muted); margin-bottom: 30px; font-size: 16px; }
+.upload-area { border: 2px dashed var(--line); border-radius: 12px; padding: 40px 20px; background: #f7fafc; transition: all 0.3s; cursor: pointer; }
+.upload-area:hover { border-color: var(--brand); background: #edf2f7; }
+.form-group { text-align: left; margin-top: 25px; padding: 20px; background: #f7fafc; border-radius: 8px; }
+.form-group label { display: block; font-weight: 600; color: var(--text); margin-bottom: 8px; font-size: 14px; }
+.form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 6px; font-size: 14px; font-family: inherit; }
+.form-group input:focus, .form-group select:focus { outline: none; border-color: var(--brand); }
+.form-group .hint { font-size: 12px; color: var(--muted); margin-top: 5px; }
+.submit-btn { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-size: 18px; font-weight: 600; cursor: pointer; margin-top: 30px; width: 100%; display: none; transition: all 0.3s; }
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(72, 187, 120, 0.4); }
+.back-link { display: inline-block; margin-top: 25px; color: var(--muted); text-decoration: none; font-size: 14px; }
+.back-link:hover { color: var(--brand); }
+.note { background: #fffaf0; border-left: 4px solid #ed8936; padding: 15px; margin-top: 20px; text-align: left; font-size: 13px; color: #744210; border-radius: 4px; }
 {% endblock %}
 
 {% block content %}
-<div class="crumbs">
-    <a href="/">All tools</a> › {{ tool.title }}
-</div>
+<div class="main-content">
+    <div class="container-box">
+        <h2>{{ tool.title }}</h2>
+        <p class="desc">{{ tool.desc }}</p>
 
-<div class="head">
-    <div class="ico">{{ tool.icon }}</div>
-    <h1>{{ tool.title }}</h1>
-    <p>{{ tool.desc }}</p>
-</div>
+        <form action="/{{ tool.slug }}" method="POST" enctype="multipart/form-data">
+            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                <div style="font-size: 48px; margin-bottom: 15px;"></div>
+                <p style="color: var(--text); font-weight: 600;">
+                    {% if tool.multiple %}Choose files or drop them here{% else %}Choose a file or drop it here{% endif %}
+                </p>
+                <p style="color: var(--muted); font-size: 13px; margin-top: 5px;">
+                    {{ tool.accept.replace(',', ', ') }} · up to {{ max_mb }} MB
+                </p>
+                <input type="file" id="fileInput" name="files" accept="{{ tool.accept }}" 
+                       {% if tool.multiple %}multiple{% endif %} required 
+                       style="display: none;" onchange="document.getElementById('submitBtn').style.display='block'">
+            </div>
 
-<div class="box">
-    <form id="toolForm" action="/{{ tool.slug }}" method="POST" enctype="multipart/form-data">
-        <label class="drop" id="dropZone">
-            <div class="big">📂</div>
-            <strong>{% if tool.multiple %}Choose files or drop them here{% else %}Choose a file or drop it here{% endif %}</strong>
-            <small>{{ tool.accept.replace(',', ', ') }} · up to {{ max_mb }} MB{% if tool.multiple %} in total{% endif %}</small>
-            <input type="file" name="files" class="sr" accept="{{ tool.accept }}" {% if tool.multiple %}multiple{% endif %} required>
-        </label>
-
-        <ul class="files" id="fileList"></ul>
-
-        {% if tool.fields %}
-        <div class="opts" id="optionsZone" style="display:none;">
-          {% for f in tool.fields %}
-          <div class="field">
-            <label for="{{ f.name }}">{{ f.label }} {% if f.required %}<span style="color:var(--err)">*</span>{% endif %}</label>
-            {% if f.type == 'select' %}
-            <select name="{{ f.name }}" id="{{ f.name }}" {% if f.required %}required{% endif %}>
-              {% for v, l in f.options %}
-              <option value="{{ v }}">{{ l }}</option>
-              {% endfor %}
-            </select>
-            {% else %}
-            <input type="{{ f.type }}" name="{{ f.name }}" id="{{ f.name }}" placeholder="{{ f.placeholder or '' }}" {% if f.required %}required{% endif %}>
+            {% if tool.fields %}
+            {% for f in tool.fields %}
+            <div class="form-group">
+                <label for="{{ f.name }}">{{ f.label }} {% if f.required %}<span style="color:red">*</span>{% endif %}</label>
+                {% if f.type == 'select' %}
+                    <select name="{{ f.name }}" id="{{ f.name }}" {% if f.required %}required{% endif %}>
+                        {% for val, label in f.options %}
+                            <option value="{{ val }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                {% else %}
+                    <input type="{{ f.type }}" name="{{ f.name }}" id="{{ f.name }}" 
+                           placeholder="{{ f.placeholder or '' }}" {% if f.required %}required{% endif %}>
+                {% endif %}
+                {% if f.hint %}<div class="hint">{{ f.hint }}</div>{% endif %}
+            </div>
+            {% endfor %}
             {% endif %}
-            {% if f.hint %}<small>{{ f.hint }}</small>{% endif %}
-          </div>
-          {% endfor %}
-        </div>
-        {% endif %}
 
-        <div class="actions">
-            <button type="submit" class="btn" id="submitBtn" disabled>{{ tool.button }} →</button>
-        </div>
-        
-        <div class="progress" id="progressBar">
-            <div class="bar" id="progressFill"></div>
-        </div>
-        <div class="status" id="statusText"></div>
+            {% if tool.note %}
+            <div class="note">⚠️ {{ tool.note }}</div>
+            {% endif %}
 
-        {% if tool.note %}
-        <div class="note">⚠️ {{ tool.note }}</div>
-        {% endif %}
-    </form>
+            <button type="submit" class="submit-btn" id="submitBtn">{{ tool.button }} →</button>
+        </form>
 
-    <div class="result" id="resultZone" style="display:none;">
-        <div class="ok">✓</div>
-        <h2>Success!</h2>
-        <p class="fn">Your {{ tool.label }} is ready! 🎉</p>
-        <div class="row">
-            <a href="#" class="btn primary" id="downloadBtn" download>⬇ Download again</a>
-            <a href="/{{ tool.slug }}" class="btn">Process another file</a>
-        </div>
-    </div>
-</div>
-
-<div class="next">
-    <h2>What next?</h2>
-    <div class="grid">
-      {% for t in related %}
-      <a href="/{{ t.slug }}" class="tool-card">
-        <div class="ico">{{ t.icon }}</div>
-        <h3>{{ t.title }}</h3>
-      </a>
-      {% endfor %}
+        <a href="/" class="back-link">← Back to Home</a>
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-const form = document.getElementById('toolForm');
-const dropZone = document.getElementById('dropZone');
-const fileInput = dropZone.querySelector('input[type="file"]');
-const fileList = document.getElementById('fileList');
-const optionsZone = document.getElementById('optionsZone');
-const submitBtn = document.getElementById('submitBtn');
-const progressBar = document.getElementById('progressBar');
-const progressFill = document.getElementById('progressFill');
-const statusText = document.getElementById('statusText');
-const resultZone = document.getElementById('resultZone');
-
-let filesArray = [];
-
-function updateFiles() {
-    fileList.innerHTML = '';
-    filesArray.forEach((file, index) => {
-        const li = document.createElement('li');
-        li.className = 'file';
-        li.innerHTML = `
-            <div class="thumb">${file.name.split('.').pop().toUpperCase().substring(0,4)}</div>
-            <div class="meta">
-                <b>${file.name}</b>
-                <span>${(file.size / 1024 / 1024).toFixed(2)} MB</span>
-            </div>
-            <div class="acts">
-                <button type="button" class="mini del" onclick="removeFile(${index})">✕</button>
-            </div>
-        `;
-        fileList.appendChild(li);
-    });
-    
-    if (filesArray.length > 0) {
-        submitBtn.disabled = false;
-        if (optionsZone) optionsZone.style.display = 'grid';
-    } else {
-        submitBtn.disabled = true;
-        if (optionsZone) optionsZone.style.display = 'none';
+    function showSubmit() {
+        document.getElementById('submitBtn').style.display = 'block';
     }
-}
-
-window.removeFile = function(index) {
-    filesArray.splice(index, 1);
-    updateFiles();
-};
-
-fileInput.addEventListener('change', (e) => {
-    const newFiles = Array.from(e.target.files);
-    {% if tool.multiple %}
-    filesArray = filesArray.concat(newFiles);
-    {% else %}
-    filesArray = newFiles.slice(0, 1);
-    {% endif %}
-    updateFiles();
-});
-
-['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-    dropZone.addEventListener(eventName, preventDefaults, false);
-});
-function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
-['dragenter', 'dragover'].forEach(eventName => {
-    dropZone.addEventListener(eventName, () => dropZone.classList.add('over'), false);
-});
-['dragleave', 'drop'].forEach(eventName => {
-    dropZone.addEventListener(eventName, () => dropZone.classList.remove('over'), false);
-});
-dropZone.addEventListener('drop', (e) => {
-    const dt = e.dataTransfer;
-    const newFiles = Array.from(dt.files);
-    {% if tool.multiple %}
-    filesArray = filesArray.concat(newFiles);
-    {% else %}
-    filesArray = newFiles.slice(0, 1);
-    {% endif %}
-    updateFiles();
-});
-
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    submitBtn.disabled = true;
-    progressBar.style.display = 'block';
-    progressFill.classList.add('busy');
-    statusText.textContent = 'Processing your file...';
-
-    const formData = new FormData(form);
-    formData.delete('files');
-    filesArray.forEach(f => formData.append('files', f));
-
-    try {
-        const response = await fetch(form.action, { method: 'POST', body: formData });
-        if (!response.ok) throw new Error(await response.text() || 'Processing failed');
-
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        
-        const disposition = response.headers.get('Content-Disposition');
-        let filename = 'processed_file';
-        if (disposition && disposition.includes('filename=')) {
-            filename = disposition.split('filename=')[1].replace(/["']/g, '');
-        } else {
-            filename = filesArray[0].name.replace(/\.[^/.]+$/, "") + "_processed." + filesArray[0].name.split('.').pop();
-        }
-        
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-
-        form.style.display = 'none';
-        resultZone.style.display = 'block';
-        document.getElementById('downloadBtn').href = url;
-        document.getElementById('downloadBtn').download = filename;
-        statusText.textContent = '';
-        
-    } catch (error) {
-        statusText.textContent = 'Error: ' + error.message;
-        statusText.style.color = 'var(--err)';
-        submitBtn.disabled = false;
-    } finally {
-        progressBar.style.display = 'none';
-        progressFill.classList.remove('busy');
-    }
-});
 </script>
 {% endblock %}
