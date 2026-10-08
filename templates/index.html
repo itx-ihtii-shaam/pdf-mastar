@@ -15,26 +15,6 @@
 .chip[aria-pressed=true] { background: var(--brand); border-color: var(--brand); color: #fff; }
 h2.sec { font-size: 1.05rem; margin: 0 0 14px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
 #recent { margin-bottom: 30px; }
-.demo { position: relative; width: 320px; height: 112px; margin: 0 auto 26px; }
-.pg { position: absolute; top: 12px; width: 64px; height: 84px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); display: grid; place-items: end center; padding-bottom: 10px; font-weight: 800; font-size: .7rem; color: var(--muted); overflow: hidden; }
-.pg::before { content: ""; position: absolute; left: 10px; right: 10px; top: 12px; height: 5px; border-radius: 3px; background: var(--accent); box-shadow: 0 11px 0 var(--line), 0 22px 0 var(--line), 0 33px 0 var(--line); }
-.pg.p1 { left: 0; --dx: 128px; --r: -9deg; --accent: #5b5bf0; animation: gather 5.5s ease-in-out infinite; }
-.pg.p2 { left: 38px; --dx: 90px; --r: 0deg; --accent: #0ea5e9; animation: gather 5.5s ease-in-out infinite; }
-.pg.p3 { left: 76px; --dx: 52px; --r: 9deg; --accent: #10b981; animation: gather 5.5s ease-in-out infinite; }
-.pg.out { left: 128px; top: 6px; width: 68px; height: 92px; background: linear-gradient(135deg, var(--brand), var(--brand2)); border: 0; color: #fff; font-size: .78rem; place-items: center; padding: 0; opacity: 0; animation: pop 5.5s ease-in-out infinite; }
-.pg.out::before { display: none; }
-@keyframes gather {
-  0% { opacity: 0; transform: translateX(0) rotate(var(--r)); }
-  10%, 26% { opacity: 1; transform: translateX(0) rotate(var(--r)); }
-  50%, 60% { opacity: 1; transform: translateX(var(--dx)) rotate(0); }
-  68%, 100% { opacity: 0; transform: translateX(var(--dx)) rotate(0) scale(.9); }
-}
-@keyframes pop {
-  0%, 58% { opacity: 0; transform: scale(.6); }
-  66% { opacity: 1; transform: scale(1.12); }
-  72%, 92% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: scale(1); }
-}
 .statbar { display: flex; gap: 18px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 16px 20px; margin-bottom: 26px; }
 .statbar .nums { display: flex; gap: 22px; flex-wrap: wrap; }
 .statbar .n b { display: block; font-size: 1.5rem; line-height: 1.1; }
@@ -96,23 +76,17 @@ function filterTools() {
     const query = searchInput.value.toLowerCase();
     let activeCat = document.querySelector('.chip[aria-pressed="true"]')?.dataset.cat || 'all';
     let visibleCount = 0;
-
     cards.forEach(card => {
         const title = card.dataset.title;
         const cat = card.dataset.cat;
-        const matchesSearch = title.includes(query);
-        const matchesCat = activeCat === 'all' || cat === activeCat;
-
-        if (matchesSearch && matchesCat) {
-            card.style.display = '';
-            visibleCount++;
+        if (title.includes(query) && (activeCat === 'all' || cat === activeCat)) {
+            card.style.display = ''; visibleCount++;
         } else {
             card.style.display = 'none';
         }
     });
     noResults.style.display = visibleCount === 0 ? 'block' : 'none';
 }
-
 searchInput.addEventListener('input', filterTools);
 chips.forEach(chip => {
     chip.addEventListener('click', () => {
@@ -122,10 +96,7 @@ chips.forEach(chip => {
     });
 });
 document.addEventListener('keydown', (e) => {
-    if (e.key === '/' && document.activeElement !== searchInput) {
-        e.preventDefault();
-        searchInput.focus();
-    }
+    if (e.key === '/' && document.activeElement !== searchInput) { e.preventDefault(); searchInput.focus(); }
 });
 </script>
 {% endblock %}
