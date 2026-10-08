@@ -27,7 +27,7 @@ def cleanup_old_files(folder, max_age_seconds=3600):
 def get_base_name(filename):
     return os.path.splitext(filename)[0]
 
-def convert_with_api(input_file, input_format, output_format, base_name):
+def process_conversion(input_file, input_format, output_format, base_name):
     cleanup_old_files(UPLOAD_FOLDER, 3600)
     cleanup_old_files(OUTPUT_FOLDER, 3600)
     
@@ -54,8 +54,17 @@ def convert_with_api(input_file, input_format, output_format, base_name):
                 output_path = os.path.join(OUTPUT_FOLDER, out_name)
                 with open(output_path, 'wb') as f:
                     f.write(download_response.content)
-                return send_file(output_path, as_attachment=True, download_name=out_name)
-    return f"API Error", 500
+                return out_name, True
+    return None, False
+
+@app.route('/download/<filename>')
+def download_file(filename):
+    if '..' in filename or not filename:
+        return "Invalid file", 400
+    file_path = os.path.join(OUTPUT_FOLDER, filename)
+    if os.path.exists(file_path):
+        return send_file(file_path, as_attachment=True)
+    return "File not found", 404
 
 @app.route('/')
 def home():
@@ -77,10 +86,10 @@ def merge_pdf():
             output_path = os.path.join(OUTPUT_FOLDER, out_name)
             merger.write(output_path)
             merger.close()
-            return send_file(output_path, as_attachment=True, download_name=out_name)
+            return render_template('tool.html', title="Merge PDF", action="/merge", accept=".pdf", multiple=True, success=True, download_filename=out_name, output_format="Merged PDF", button_text="Merge PDFs")
         except Exception as e:
             return f"Error: {str(e)}", 500
-    return render_template('tool.html', title="Merge PDF", action="/merge", accept=".pdf", multiple=True)
+    return render_template('tool.html', title="Merge PDF", action="/merge", accept=".pdf", multiple=True, button_text="Merge PDFs")
 
 @app.route('/split', methods=['GET', 'POST'])
 def split_pdf():
@@ -104,10 +113,10 @@ def split_pdf():
                         writer.write(f)
                     zipf.write(temp_pdf, f"page_{i+1}.pdf")
                     os.remove(temp_pdf)
-            return send_file(zip_path, as_attachment=True, download_name=out_name)
+            return render_template('tool.html', title="Split PDF", action="/split", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Split PDFs (ZIP)", button_text="Split PDF")
         except Exception as e:
             return f"Error: {str(e)}", 500
-    return render_template('tool.html', title="Split PDF", action="/split", accept=".pdf", multiple=False)
+    return render_template('tool.html', title="Split PDF", action="/split", accept=".pdf", multiple=False, button_text="Split PDF")
 
 @app.route('/compress', methods=['GET', 'POST'])
 def compress_pdf():
@@ -127,114 +136,153 @@ def compress_pdf():
             output_path = os.path.join(OUTPUT_FOLDER, out_name)
             with open(output_path, 'wb') as f:
                 writer.write(f)
-            return send_file(output_path, as_attachment=True, download_name=out_name)
+            return render_template('tool.html', title="Compress PDF", action="/compress", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Compressed PDF", button_text="Compress PDF")
         except Exception as e:
             return f"Error: {str(e)}", 500
-    return render_template('tool.html', title="Compress PDF", action="/compress", accept=".pdf", multiple=False)
+    return render_template('tool.html', title="Compress PDF", action="/compress", accept=".pdf", multiple=False, button_text="Compress PDF")
 
 @app.route('/pdf-to-word', methods=['GET', 'POST'])
 def pdf_to_word():
     if request.method == 'POST':
         file = request.files.get('pdf_file')
         if not file: return "No file selected", 400
-        return convert_with_api(file, 'pdf', 'docx', get_base_name(file.filename))
-    return render_template('tool.html', title="PDF to Word", action="/pdf-to-word", accept=".pdf", multiple=False)
+        out_name, success = process_conversion(file, 'pdf', 'docx', get_base_name(file.filename))
+        if success:
+            return render_template('tool.html', title="PDF to Word", action="/pdf-to-word", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Word Document", button_text="Convert to Word")
+        return "Conversion failed. Please try again.", 500
+    return render_template('tool.html', title="PDF to Word", action="/pdf-to-word", accept=".pdf", multiple=False, button_text="Convert to Word")
 
 @app.route('/word-to-pdf', methods=['GET', 'POST'])
 def word_to_pdf():
     if request.method == 'POST':
         file = request.files.get('pdf_file')
         if not file: return "No file selected", 400
-        return convert_with_api(file, 'docx', 'pdf', get_base_name(file.filename))
-    return render_template('tool.html', title="Word to PDF", action="/word-to-pdf", accept=".docx,.doc", multiple=False)
+        out_name, success = process_conversion(file, 'docx', 'pdf', get_base_name(file.filename))
+        if success:
+            return render_template('tool.html', title="Word to PDF", action="/word-to-pdf", accept=".docx,.doc", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF")
+        return "Conversion failed. Please try again.", 500
+    return render_template('tool.html', title="Word to PDF", action="/word-to-pdf", accept=".docx,.doc", multiple=False, button_text="Convert to PDF")
 
 @app.route('/jpg-to-pdf', methods=['GET', 'POST'])
 def jpg_to_pdf():
     if request.method == 'POST':
         file = request.files.get('pdf_file')
         if not file: return "No file selected", 400
-        return convert_with_api(file, 'jpg', 'pdf', get_base_name(file.filename))
-    return render_template('tool.html', title="JPG to PDF", action="/jpg-to-pdf", accept=".jpg,.jpeg,.png", multiple=False)
+        out_name, success = process_conversion(file, 'jpg', 'pdf', get_base_name(file.filename))
+        if success:
+            return render_template('tool.html', title="JPG to PDF", action="/jpg-to-pdf", accept=".jpg,.jpeg,.png", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF")
+        return "Conversion failed. Please try again.", 500
+    return render_template('tool.html', title="JPG to PDF", action="/jpg-to-pdf", accept=".jpg,.jpeg,.png", multiple=False, button_text="Convert to PDF")
 
 @app.route('/pdf-to-jpg', methods=['GET', 'POST'])
 def pdf_to_jpg():
     if request.method == 'POST':
         file = request.files.get('pdf_file')
         if not file: return "No file selected", 400
-        return convert_with_api(file, 'pdf', 'jpg', get_base_name(file.filename))
-    return render_template('tool.html', title="PDF to JPG", action="/pdf-to-jpg", accept=".pdf", multiple=False)
+        out_name, success = process_conversion(file, 'pdf', 'jpg', get_base_name(file.filename))
+        if success:
+            return render_template('tool.html', title="PDF to JPG", action="/pdf-to-jpg", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="JPG Images", button_text="Convert to JPG")
+        return "Conversion failed. Please try again.", 500
+    return render_template('tool.html', title="PDF to JPG", action="/pdf-to-jpg", accept=".pdf", multiple=False, button_text="Convert to JPG")
 
 @app.route('/excel-to-pdf', methods=['GET', 'POST'])
 def excel_to_pdf():
     if request.method == 'POST':
         file = request.files.get('pdf_file')
         if not file: return "No file selected", 400
-        return convert_with_api(file, 'xlsx', 'pdf', get_base_name(file.filename))
-    return render_template('tool.html', title="Excel to PDF", action="/excel-to-pdf", accept=".xlsx,.xls", multiple=False)
+        out_name, success = process_conversion(file, 'xlsx', 'pdf', get_base_name(file.filename))
+        if success:
+            return render_template('tool.html', title="Excel to PDF", action="/excel-to-pdf", accept=".xlsx,.xls", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF")
+        return "Conversion failed. Please try again.", 500
+    return render_template('tool.html', title="Excel to PDF", action="/excel-to-pdf", accept=".xlsx,.xls", multiple=False, button_text="Convert to PDF")
 
 @app.route('/pdf-to-excel', methods=['GET', 'POST'])
 def pdf_to_excel():
     if request.method == 'POST':
         file = request.files.get('pdf_file')
         if not file: return "No file selected", 400
-        return convert_with_api(file, 'pdf', 'xlsx', get_base_name(file.filename))
-    return render_template('tool.html', title="PDF to Excel", action="/pdf-to-excel", accept=".pdf", multiple=False)
+        out_name, success = process_conversion(file, 'pdf', 'xlsx', get_base_name(file.filename))
+        if success:
+            return render_template('tool.html', title="PDF to Excel", action="/pdf-to-excel", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Excel Spreadsheet", button_text="Convert to Excel")
+        return "Conversion failed. Please try again.", 500
+    return render_template('tool.html', title="PDF to Excel", action="/pdf-to-excel", accept=".pdf", multiple=False, button_text="Convert to Excel")
 
 @app.route('/pdf-to-powerpoint', methods=['GET', 'POST'])
 def pdf_to_powerpoint():
     if request.method == 'POST':
         file = request.files.get('pdf_file')
         if not file: return "No file selected", 400
-        return convert_with_api(file, 'pdf', 'pptx', get_base_name(file.filename))
-    return render_template('tool.html', title="PDF to PowerPoint", action="/pdf-to-powerpoint", accept=".pdf", multiple=False)
+        out_name, success = process_conversion(file, 'pdf', 'pptx', get_base_name(file.filename))
+        if success:
+            return render_template('tool.html', title="PDF to PowerPoint", action="/pdf-to-powerpoint", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="PowerPoint Presentation", button_text="Convert to PowerPoint")
+        return "Conversion failed. Please try again.", 500
+    return render_template('tool.html', title="PDF to PowerPoint", action="/pdf-to-powerpoint", accept=".pdf", multiple=False, button_text="Convert to PowerPoint")
 
 @app.route('/powerpoint-to-pdf', methods=['GET', 'POST'])
 def powerpoint_to_pdf():
     if request.method == 'POST':
         file = request.files.get('pdf_file')
         if not file: return "No file selected", 400
-        return convert_with_api(file, 'pptx', 'pdf', get_base_name(file.filename))
-    return render_template('tool.html', title="PowerPoint to PDF", action="/powerpoint-to-pdf", accept=".pptx,.ppt", multiple=False)
+        out_name, success = process_conversion(file, 'pptx', 'pdf', get_base_name(file.filename))
+        if success:
+            return render_template('tool.html', title="PowerPoint to PDF", action="/powerpoint-to-pdf", accept=".pptx,.ppt", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF")
+        return "Conversion failed. Please try again.", 500
+    return render_template('tool.html', title="PowerPoint to PDF", action="/powerpoint-to-pdf", accept=".pptx,.ppt", multiple=False, button_text="Convert to PDF")
 
 @app.route('/pdf-to-png', methods=['GET', 'POST'])
 def pdf_to_png():
     if request.method == 'POST':
         file = request.files.get('pdf_file')
         if not file: return "No file selected", 400
-        return convert_with_api(file, 'pdf', 'png', get_base_name(file.filename))
-    return render_template('tool.html', title="PDF to PNG", action="/pdf-to-png", accept=".pdf", multiple=False)
+        out_name, success = process_conversion(file, 'pdf', 'png', get_base_name(file.filename))
+        if success:
+            return render_template('tool.html', title="PDF to PNG", action="/pdf-to-png", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="PNG Images", button_text="Convert to PNG")
+        return "Conversion failed. Please try again.", 500
+    return render_template('tool.html', title="PDF to PNG", action="/pdf-to-png", accept=".pdf", multiple=False, button_text="Convert to PNG")
 
 @app.route('/rotate-pdf', methods=['GET', 'POST'])
 def rotate_pdf():
     if request.method == 'POST':
         file = request.files.get('pdf_file')
         if not file: return "No file selected", 400
-        return convert_with_api(file, 'pdf', 'pdf', get_base_name(file.filename))
-    return render_template('tool.html', title="Rotate PDF", action="/rotate-pdf", accept=".pdf", multiple=False)
+        out_name, success = process_conversion(file, 'pdf', 'pdf', get_base_name(file.filename))
+        if success:
+            return render_template('tool.html', title="Rotate PDF", action="/rotate-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Rotated PDF", button_text="Rotate PDF")
+        return "Conversion failed. Please try again.", 500
+    return render_template('tool.html', title="Rotate PDF", action="/rotate-pdf", accept=".pdf", multiple=False, button_text="Rotate PDF")
 
 @app.route('/protect-pdf', methods=['GET', 'POST'])
 def protect_pdf():
     if request.method == 'POST':
         file = request.files.get('pdf_file')
         if not file: return "No file selected", 400
-        return convert_with_api(file, 'pdf', 'pdf', get_base_name(file.filename))
-    return render_template('tool.html', title="Protect PDF", action="/protect-pdf", accept=".pdf", multiple=False)
+        out_name, success = process_conversion(file, 'pdf', 'pdf', get_base_name(file.filename))
+        if success:
+            return render_template('tool.html', title="Protect PDF", action="/protect-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Protected PDF", button_text="Protect PDF")
+        return "Conversion failed. Please try again.", 500
+    return render_template('tool.html', title="Protect PDF", action="/protect-pdf", accept=".pdf", multiple=False, button_text="Protect PDF")
 
 @app.route('/unlock-pdf', methods=['GET', 'POST'])
 def unlock_pdf():
     if request.method == 'POST':
         file = request.files.get('pdf_file')
         if not file: return "No file selected", 400
-        return convert_with_api(file, 'pdf', 'pdf', get_base_name(file.filename))
-    return render_template('tool.html', title="Unlock PDF", action="/unlock-pdf", accept=".pdf", multiple=False)
+        out_name, success = process_conversion(file, 'pdf', 'pdf', get_base_name(file.filename))
+        if success:
+            return render_template('tool.html', title="Unlock PDF", action="/unlock-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Unlocked PDF", button_text="Unlock PDF")
+        return "Conversion failed. Please try again.", 500
+    return render_template('tool.html', title="Unlock PDF", action="/unlock-pdf", accept=".pdf", multiple=False, button_text="Unlock PDF")
 
 @app.route('/organize-pdf', methods=['GET', 'POST'])
 def organize_pdf():
     if request.method == 'POST':
         file = request.files.get('pdf_file')
         if not file: return "No file selected", 400
-        return convert_with_api(file, 'pdf', 'pdf', get_base_name(file.filename))
-    return render_template('tool.html', title="Organize PDF", action="/organize-pdf", accept=".pdf", multiple=False)
+        out_name, success = process_conversion(file, 'pdf', 'pdf', get_base_name(file.filename))
+        if success:
+            return render_template('tool.html', title="Organize PDF", action="/organize-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Organized PDF", button_text="Organize PDF")
+        return "Conversion failed. Please try again.", 500
+    return render_template('tool.html', title="Organize PDF", action="/organize-pdf", accept=".pdf", multiple=False, button_text="Organize PDF")
 
-# Vercel ke liye handler - ye line sab se zaroori hai
+# Vercel ke liye handler
 handler = app
