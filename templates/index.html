@@ -1,196 +1,131 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23e74c3c'/%3E%3Cstop offset='100%25' stop-color='%232980b9'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M25 15 L70 15 L85 30 L85 95 L25 95 Z' fill='none' stroke='url(%23grad)' stroke-width='5' stroke-linejoin='round'/%3E%3Cpath d='M70 15 L70 30 L85 30' fill='none' stroke='url(%23grad)' stroke-width='5' stroke-linejoin='round'/%3E%3Crect x='20' y='50' width='45' height='22' rx='4' fill='url(%23grad)'/%3E%3Ctext x='42' y='66' font-family='Arial Black, Arial' font-size='16' font-weight='900' fill='white' text-anchor='middle'%3EPDF%3C/text%3E%3Ccircle cx='78' cy='82' r='14' fill='url(%23grad)'/%3E%3Ccircle cx='78' cy='82' r='5' fill='white'/%3E%3Cpath d='M78 68 L78 72 M78 92 L78 96 M64 82 L68 82 M88 82 L92 82 M68 72 L71 75 M85 89 L88 92 M68 92 L71 89 M85 75 L88 72' stroke='url(%23grad)' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- SEO Meta Tags -->
-    <title>PDF MASTAR - Free Online PDF Tools | Convert, Merge, Split</title>
-    <meta name="description" content="PDF MASTAR - 100% Free online PDF tools. Convert PDF to Word, Excel, JPG. Merge, split, compress PDF files instantly. No signup required.">
-    <meta name="keywords" content="pdf mastar, pdf master, pdf to word free, merge pdf online, split pdf, compress pdf, free pdf converter, ihtisham pdf tools">
-    <meta name="author" content="Ihtisham">
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content="PDF MASTAR - Free PDF Tools">
-    <meta property="og:description" content="Best free online PDF tools. Convert PDF to Word, Excel, and more.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://ihtisham.pythonanywhere.com">
+{% extends "base.html" %}
 
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; }
-        
-        /* Navbar */
-        .navbar { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 0 40px; position: sticky; top: 0; z-index: 1000; }
-        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 70px; }
-        .logo { font-size: 22px; font-weight: 900; text-decoration: none; display: flex; align-items: center; gap: 5px; }
-        .nav-menu { display: flex; list-style: none; gap: 0; }
-        .nav-item { position: relative; }
-        .nav-link { display: block; padding: 25px 18px; text-decoration: none; color: #4a5568; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.3s; }
-        .nav-link:hover { color: #e74c3c; }
-        
-        /* Mega Menu */
-        .mega-menu { position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(-10px); background: white; box-shadow: 0 15px 50px rgba(0,0,0,0.15); border-radius: 10px; padding: 25px 30px; opacity: 0; visibility: hidden; transition: all 0.3s; min-width: 700px; }
-        .nav-item:hover .mega-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
-        .mega-menu-columns { display: flex; gap: 40px; }
-        .mega-column { flex: 1; min-width: 200px; }
-        .mega-column-title { font-size: 11px; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #edf2f7; }
-        .mega-item { display: flex; align-items: center; gap: 12px; padding: 10px 8px; text-decoration: none; color: #2d3748; font-size: 14px; font-weight: 500; border-radius: 6px; transition: all 0.2s; }
-        .mega-item:hover { background: #f7fafc; color: #e74c3c; padding-left: 12px; }
-        .mega-icon { font-size: 18px; width: 24px; text-align: center; }
-        .mega-menu-large { min-width: 1100px; padding: 30px 35px; }
-        .mega-menu-large .mega-menu-columns { gap: 30px; flex-wrap: wrap; }
-        .mega-menu-large .mega-column { min-width: 180px; flex: 1 1 180px; }
+{% block css %}
+.hero { text-align: center; padding: 56px 0 28px; }
+.hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.12; margin: 0 0 12px; letter-spacing: -.02em; }
+.hero h1 span { background: linear-gradient(135deg, var(--brand), var(--brand2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero p { color: var(--muted); font-size: 1.1rem; margin: 0 auto 24px; max-width: 560px; }
+.search { max-width: 520px; margin: 0 auto; position: relative; }
+.search input { width: 100%; padding: 16px 18px 16px 48px; border-radius: 16px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-size: 1rem; box-shadow: var(--shadow); font-family: inherit; }
+.search input:focus { outline: none; border-color: var(--brand); }
+.search .s { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); font-size: 18px; opacity: .6; }
+.search kbd { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px; color: var(--muted); font-size: .8rem; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 22px 0 26px; }
+.chip { border: 1px solid var(--line); background: var(--card); color: var(--text); padding: 8px 16px; border-radius: 99px; cursor: pointer; font-weight: 600; font-size: .9rem; font-family: inherit; }
+.chip[aria-pressed=true] { background: var(--brand); border-color: var(--brand); color: #fff; }
+h2.sec { font-size: 1.05rem; margin: 0 0 14px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+#recent { margin-bottom: 30px; }
+.demo { position: relative; width: 320px; height: 112px; margin: 0 auto 26px; }
+.pg { position: absolute; top: 12px; width: 64px; height: 84px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); display: grid; place-items: end center; padding-bottom: 10px; font-weight: 800; font-size: .7rem; color: var(--muted); overflow: hidden; }
+.pg::before { content: ""; position: absolute; left: 10px; right: 10px; top: 12px; height: 5px; border-radius: 3px; background: var(--accent); box-shadow: 0 11px 0 var(--line), 0 22px 0 var(--line), 0 33px 0 var(--line); }
+.pg.p1 { left: 0; --dx: 128px; --r: -9deg; --accent: #5b5bf0; animation: gather 5.5s ease-in-out infinite; }
+.pg.p2 { left: 38px; --dx: 90px; --r: 0deg; --accent: #0ea5e9; animation: gather 5.5s ease-in-out infinite; }
+.pg.p3 { left: 76px; --dx: 52px; --r: 9deg; --accent: #10b981; animation: gather 5.5s ease-in-out infinite; }
+.pg.out { left: 128px; top: 6px; width: 68px; height: 92px; background: linear-gradient(135deg, var(--brand), var(--brand2)); border: 0; color: #fff; font-size: .78rem; place-items: center; padding: 0; opacity: 0; animation: pop 5.5s ease-in-out infinite; }
+.pg.out::before { display: none; }
+@keyframes gather {
+  0% { opacity: 0; transform: translateX(0) rotate(var(--r)); }
+  10%, 26% { opacity: 1; transform: translateX(0) rotate(var(--r)); }
+  50%, 60% { opacity: 1; transform: translateX(var(--dx)) rotate(0); }
+  68%, 100% { opacity: 0; transform: translateX(var(--dx)) rotate(0) scale(.9); }
+}
+@keyframes pop {
+  0%, 58% { opacity: 0; transform: scale(.6); }
+  66% { opacity: 1; transform: scale(1.12); }
+  72%, 92% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1); }
+}
+.statbar { display: flex; gap: 18px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 16px 20px; margin-bottom: 26px; }
+.statbar .nums { display: flex; gap: 22px; flex-wrap: wrap; }
+.statbar .n b { display: block; font-size: 1.5rem; line-height: 1.1; }
+.statbar .n span { color: var(--muted); font-size: .82rem; }
+.empty { text-align: center; color: var(--muted); padding: 40px 0; }
+{% endblock %}
 
-        /* Hero Section */
-        .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; padding: 80px 20px; }
-        .hero h1 { font-size: 42px; margin-bottom: 15px; font-weight: 800; }
-        .hero p { font-size: 18px; opacity: 0.9; max-width: 600px; margin: 0 auto; }
-
-        /* Tools Grid */
-        .tools-section { max-width: 1200px; margin: -40px auto 60px; padding: 0 20px; position: relative; z-index: 10; }
-        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; }
-        .tool-card { background: white; border-radius: 12px; padding: 30px 20px; text-align: center; text-decoration: none; color: #2d3748; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: all 0.3s ease; border: 1px solid #edf2f7; }
-        .tool-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-color: #667eea; }
-        .tool-icon { font-size: 40px; margin-bottom: 15px; display: inline-block; }
-        .tool-card h3 { font-size: 18px; margin-bottom: 10px; font-weight: 700; }
-        .tool-card p { font-size: 14px; color: #718096; line-height: 1.5; }
-
-        /* SEO Section */
-        .seo-section { background: white; padding: 60px 20px; text-align: center; }
-        .seo-container { max-width: 900px; margin: 0 auto; }
-        .seo-section h2 { font-size: 32px; color: #2d3748; margin-bottom: 20px; }
-        .seo-section p { font-size: 16px; color: #4a5568; line-height: 1.8; margin-bottom: 20px; }
-        .features-list { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 40px; }
-        .feature-item { flex: 1; min-width: 250px; padding: 20px; }
-        .feature-item h4 { color: #e74c3c; margin-bottom: 10px; font-size: 18px; }
-
-        footer { background: #2d3748; color: #a0aec0; text-align: center; padding: 30px 20px; font-size: 14px; }
-        footer a { color: white; text-decoration: none; }
-
-        @media (max-width: 900px) { .nav-menu { display: none; } .hero h1 { font-size: 32px; } }
-    </style>
-</head>
-<body>
-
-    <nav class="navbar">
-        <div class="nav-container">
-             <a href="/" class="logo">
-    <span style="font-weight: 900; color: #2d3748; font-size: 24px;">PDF <span style="color: #e74c3c;">MASTAR</span></span>
-</a>
-            <ul class="nav-menu">
-                <li class="nav-item"><a href="/merge" class="nav-link">Merge PDF</a></li>
-                <li class="nav-item"><a href="/split" class="nav-link">Split PDF</a></li>
-                <li class="nav-item"><a href="/compress" class="nav-link">Compress PDF</a></li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">Convert PDF ▾</a>
-                    <div class="mega-menu">
-                        <div class="mega-menu-columns">
-                            <div class="mega-column">
-                                <div class="mega-column-title">Convert to PDF</div>
-                                <a href="/jpg-to-pdf" class="mega-item"><span class="mega-icon">️</span> JPG to PDF</a>
-                                <a href="/word-to-pdf" class="mega-item"><span class="mega-icon">📝</span> Word to PDF</a>
-                                <a href="/powerpoint-to-pdf" class="mega-item"><span class="mega-icon">📊</span> PowerPoint to PDF</a>
-                                <a href="/excel-to-pdf" class="mega-item"><span class="mega-icon">📈</span> Excel to PDF</a>
-                            </div>
-                            <div class="mega-column">
-                                <div class="mega-column-title">Convert from PDF</div>
-                                <a href="/pdf-to-jpg" class="mega-item"><span class="mega-icon">🖼️</span> PDF to JPG</a>
-                                <a href="/pdf-to-word" class="mega-item"><span class="mega-icon">📝</span> PDF to Word</a>
-                                <a href="/pdf-to-powerpoint" class="mega-item"><span class="mega-icon">📊</span> PDF to PowerPoint</a>
-                                <a href="/pdf-to-excel" class="mega-item"><span class="mega-icon">📈</span> PDF to Excel</a>
-                                <a href="/pdf-to-png" class="mega-item"><span class="mega-icon">🎨</span> PDF to PNG</a>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">All PDF Tools ▾</a>
-                    <div class="mega-menu mega-menu-large">
-                        <div class="mega-menu-columns">
-                            <div class="mega-column">
-                                <div class="mega-column-title">Organize PDF</div>
-                                <a href="/merge" class="mega-item"><span class="mega-icon">➕</span> Merge PDF</a>
-                                <a href="/split" class="mega-item"><span class="mega-icon">️</span> Split PDF</a>
-                                <a href="/organize-pdf" class="mega-item"><span class="mega-icon">📑</span> Organize PDF</a>
-                            </div>
-                            <div class="mega-column">
-                                <div class="mega-column-title">Optimize PDF</div>
-                                <a href="/compress" class="mega-item"><span class="mega-icon">🗜️</span> Compress PDF</a>
-                            </div>
-                            <div class="mega-column">
-                                <div class="mega-column-title">Convert to PDF</div>
-                                <a href="/jpg-to-pdf" class="mega-item"><span class="mega-icon">🖼️</span> JPG to PDF</a>
-                                <a href="/word-to-pdf" class="mega-item"><span class="mega-icon"></span> Word to PDF</a>
-                                <a href="/excel-to-pdf" class="mega-item"><span class="mega-icon">📈</span> Excel to PDF</a>
-                                <a href="/powerpoint-to-pdf" class="mega-item"><span class="mega-icon">📊</span> PowerPoint to PDF</a>
-                            </div>
-                            <div class="mega-column">
-                                <div class="mega-column-title">Convert from PDF</div>
-                                <a href="/pdf-to-word" class="mega-item"><span class="mega-icon">📝</span> PDF to Word</a>
-                                <a href="/pdf-to-excel" class="mega-item"><span class="mega-icon">📈</span> PDF to Excel</a>
-                                <a href="/pdf-to-powerpoint" class="mega-item"><span class="mega-icon">📊</span> PDF to PPT</a>
-                                <a href="/pdf-to-jpg" class="mega-item"><span class="mega-icon">🖼️</span> PDF to JPG</a>
-                                <a href="/pdf-to-png" class="mega-item"><span class="mega-icon">🎨</span> PDF to PNG</a>
-                            </div>
-                            <div class="mega-column">
-                                <div class="mega-column-title">Edit PDF</div>
-                                <a href="/rotate-pdf" class="mega-item"><span class="mega-icon">🔄</span> Rotate PDF</a>
-                            </div>
-                            <div class="mega-column">
-                                <div class="mega-column-title">PDF Security</div>
-                                <a href="/protect-pdf" class="mega-item"><span class="mega-icon">🔒</span> Protect PDF</a>
-                                <a href="/unlock-pdf" class="mega-item"><span class="mega-icon">🔓</span> Unlock PDF</a>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-    <div class="hero">
-        <h1>PDF MASTAR - Every tool you need to work with PDFs</h1>
-        <p>100% Free. No signup required. Merge, split, compress, convert, rotate, unlock and watermark PDFs with just a few clicks.</p>
+{% block content %}
+<div class="hero">
+    <h1><span>PDF MASTAR</span></h1>
+    <p>Every PDF tool you need, in one place. Merge, split, compress, convert and protect your PDFs in seconds. Free, fast and no sign-up.</p>
+    <div class="search">
+        <span class="s">🔍</span>
+        <input type="text" id="search" placeholder="Search tools (e.g., merge, word)..." autocomplete="off">
+        <kbd>/</kbd>
     </div>
-
-    <div class="tools-section">
-        <div class="tools-grid">
-            <a href="/merge" class="tool-card"><span class="tool-icon">➕</span><h3>Merge PDF</h3><p>Combine PDFs in the order you want with the easiest PDF merger available.</p></a>
-            <a href="/split" class="tool-card"><span class="tool-icon">✂️</span><h3>Split PDF</h3><p>Separate one page or a whole set for easy conversion into independent PDF files.</p></a>
-            <a href="/compress" class="tool-card"><span class="tool-icon">🗜️</span><h3>Compress PDF</h3><p>Reduce file size while optimizing for maximal PDF quality.</p></a>
-            <a href="/pdf-to-word" class="tool-card"><span class="tool-icon">📝</span><h3>PDF to Word</h3><p>Easily convert your PDF files into easy to edit DOC and DOCX documents.</p></a>
-            <a href="/word-to-pdf" class="tool-card"><span class="tool-icon">📄</span><h3>Word to PDF</h3><p>Make DOC and DOCX files easy to read by converting them to PDF.</p></a>
-            <a href="/pdf-to-jpg" class="tool-card"><span class="tool-icon">🖼️</span><h3>PDF to JPG</h3><p>Convert each PDF page into a JPG or extract all images contained in a PDF.</p></a>
-            <a href="/jpg-to-pdf" class="tool-card"><span class="tool-icon">📸</span><h3>JPG to PDF</h3><p>Convert JPG images to PDF in seconds. Easily adjust orientation and margins.</p></a>
-            <a href="/excel-to-pdf" class="tool-card"><span class="tool-icon">📊</span><h3>Excel to PDF</h3><p>Make EXCEL spreadsheets easy to read by converting them to PDF.</p></a>
-            <a href="/pdf-to-excel" class="tool-card"><span class="tool-icon">📈</span><h3>PDF to Excel</h3><p>Pull data straight from PDFs into Excel spreadsheets in a few short seconds.</p></a>
-            <a href="/pdf-to-powerpoint" class="tool-card"><span class="tool-icon">🎞️</span><h3>PDF to PowerPoint</h3><p>Turn your PDF files into easy to edit PPT and PPTX slideshows.</p></a>
-            <a href="/powerpoint-to-pdf" class="tool-card"><span class="tool-icon">📽️</span><h3>PowerPoint to PDF</h3><p>Make PPT and PPTX slideshows easy to view by converting them to PDF.</p></a>
-            <a href="/pdf-to-png" class="tool-card"><span class="tool-icon">🎨</span><h3>PDF to PNG</h3><p>Convert each PDF page into a PNG image with high quality.</p></a>
-            <a href="/rotate-pdf" class="tool-card"><span class="tool-icon">🔄</span><h3>Rotate PDF</h3><p>Rotate your PDFs the way you need them. You can even rotate multiple PDFs at once!</p></a>
-            <a href="/protect-pdf" class="tool-card"><span class="tool-icon">🔒</span><h3>Protect PDF</h3><p>Protect PDF files with a password. Encrypt PDF documents to prevent unauthorized access.</p></a>
-            <a href="/unlock-pdf" class="tool-card"><span class="tool-icon">🔓</span><h3>Unlock PDF</h3><p>Remove PDF password security, giving you the freedom to use your PDFs as you want.</p></a>
-            <a href="/organize-pdf" class="tool-card"><span class="tool-icon">📑</span><h3>Organize PDF</h3><p>Sort pages of your PDF file however you like. Delete PDF pages or add PDF pages.</p></a>
-        </div>
+    <div class="chips" id="chips">
+      {% for key, label in cats %}
+      <button class="chip" data-cat="{{ key }}" aria-pressed="{{ 'true' if key == 'all' else 'false' }}">{{ label }}</button>
+      {% endfor %}
     </div>
+</div>
 
-    <div class="seo-section">
-        <div class="seo-container">
-            <h2>The Best Free Online PDF Tools by PDF MASTAR</h2>
-            <p>Welcome to PDF MASTAR, the ultimate destination for all your PDF needs. Our platform offers a comprehensive suite of tools designed to make working with PDF documents effortless. Whether you need to convert PDF to Word, merge multiple files, split large documents, or compress files for easy sharing, we have got you covered. All our tools are 100% free, secure, and require no software installation or signup.</p>
-            <div class="features-list">
-                <div class="feature-item"><h4> Fast & Easy</h4><p>Process your files in seconds with our optimized cloud servers. No waiting, no hassle.</p></div>
-                <div class="feature-item"><h4> 100% Secure</h4><p>Your privacy matters. All uploaded files are automatically deleted from our servers after 1 hour.</p></div>
-                <div class="feature-item"><h4>💸 Completely Free</h4><p>Enjoy unlimited access to all premium PDF tools without paying a single penny. No hidden charges.</p></div>
-            </div>
-        </div>
+<div class="statbar">
+    <div class="nums">
+        <div class="n"><b id="streak">0</b><span>day streak 🔥</span></div>
+        <div class="n"><b id="processed">0</b><span>files processed on this device</span></div>
     </div>
+</div>
 
-    <footer>
-        <p>&copy; 2026 PDF MASTAR. All rights reserved. | <a href="/">Home</a></p>
-    </footer>
+<div id="recent" style="display:none;">
+    <h2 class="sec">Recently used</h2>
+    <div class="tools-grid" id="recent-grid"></div>
+</div>
 
-</body>
-</html>
+<div>
+    <h2 class="sec">All tools</h2>
+    <div class="tools-grid" id="tools-grid">
+      {% for t in tools %}
+      <a href="/{{ t.slug }}" class="tool-card" data-cat="{{ t.cat }}" data-title="{{ t.title | lower }}">
+        <div class="ico">{{ t.icon }}</div>
+        <h3>{{ t.title }}</h3>
+        <p>{{ t.desc }}</p>
+      </a>
+      {% endfor %}
+    </div>
+    <div class="empty" id="no-results" style="display:none;">No tool matches your search. Try another word.</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const searchInput = document.getElementById('search');
+const chips = document.querySelectorAll('.chip');
+const cards = document.querySelectorAll('.tool-card');
+const noResults = document.getElementById('no-results');
+
+function filterTools() {
+    const query = searchInput.value.toLowerCase();
+    let activeCat = document.querySelector('.chip[aria-pressed="true"]')?.dataset.cat || 'all';
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+        const title = card.dataset.title;
+        const cat = card.dataset.cat;
+        const matchesSearch = title.includes(query);
+        const matchesCat = activeCat === 'all' || cat === activeCat;
+
+        if (matchesSearch && matchesCat) {
+            card.style.display = '';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+    noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+}
+
+searchInput.addEventListener('input', filterTools);
+chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+        chips.forEach(c => c.setAttribute('aria-pressed', 'false'));
+        chip.setAttribute('aria-pressed', 'true');
+        filterTools();
+    });
+});
+document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+    }
+});
+</script>
+{% endblock %}
