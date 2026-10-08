@@ -76,14 +76,14 @@
                                 <a href="/jpg-to-pdf" class="mega-item"><span class="mega-icon">🖼️</span> JPG to PDF</a>
                                 <a href="/word-to-pdf" class="mega-item"><span class="mega-icon">📝</span> Word to PDF</a>
                                 <a href="/powerpoint-to-pdf" class="mega-item"><span class="mega-icon">📊</span> PowerPoint to PDF</a>
-                                <a href="/excel-to-pdf" class="mega-item"><span class="mega-icon">📈</span> Excel to PDF</a>
+                                <a href="/excel-to-pdf" class="mega-item"><span class="mega-icon"></span> Excel to PDF</a>
                             </div>
                             <div class="mega-column">
                                 <div class="mega-column-title">Convert from PDF</div>
                                 <a href="/pdf-to-jpg" class="mega-item"><span class="mega-icon">🖼️</span> PDF to JPG</a>
                                 <a href="/pdf-to-word" class="mega-item"><span class="mega-icon">📝</span> PDF to Word</a>
                                 <a href="/pdf-to-powerpoint" class="mega-item"><span class="mega-icon">📊</span> PDF to PowerPoint</a>
-                                <a href="/pdf-to-excel" class="mega-item"><span class="mega-icon">📈</span> PDF to Excel</a>
+                                <a href="/pdf-to-excel" class="mega-item"><span class="mega-icon"></span> PDF to Excel</a>
                                 <a href="/pdf-to-png" class="mega-item"><span class="mega-icon">🎨</span> PDF to PNG</a>
                             </div>
                         </div>
@@ -116,7 +116,7 @@
                                 <a href="/pdf-to-excel" class="mega-item"><span class="mega-icon">📈</span> PDF to Excel</a>
                                 <a href="/pdf-to-powerpoint" class="mega-item"><span class="mega-icon">📊</span> PDF to PPT</a>
                                 <a href="/pdf-to-jpg" class="mega-item"><span class="mega-icon">🖼️</span> PDF to JPG</a>
-                                <a href="/pdf-to-png" class="mega-item"><span class="mega-icon">🎨</span> PDF to PNG</a>
+                                <a href="/pdf-to-png" class="mega-item"><span class="mega-icon"></span> PDF to PNG</a>
                             </div>
                             <div class="mega-column">
                                 <div class="mega-column-title">Edit PDF</div>
@@ -124,7 +124,7 @@
                             </div>
                             <div class="mega-column">
                                 <div class="mega-column-title">PDF Security</div>
-                                <a href="/protect-pdf" class="mega-item"><span class="mega-icon">🔒</span> Protect PDF</a>
+                                <a href="/protect-pdf" class="mega-item"><span class="mega-icon"></span> Protect PDF</a>
                                 <a href="/unlock-pdf" class="mega-item"><span class="mega-icon">🔓</span> Unlock PDF</a>
                             </div>
                         </div>
@@ -146,15 +146,24 @@
                         Your file has been successfully converted to <strong>{{ output_format }}</strong>.
                     </p>
                     
-                    <a href="/download/{{ download_filename }}" class="submit-btn" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; width: auto; margin-bottom: 20px; background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);">
-                        <span>📥</span> Download File
-                    </a>
-                    
-                    <br>
-                    <a href="{{ action }}" class="back-link" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 15px; font-size: 16px; color: #667eea; font-weight: 600; text-decoration: none;">
+                    <a href="{{ action }}" class="submit-btn" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; width: auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                         <span>🔄</span> Convert Another File
                     </a>
                 </div>
+                
+                {% if auto_download %}
+                <script>
+                    // Auto-download trigger
+                    window.addEventListener('load', function() {
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = '/download/{{ download_filename }}';
+                        downloadLink.download = '{{ download_filename }}';
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                    });
+                </script>
+                {% endif %}
             {% else %}
                 <form action="{{ action }}" method="POST" enctype="multipart/form-data">
                     <label class="upload-btn" id="uploadBtn">
