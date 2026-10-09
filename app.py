@@ -5,7 +5,6 @@ import requests
 from flask import Flask, render_template, request, send_file
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
-app.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024  # 4 MB limit
 
 UPLOAD_FOLDER = '/tmp/uploads'
 OUTPUT_FOLDER = '/tmp/outputs'
@@ -41,8 +40,7 @@ def process_conversion(input_file, input_format, output_format, base_name):
         f'https://v2.convertapi.com/convert/{input_format}/to/{output_format}',
         headers=headers,
         files=files,
-        data=data,
-        timeout=60
+        data=data
     )
     
     if response.status_code == 200:
@@ -50,7 +48,7 @@ def process_conversion(input_file, input_format, output_format, base_name):
         if 'Files' in result and len(result['Files']) > 0:
             file_url = result['Files'][0].get('Url') or result['Files'][0].get('url')
             if file_url:
-                download_response = requests.get(file_url, timeout=60)
+                download_response = requests.get(file_url)
                 output_path = os.path.join(OUTPUT_FOLDER, out_name)
                 with open(output_path, 'wb') as f:
                     f.write(download_response.content)
@@ -66,9 +64,29 @@ def download_file(filename):
         return send_file(file_path, as_attachment=True)
     return "File not found", 404
 
+# ✅ YE TOOLS LIST ADD KI GAI HAI TAAKE HOMEPAGE CHAL SAKE
+TOOLS = [
+    {'slug': 'merge', 'title': 'Merge PDF', 'desc': 'Combine multiple PDFs into one unified document.', 'icon': '🧩'},
+    {'slug': 'split', 'title': 'Split PDF', 'desc': 'Extract pages or split every page into separate PDF files.', 'icon': '✂️'},
+    {'slug': 'compress', 'title': 'Compress PDF', 'desc': 'Reduce PDF file size while maintaining quality.', 'icon': '🗜️'},
+    {'slug': 'pdf-to-word', 'title': 'PDF to Word', 'desc': 'Convert PDF to editable Word documents (DOCX).', 'icon': '📝'},
+    {'slug': 'word-to-pdf', 'title': 'Word to PDF', 'desc': 'Convert Word documents (DOC, DOCX) to PDF format.', 'icon': '📘'},
+    {'slug': 'pdf-to-excel', 'title': 'PDF to Excel', 'desc': 'Extract tables from PDF and convert to Excel.', 'icon': '📊'},
+    {'slug': 'excel-to-pdf', 'title': 'Excel to PDF', 'desc': 'Convert Excel spreadsheets to PDF format.', 'icon': '📈'},
+    {'slug': 'pdf-to-jpg', 'title': 'PDF to JPG', 'desc': 'Convert PDF pages to high-quality JPG images.', 'icon': '🖼️'},
+    {'slug': 'jpg-to-pdf', 'title': 'JPG to PDF', 'desc': 'Convert JPG and PNG images to PDF.', 'icon': '🖼️'},
+    {'slug': 'pdf-to-png', 'title': 'PDF to PNG', 'desc': 'Convert PDF pages to PNG images.', 'icon': '🎨'},
+    {'slug': 'powerpoint-to-pdf', 'title': 'PowerPoint to PDF', 'desc': 'Convert PowerPoint presentations to PDF.', 'icon': '📊'},
+    {'slug': 'pdf-to-powerpoint', 'title': 'PDF to PowerPoint', 'desc': 'Convert PDF to editable PowerPoint.', 'icon': '📽️'},
+    {'slug': 'rotate-pdf', 'title': 'Rotate PDF', 'desc': 'Rotate PDF pages clockwise or counter-clockwise.', 'icon': '🔄'},
+    {'slug': 'organize-pdf', 'title': 'Organize PDF', 'desc': 'Reorder, delete, or rearrange PDF pages.', 'icon': '📑'},
+    {'slug': 'protect-pdf', 'title': 'Protect PDF', 'desc': 'Add password protection to your PDF files.', 'icon': '🔒'},
+    {'slug': 'unlock-pdf', 'title': 'Unlock PDF', 'desc': 'Remove password protection from PDF files.', 'icon': '🔓'}
+]
+
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('index.html', tools=TOOLS)
 
 @app.route('/merge', methods=['GET', 'POST'])
 def merge_pdf():
@@ -86,7 +104,7 @@ def merge_pdf():
             output_path = os.path.join(OUTPUT_FOLDER, out_name)
             merger.write(output_path)
             merger.close()
-            return render_template('tool.html', title="Merge PDF", action="/merge", accept=".pdf", multiple=True, success=True, download_filename=out_name, output_format="Merged PDF", button_text="Merge PDFs")
+            return render_template('tool.html', title="Merge PDF", action="/merge", accept=".pdf", multiple=True, success=True, download_filename=out_name, output_format="Merged PDF", button_text="Merge PDFs", auto_download=True)
         except Exception as e:
             return f"Error: {str(e)}", 500
     return render_template('tool.html', title="Merge PDF", action="/merge", accept=".pdf", multiple=True, button_text="Merge PDFs")
@@ -113,7 +131,7 @@ def split_pdf():
                         writer.write(f)
                     zipf.write(temp_pdf, f"page_{i+1}.pdf")
                     os.remove(temp_pdf)
-            return render_template('tool.html', title="Split PDF", action="/split", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Split PDFs (ZIP)", button_text="Split PDF")
+            return render_template('tool.html', title="Split PDF", action="/split", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Split PDFs (ZIP)", button_text="Split PDF", auto_download=True)
         except Exception as e:
             return f"Error: {str(e)}", 500
     return render_template('tool.html', title="Split PDF", action="/split", accept=".pdf", multiple=False, button_text="Split PDF")
@@ -136,7 +154,7 @@ def compress_pdf():
             output_path = os.path.join(OUTPUT_FOLDER, out_name)
             with open(output_path, 'wb') as f:
                 writer.write(f)
-            return render_template('tool.html', title="Compress PDF", action="/compress", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Compressed PDF", button_text="Compress PDF")
+            return render_template('tool.html', title="Compress PDF", action="/compress", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Compressed PDF", button_text="Compress PDF", auto_download=True)
         except Exception as e:
             return f"Error: {str(e)}", 500
     return render_template('tool.html', title="Compress PDF", action="/compress", accept=".pdf", multiple=False, button_text="Compress PDF")
@@ -148,7 +166,7 @@ def pdf_to_word():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'pdf', 'docx', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="PDF to Word", action="/pdf-to-word", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Word Document", button_text="Convert to Word")
+            return render_template('tool.html', title="PDF to Word", action="/pdf-to-word", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Word Document", button_text="Convert to Word", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="PDF to Word", action="/pdf-to-word", accept=".pdf", multiple=False, button_text="Convert to Word")
 
@@ -159,7 +177,7 @@ def word_to_pdf():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'docx', 'pdf', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="Word to PDF", action="/word-to-pdf", accept=".docx,.doc", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF")
+            return render_template('tool.html', title="Word to PDF", action="/word-to-pdf", accept=".docx,.doc", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="Word to PDF", action="/word-to-pdf", accept=".docx,.doc", multiple=False, button_text="Convert to PDF")
 
@@ -170,7 +188,7 @@ def jpg_to_pdf():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'jpg', 'pdf', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="JPG to PDF", action="/jpg-to-pdf", accept=".jpg,.jpeg,.png", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF")
+            return render_template('tool.html', title="JPG to PDF", action="/jpg-to-pdf", accept=".jpg,.jpeg,.png", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="JPG to PDF", action="/jpg-to-pdf", accept=".jpg,.jpeg,.png", multiple=False, button_text="Convert to PDF")
 
@@ -181,7 +199,7 @@ def pdf_to_jpg():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'pdf', 'jpg', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="PDF to JPG", action="/pdf-to-jpg", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="JPG Images", button_text="Convert to JPG")
+            return render_template('tool.html', title="PDF to JPG", action="/pdf-to-jpg", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="JPG Images", button_text="Convert to JPG", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="PDF to JPG", action="/pdf-to-jpg", accept=".pdf", multiple=False, button_text="Convert to JPG")
 
@@ -192,7 +210,7 @@ def excel_to_pdf():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'xlsx', 'pdf', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="Excel to PDF", action="/excel-to-pdf", accept=".xlsx,.xls", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF")
+            return render_template('tool.html', title="Excel to PDF", action="/excel-to-pdf", accept=".xlsx,.xls", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="Excel to PDF", action="/excel-to-pdf", accept=".xlsx,.xls", multiple=False, button_text="Convert to PDF")
 
@@ -203,7 +221,7 @@ def pdf_to_excel():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'pdf', 'xlsx', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="PDF to Excel", action="/pdf-to-excel", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Excel Spreadsheet", button_text="Convert to Excel")
+            return render_template('tool.html', title="PDF to Excel", action="/pdf-to-excel", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Excel Spreadsheet", button_text="Convert to Excel", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="PDF to Excel", action="/pdf-to-excel", accept=".pdf", multiple=False, button_text="Convert to Excel")
 
@@ -214,7 +232,7 @@ def pdf_to_powerpoint():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'pdf', 'pptx', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="PDF to PowerPoint", action="/pdf-to-powerpoint", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="PowerPoint Presentation", button_text="Convert to PowerPoint")
+            return render_template('tool.html', title="PDF to PowerPoint", action="/pdf-to-powerpoint", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="PowerPoint Presentation", button_text="Convert to PowerPoint", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="PDF to PowerPoint", action="/pdf-to-powerpoint", accept=".pdf", multiple=False, button_text="Convert to PowerPoint")
 
@@ -225,7 +243,7 @@ def powerpoint_to_pdf():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'pptx', 'pdf', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="PowerPoint to PDF", action="/powerpoint-to-pdf", accept=".pptx,.ppt", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF")
+            return render_template('tool.html', title="PowerPoint to PDF", action="/powerpoint-to-pdf", accept=".pptx,.ppt", multiple=False, success=True, download_filename=out_name, output_format="PDF", button_text="Convert to PDF", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="PowerPoint to PDF", action="/powerpoint-to-pdf", accept=".pptx,.ppt", multiple=False, button_text="Convert to PDF")
 
@@ -236,102 +254,52 @@ def pdf_to_png():
         if not file: return "No file selected", 400
         out_name, success = process_conversion(file, 'pdf', 'png', get_base_name(file.filename))
         if success:
-            return render_template('tool.html', title="PDF to PNG", action="/pdf-to-png", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="PNG Images", button_text="Convert to PNG")
+            return render_template('tool.html', title="PDF to PNG", action="/pdf-to-png", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="PNG Images", button_text="Convert to PNG", auto_download=True)
         return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="PDF to PNG", action="/pdf-to-png", accept=".pdf", multiple=False, button_text="Convert to PNG")
 
 @app.route('/rotate-pdf', methods=['GET', 'POST'])
 def rotate_pdf():
     if request.method == 'POST':
-        try:
-            from pypdf import PdfReader, PdfWriter
-            file = request.files.get('pdf_file')
-            if not file: return "No file selected", 400
-            base_name = get_base_name(file.filename)
-            unique_id = uuid.uuid4().hex[:8]
-            reader = PdfReader(file)
-            writer = PdfWriter()
-            for page in reader.pages:
-                page.rotate(90)
-                writer.add_page(page)
-            out_name = f"{base_name}_rotated_{unique_id}.pdf"
-            output_path = os.path.join(OUTPUT_FOLDER, out_name)
-            with open(output_path, 'wb') as f:
-                writer.write(f)
-            return render_template('tool.html', title="Rotate PDF", action="/rotate-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Rotated PDF", button_text="Rotate PDF")
-        except Exception as e:
-            return f"Error: {str(e)}", 500
+        file = request.files.get('pdf_file')
+        if not file: return "No file selected", 400
+        out_name, success = process_conversion(file, 'pdf', 'pdf', get_base_name(file.filename))
+        if success:
+            return render_template('tool.html', title="Rotate PDF", action="/rotate-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Rotated PDF", button_text="Rotate PDF", auto_download=True)
+        return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="Rotate PDF", action="/rotate-pdf", accept=".pdf", multiple=False, button_text="Rotate PDF")
 
 @app.route('/protect-pdf', methods=['GET', 'POST'])
 def protect_pdf():
     if request.method == 'POST':
-        try:
-            from pypdf import PdfReader, PdfWriter
-            file = request.files.get('pdf_file')
-            password = request.form.get('password', 'pdfmastar123')
-            if not file: return "No file selected", 400
-            base_name = get_base_name(file.filename)
-            unique_id = uuid.uuid4().hex[:8]
-            reader = PdfReader(file)
-            writer = PdfWriter()
-            for page in reader.pages:
-                writer.add_page(page)
-            writer.encrypt(password)
-            out_name = f"{base_name}_protected_{unique_id}.pdf"
-            output_path = os.path.join(OUTPUT_FOLDER, out_name)
-            with open(output_path, 'wb') as f:
-                writer.write(f)
-            return render_template('tool.html', title="Protect PDF", action="/protect-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Protected PDF", button_text="Protect PDF")
-        except Exception as e:
-            return f"Error: {str(e)}", 500
+        file = request.files.get('pdf_file')
+        if not file: return "No file selected", 400
+        out_name, success = process_conversion(file, 'pdf', 'pdf', get_base_name(file.filename))
+        if success:
+            return render_template('tool.html', title="Protect PDF", action="/protect-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Protected PDF", button_text="Protect PDF", auto_download=True)
+        return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="Protect PDF", action="/protect-pdf", accept=".pdf", multiple=False, button_text="Protect PDF")
 
 @app.route('/unlock-pdf', methods=['GET', 'POST'])
 def unlock_pdf():
     if request.method == 'POST':
-        try:
-            from pypdf import PdfReader, PdfWriter
-            file = request.files.get('pdf_file')
-            password = request.form.get('password', '')
-            if not file: return "No file selected", 400
-            base_name = get_base_name(file.filename)
-            unique_id = uuid.uuid4().hex[:8]
-            reader = PdfReader(file)
-            if reader.is_encrypted:
-                reader.decrypt(password)
-            writer = PdfWriter()
-            for page in reader.pages:
-                writer.add_page(page)
-            out_name = f"{base_name}_unlocked_{unique_id}.pdf"
-            output_path = os.path.join(OUTPUT_FOLDER, out_name)
-            with open(output_path, 'wb') as f:
-                writer.write(f)
-            return render_template('tool.html', title="Unlock PDF", action="/unlock-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Unlocked PDF", button_text="Unlock PDF")
-        except Exception as e:
-            return f"Error: {str(e)}", 500
+        file = request.files.get('pdf_file')
+        if not file: return "No file selected", 400
+        out_name, success = process_conversion(file, 'pdf', 'pdf', get_base_name(file.filename))
+        if success:
+            return render_template('tool.html', title="Unlock PDF", action="/unlock-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Unlocked PDF", button_text="Unlock PDF", auto_download=True)
+        return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="Unlock PDF", action="/unlock-pdf", accept=".pdf", multiple=False, button_text="Unlock PDF")
 
 @app.route('/organize-pdf', methods=['GET', 'POST'])
 def organize_pdf():
     if request.method == 'POST':
-        try:
-            from pypdf import PdfReader, PdfWriter
-            file = request.files.get('pdf_file')
-            if not file: return "No file selected", 400
-            base_name = get_base_name(file.filename)
-            unique_id = uuid.uuid4().hex[:8]
-            reader = PdfReader(file)
-            writer = PdfWriter()
-            for page in reader.pages:
-                writer.add_page(page)
-            out_name = f"{base_name}_organized_{unique_id}.pdf"
-            output_path = os.path.join(OUTPUT_FOLDER, out_name)
-            with open(output_path, 'wb') as f:
-                writer.write(f)
-            return render_template('tool.html', title="Organize PDF", action="/organize-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Organized PDF", button_text="Organize PDF")
-        except Exception as e:
-            return f"Error: {str(e)}", 500
+        file = request.files.get('pdf_file')
+        if not file: return "No file selected", 400
+        out_name, success = process_conversion(file, 'pdf', 'pdf', get_base_name(file.filename))
+        if success:
+            return render_template('tool.html', title="Organize PDF", action="/organize-pdf", accept=".pdf", multiple=False, success=True, download_filename=out_name, output_format="Organized PDF", button_text="Organize PDF", auto_download=True)
+        return "Conversion failed. Please try again.", 500
     return render_template('tool.html', title="Organize PDF", action="/organize-pdf", accept=".pdf", multiple=False, button_text="Organize PDF")
 
 handler = app
