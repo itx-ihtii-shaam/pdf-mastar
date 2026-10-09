@@ -4,10 +4,11 @@ import json
 import os
 import re
 import zipfile
+import uuid
 from functools import lru_cache
 
 import requests
-from flask import Flask, Response, abort, render_template, request, send_file
+from flask import Flask, Response, abort, render_template, request, send_file, session
 from PIL import Image, ImageDraw, ImageOps
 from pypdf import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
@@ -17,11 +18,11 @@ MAX_MB = 4
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['MAX_CONTENT_LENGTH'] = MAX_MB * 1024 * 1024
+app.secret_key = 'pdf_master_secret_key_here'
 
 API_TOKEN = os.environ.get('CONVERT_API_TOKEN')
 CONVERT_API = 'https://v2.convertapi.com/convert'
 
-# In-memory storage for generated files on Vercel (temporary dictionary for download tokens)
 TEMP_STORAGE = {}
 
 class ToolError(Exception):
@@ -484,7 +485,9 @@ def security_headers(resp):
 
 @app.route('/')
 def home():
-    return render_template('index.html', tools=TOOLS, cats=CATS)
+    recent_slugs = session.get('recent_tools', [])
+    recent_tools = [TOOL_MAP[s] for s in recent_slugs if s in TOOL_MAP]
+    return render_template('index.html', tools=TOOLS, cats=CATS, recent_tools=recent_tools)
 
 
 @lru_cache(maxsize=4)
@@ -611,7 +614,15 @@ def tool_page(slug):
         app.logger.exception('Tool %s failed', slug)
         return 'Something went wrong while processing your file. Please try again.', 500
 
-    import uuid
+    # Save to recent tools session
+    if 'recent_tools' not in session:
+        session['recent_tools'] = []
+    if slug in session['recent_tools']:
+        session['recent_tools'].remove(slug)
+    session['recent_tools'].insert(0, slug)
+    session['recent_tools'] = session['recent_tools'][:3]
+    session.modified = True
+
     file_id = uuid.uuid4().hex
     TEMP_STORAGE[file_id] = {'data': data, 'name': name}
 
