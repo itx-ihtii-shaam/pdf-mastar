@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF MASTAR - Free Online PDF Tools</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;color:#2d3748}
+.navbar{background:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.08);padding:0 40px;position:sticky;top:0;z-index:1000}
+.nav-container{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:70px}
+.logo{font-size:22px;font-weight:900;text-decoration:none;color:#2d3748}
+.logo span{color:#e74c3c}
+.hero{text-align:center;padding:80px 20px 60px;color:#fff}
+.hero h1{font-size:48px;margin-bottom:20px;font-weight:800}
+.hero p{font-size:20px;opacity:0.95;max-width:600px;margin:0 auto}
+.tools-section{max-width:1200px;margin:-40px auto 60px;padding:0 20px}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px}
+.tool-card{background:#fff;border-radius:16px;padding:35px 30px;text-align:center;text-decoration:none;color:#2d3748;box-shadow:0 10px 40px rgba(0,0,0,0.15);transition:all 0.3s;border:1px solid #edf2f7}
+.tool-card:hover{transform:translateY(-10px);box-shadow:0 20px 60px rgba(0,0,0,0.2);border-color:#667eea}
+.tool-icon{font-size:48px;margin-bottom:20px}
+.tool-card h3{font-size:20px;margin-bottom:12px;font-weight:700}
+.tool-card p{font-size:14px;color:#718096;line-height:1.6}
+footer{background:#2d3748;color:#a0aec0;padding:40px 20px;text-align:center;margin-top:60px}
+</style>
+</head>
+<body>
+<nav class="navbar">
+<div class="nav-container">
+<a href="/" class="logo">PDF <span>MASTAR</span></a>
+</div>
+</nav>
+<div class="hero">
+<h1>Every tool you need to work with PDFs</h1>
+<p>100% Free. No signup required. Merge, split, compress, and convert PDFs.</p>
+</div>
+<div class="tools-section">
+<div class="tools-grid">
+{% for t in tools %}
+<a href="/{{ t.slug }}" class="tool-card">
+<div class="tool-icon">{{ t.icon }}</div>
+<h3>{{ t.title }}</h3>
+<p>{{ t.desc }}</p>
+</a>
+{% endfor %}
+</div>
+</div>
+<footer>
+<p>PDF MASTAR - Free Online PDF Tools</p>
+<p style="margin-top:10px;font-size:13px">Files are processed securely</p>
+</footer>
+</body>
+</html>

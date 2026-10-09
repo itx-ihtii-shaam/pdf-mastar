@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}PDF MASTAR{% endblock %}</title>
+<style>
+:root{--brand:#667eea;--brand2:#764ba2;--bg:#f4f7f6;--card:#fff;--text:#2d3748;--muted:#718096;--line:#edf2f7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--brand);text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:0 20px;width:100%}
+header{background:var(--card);box-shadow:0 2px 10px rgba(0,0,0,0.08);padding:0 40px;position:sticky;top:0;z-index:100}
+.nav{display:flex;align-items:center;justify-content:space-between;height:70px}
+.logo{font-size:1.5rem;font-weight:900;color:var(--text)}
+.logo span{color:#e74c3c}
+main{flex:1;padding:20px 0}
+footer{background:#2d3748;color:#a0aec0;padding:30px 20px;text-align:center;font-size:0.9rem;margin-top:auto}
+</style>
+{% block css %}{% endblock %}
+</head>
+<body>
+<header>
+<div class="container nav">
+<a href="/" class="logo">PDF <span>MASTAR</span></a>
+</div>
+</header>
+<main class="container">
+{% block content %}{% endblock %}
+</main>
+<footer>
+<div class="container">
+<p>Free PDF Tools - No signup required</p>
+<p style="margin-top:8px">PDF MASTAR</p>
+</div>
+</footer>
+{% block scripts %}{% endblock %}
+</body>
+</html>
