@@ -3,72 +3,77 @@
 {% block title %}{{ tool.title }} - {{ SITE_NAME }}{% endblock %}
 
 {% block content %}
-<div class="tool-page">
-    <div class="breadcrumb">
+<div class="tool-page container">
+    <div class="breadcrumb mb-4">
         <a href="/">All tools</a> &rsaquo; <span>{{ tool.title }}</span>
     </div>
 
-    <div class="tool-header">
-        <div class="tool-icon-large">{{ tool.icon }}</div>
-        <h1>{{ tool.title }}</h1>
-        <p class="subtitle">{{ tool.desc }}</p>
+    <div class="tool-header text-center mb-4">
+        <div class="tool-icon-large display-4 mb-2">{{ tool.icon }}</div>
+        <h1 class="tool-title">{{ tool.title }}</h1>
+        <p class="subtitle text-muted">{{ tool.desc }}</p>
     </div>
 
-    <form id="tool-form" action="/{{ tool.slug }}" method="POST" enctype="multipart/form-data">
-        <div class="upload-box" id="drop-zone">
-            <input type="file" id="file-input" name="files" accept="{{ tool.accept }}" {% if tool.multiple %}multiple{% endif %} style="display: none;">
-            <div class="upload-content" id="upload-prompt">
-                <div class="folder-icon">📁</div>
-                <h3 id="upload-label">Choose a file or drop it here</h3>
-                <p class="file-limits">{{ tool.accept }} &middot; up to {{ max_mb }} MB</p>
-            </div>
-        </div>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <form id="tool-form" action="/{{ tool.slug }}" method="POST" enctype="multipart/form-data">
+                <div class="upload-box card text-center p-4 border-dashed" id="drop-zone" style="cursor: pointer; background: rgba(255, 255, 255, 0.03); border: 2px dashed rgba(255, 255, 255, 0.15); border-radius: 16px;">
+                    <input type="file" id="file-input" name="files" accept="{{ tool.accept }}" {% if tool.multiple %}multiple{% endif %} style="display: none;">
+                    <div class="upload-content" id="upload-prompt">
+                        <div class="folder-icon display-4 mb-2">📁</div>
+                        <h3 id="upload-label" class="h5 font-weight-bold">Choose a file or drop it here</h3>
+                        <p class="file-limits text-muted small mb-0">{{ tool.accept }} &middot; up to {{ max_mb }} MB</p>
+                    </div>
+                </div>
 
-        <div id="file-preview-list" style="display: none; margin-top: 16px;"></div>
+                <!-- Selected File Preview Container -->
+                <div id="file-preview-list" style="display: none; margin-top: 16px;"></div>
 
-        {% if tool.fields %}
-        <div class="tool-options card">
-            {% for field in tool.fields %}
-            <div class="form-group">
-                <label for="field-{{ field.name }}">{{ field.label }}</label>
-                {% if field.type == 'select' %}
-                <select name="{{ field.name }}" id="field-{{ field.name }}" class="form-control">
-                    {% for opt_val, opt_lbl in field.options %}
-                    <option value="{{ opt_val }}">{{ opt_lbl }}</option>
+                {% if tool.fields %}
+                <div class="tool-options card p-3 mt-3" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;">
+                    {% for field in tool.fields %}
+                    <div class="form-group mb-3">
+                        <label for="field-{{ field.name }}" class="small text-light">{{ field.label }}</label>
+                        {% if field.type == 'select' %}
+                        <select name="{{ field.name }}" id="field-{{ field.name }}" class="form-control bg-dark text-light border-secondary">
+                            {% for opt_val, opt_lbl in field.options %}
+                            <option value="{{ opt_val }}">{{ opt_lbl }}</option>
+                            {% endfor %}
+                        </select>
+                        {% elif field.type == 'number' %}
+                        <input type="number" name="{{ field.name }}" id="field-{{ field.name }}" class="form-control bg-dark text-light border-secondary" placeholder="{{ field.placeholder or '' }}" {% if field.required %}required{% endif %}>
+                        {% else %}
+                        <input type="{{ field.type }}" name="{{ field.name }}" id="field-{{ field.name }}" class="form-control bg-dark text-light border-secondary" placeholder="{{ field.placeholder or '' }}" {% if field.required %}required{% endif %}>
+                        {% endif %}
+                        {% if field.hint %}
+                        <small class="form-text text-muted">{{ field.hint }}</small>
+                        {% endif %}
+                    </div>
                     {% endfor %}
-                </select>
-                {% elif field.type == 'number' %}
-                <input type="number" name="{{ field.name }}" id="field-{{ field.name }}" class="form-control" placeholder="{{ field.placeholder or '' }}" {% if field.required %}required{% endif %}>
-                {% else %}
-                <input type="{{ field.type }}" name="{{ field.name }}" id="field-{{ field.name }}" class="form-control" placeholder="{{ field.placeholder or '' }}" {% if field.required %}required{% endif %}>
+                </div>
                 {% endif %}
-                {% if field.hint %}
-                <small class="form-text">{{ field.hint }}</small>
-                {% endif %}
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
 
-        <div class="action-bar">
-            <button type="submit" class="btn btn-primary" id="submit-btn">
-                {{ tool.button }} &rarr;
-            </button>
-        </div>
-    </form>
+                <div class="text-center mt-4 mb-3">
+                    <button type="submit" class="btn btn-primary btn-lg px-5 py-2 font-weight-bold" id="submit-btn" style="border-radius: 12px; background: #6366f1; border: none;">
+                        {{ tool.button }} &rarr;
+                    </button>
+                </div>
+            </form>
 
-    {% if tool.note %}
-    <p class="tool-note"><small>{{ tool.note }}</small></p>
-    {% endif %}
+            {% if tool.note %}
+            <p class="tool-note text-center text-muted small mb-4">{{ tool.note }}</p>
+            {% endif %}
+        </div>
+    </div>
 
     {% if related %}
-    <div class="what-next-section">
-        <h3>WHAT NEXT?</h3>
-        <div class="related-grid">
+    <div class="what-next-section mt-5 pt-3 text-center">
+        <h3 class="h6 text-muted mb-3 font-weight-bold" style="letter-spacing: 1px;">WHAT NEXT?</h3>
+        <div class="d-flex justify-content-center flex-wrap gap-3" style="gap: 15px;">
             {% for r in related %}
-            <a href="/{{ r.slug }}" class="related-card">
-                <span class="related-icon">{{ r.icon }}</span>
-                <span class="related-title">{{ r.title }}</span>
+            <a href="/{{ r.slug }}" class="related-card btn btn-outline-light d-inline-flex align-items-center px-3 py-2" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: #fff; text-decoration: none;">
+                <span class="related-icon mr-2" style="margin-right: 8px;">{{ r.icon }}</span>
+                <span class="related-title font-weight-bold" style="font-size: 14px;">{{ r.title }}</span>
             </a>
             {% endfor %}
         </div>
@@ -86,16 +91,16 @@ dropZone.addEventListener('click', () => fileInput.click());
 
 dropZone.addEventListener('dragover', (e) => {
     e.preventDefault();
-    dropZone.classList.add('dragover');
+    dropZone.style.borderColor = '#6366f1';
 });
 
 dropZone.addEventListener('dragleave', () => {
-    dropZone.classList.remove('dragover');
+    dropZone.style.borderColor = 'rgba(255, 255, 255, 0.15)';
 });
 
 dropZone.addEventListener('drop', (e) => {
     e.preventDefault();
-    dropZone.classList.remove('dragover');
+    dropZone.style.borderColor = 'rgba(255, 255, 255, 0.15)';
     if (e.dataTransfer.files.length) {
         fileInput.files = e.dataTransfer.files;
         updatePreview();
@@ -130,17 +135,17 @@ function updatePreview() {
     Array.from(files).forEach((file, index) => {
         const ext = file.name.split('.').pop().toUpperCase();
         const card = document.createElement('div');
-        card.style.cssText = 'display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 14px 18px; width: 100%; max-width: 580px; margin: 0 auto; box-sizing: border-box;';
+        card.style.cssText = 'display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 12px; padding: 12px 16px; width: 100%; box-sizing: border-box;';
 
         card.innerHTML = `
             <div style="display: flex; align-items: center; gap: 12px; overflow: hidden;">
-                <span style="background: rgba(91, 91, 240, 0.3); color: #818cf8; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; letter-spacing: 0.5px;">${ext}</span>
+                <span style="background: rgba(99, 102, 241, 0.3); color: #818cf8; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px;">${ext}</span>
                 <div style="display: flex; flex-direction: column; overflow: hidden; text-align: left;">
                     <span style="color: #ffffff; font-weight: 600; font-size: 14px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${file.name}</span>
                     <small style="color: #94a3b8; font-size: 12px;">${formatSize(file.size)}</small>
                 </div>
             </div>
-            <button type="button" onclick="removeFile(${index})" style="background: rgba(255,255,255,0.06); border: none; color: #94a3b8; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px;">&times;</button>
+            <button type="button" onclick="removeFile(${index})" style="background: rgba(255,255,255,0.08); border: none; color: #94a3b8; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px;">&times;</button>
         `;
         previewList.appendChild(card);
     });
