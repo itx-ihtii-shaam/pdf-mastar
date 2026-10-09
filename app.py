@@ -348,10 +348,9 @@ def make_api_handler(default_src, dst):
 
 
 # --------------------------------------------------------------------------
-# Tool catalogue (home page aur har tool ka page isi se banta hai)
+# Tool catalogue
 # --------------------------------------------------------------------------
 def tool(slug, title, desc, icon, cat, accept, multiple=False, min_files=1, fields=None, note=None):
-    # button = button ka text, label = result card mein "Your <label> is ready"
     return dict(slug=slug, title=title, desc=desc, icon=icon, cat=cat, accept=accept,
                 multiple=multiple, min_files=min_files, fields=fields or [], note=note,
                 button=title, label='file')
@@ -426,7 +425,6 @@ TOOLS = [
 ]
 TOOL_MAP = {t['slug']: t for t in TOOLS}
 
-# slug: (button text, result label)   <- aap ke purane button_text / output_format
 BUTTONS = {
     'merge': ('Merge PDFs', 'merged PDF'),
     'split': ('Split PDF', 'split result'),
@@ -501,9 +499,6 @@ def home():
     return render_template('index.html', tools=TOOLS, cats=CATS)
 
 
-# --------------------------------------------------------------------------
-# PWA: phone ki home screen par install karne ke liye (static folder ki zaroorat nahi)
-# --------------------------------------------------------------------------
 @lru_cache(maxsize=4)
 def make_icon(size):
     img = Image.new('RGB', (size, size))
@@ -565,7 +560,7 @@ self.addEventListener('activate', e => {
 });
 self.addEventListener('fetch', e => {
   const r = e.request;
-  if (r.method !== 'GET') return;            // uploads ko kabhi nahi chhedte
+  if (r.method !== 'GET') return;
   e.respondWith(
     fetch(r).then(res => {
       if (r.mode === 'navigate' && res.ok) {
@@ -594,10 +589,18 @@ def tool_page(slug):
         abort(404)
 
     if request.method == 'GET':
-        # Har tool page ke 'WHAT NEXT?' section mein 'Word to PDF' hamesha show hoga (agar current tool Word to PDF nahi hai)
-        related = [x for x in TOOLS if x['slug'] == 'word-to-pdf' and slug != 'word-to-pdf']
-        related += [x for x in TOOLS if x['cat'] == t['cat'] and x['slug'] != slug and x['slug'] != 'word-to-pdf']
-        related += [x for x in TOOLS if x['cat'] != t['cat'] and x['slug'] != 'word-to-pdf']
+        # WHAT NEXT? section mein 'Word to PDF' aur 'PDF to Word' ko top priority par lane ka logic
+        priority_slugs = ['word-to-pdf', 'pdf-to-word']
+        
+        # 1. Jo priority tools hain aur current page ka tool NAHI hain, unko sabse pehle add karein
+        related = [x for x in TOOLS if x['slug'] in priority_slugs and x['slug'] != slug]
+        
+        # 2. Category ke baqi tools add karein
+        related += [x for x in TOOLS if x['cat'] == t['cat'] and x['slug'] != slug and x['slug'] not in priority_slugs]
+        
+        # 3. Baqi bache hue tools add karein
+        related += [x for x in TOOLS if x['slug'] != slug and x['slug'] not in priority_slugs and x['cat'] != t['cat']]
+        
         return render_template('tool.html', tool=t, related=related[:3], max_mb=MAX_MB)
 
     files = [f for f in request.files.getlist('files') if f and f.filename]
@@ -624,7 +627,6 @@ def tool_page(slug):
     return resp
 
 
-# Vercel is handler ko dhoondta hai
 handler = app
 
 if __name__ == '__main__':
