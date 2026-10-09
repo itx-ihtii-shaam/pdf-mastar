@@ -33,20 +33,17 @@ h2{color:#2d3748;margin-bottom:10px;font-size:28px;font-weight:700}
 <a href="/" class="logo">PDF <span>MASTAR</span></a>
 </div>
 </nav>
-
 <div class="main-content">
 <div class="container-box">
 <h2>{{ tool.title }}</h2>
 <p class="desc">{{ tool.desc }}</p>
-
 <form action="/{{ tool.slug }}" method="POST" enctype="multipart/form-data">
 <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-<div style="font-size:48px;margin-bottom:15px">📁</div>
+<div style="font-size:48px;margin-bottom:15px">&#128193;</div>
 <p style="color:#2d3748;font-weight:600">{% if tool.multiple %}Choose files{% else %}Choose a file{% endif %}</p>
 <p style="color:#718096;font-size:13px;margin-top:5px">{{ tool.accept }} up to {{ max_mb }} MB</p>
 <input type="file" id="fileInput" name="files" accept="{{ tool.accept }}" {% if tool.multiple %}multiple{% endif %} required style="display:none" onchange="document.getElementById('submitBtn').style.display='block'">
 </div>
-
 {% if tool.fields %}
 {% for f in tool.fields %}
 <div class="form-group">
@@ -63,15 +60,12 @@ h2{color:#2d3748;margin-bottom:10px;font-size:28px;font-weight:700}
 </div>
 {% endfor %}
 {% endif %}
-
 {% if tool.note %}
 <div class="note">{{ tool.note }}</div>
 {% endif %}
-
 <button type="submit" class="submit-btn" id="submitBtn">{{ tool.button }}</button>
 </form>
-
-<a href="/" class="back-link">← Back to Home</a>
+<a href="/" class="back-link">&#8592; Back to Home</a>
 </div>
 </div>
 </body>
