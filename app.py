@@ -138,7 +138,7 @@ def do_compress(files, form):
     writer = PdfWriter()
     for page in reader.pages:
         writer.add_page(page)
-    for page in reader.pages:
+    for page in writer.pages:
         try:
             for img in page.images:
                 try:
@@ -489,7 +489,7 @@ def home():
 def make_icon(size):
     img = Image.new('RGB', (size, size))
     px = img.load()
-    # Red (#e74c3c to #c0392b) Gradient
+    # Red Favicon Icon Generator
     c1, c2 = (231, 76, 60), (192, 57, 43)
     for y in range(size):
         for x in range(size):
