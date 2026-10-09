@@ -5,45 +5,76 @@
 {% block content %}
 <style>
     .tool-page-container {
-        max-width: 700px;
-        margin: 60px auto;
+        max-width: 800px;
+        margin: 40px auto;
         padding: 0 20px;
     }
 
-    .tool-box {
-        background: #131826;
-        border: 1px solid #232a42;
-        border-radius: 16px;
-        padding: 40px;
-        text-align: center;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    .breadcrumb {
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 24px;
     }
 
-    .tool-box h1 {
-        font-size: 28px;
-        font-weight: 800;
+    .breadcrumb a {
+        color: #94a3b8;
+        text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
         color: #ffffff;
-        margin-bottom: 10px;
+    }
+
+    .tool-box {
+        text-align: center;
+        padding: 20px 0;
+    }
+
+    .tool-icon-box {
+        width: 64px;
+        height: 64px;
+        background: #161c2e;
+        border: 1px solid #232a42;
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 12px;
+        font-size: 28px;
+        margin: 0 auto 20px auto;
+    }
+
+    .tool-box h1 {
+        font-size: 32px;
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 8px;
     }
 
     .tool-box p {
         color: #94a3b8;
         font-size: 14px;
-        margin-bottom: 30px;
+        margin-bottom: 32px;
+    }
+
+    /* Dropzone Box */
+    .upload-box {
+        background: #131826;
+        border: 1px solid #232a42;
+        border-radius: 16px;
+        padding: 40px 30px;
+        margin-bottom: 24px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
     .upload-dropzone {
-        border: 2px dashed #323d61;
+        border: 2px dashed #2d3748;
         border-radius: 12px;
-        padding: 40px 20px;
+        padding: 35px 20px;
         background: #0b0f19;
         cursor: pointer;
+        display: block;
         transition: all 0.2s;
-        margin-bottom: 24px;
+        margin-bottom: 20px;
     }
 
     .upload-dropzone:hover {
@@ -54,6 +85,11 @@
         display: none;
     }
 
+    .upload-icon {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+
     .upload-text {
         color: #cbd5e1;
         font-size: 14px;
@@ -62,7 +98,7 @@
 
     .form-fields {
         text-align: left;
-        margin-bottom: 24px;
+        margin-bottom: 20px;
     }
 
     .form-group {
@@ -103,6 +139,7 @@
         font-weight: 700;
         cursor: pointer;
         transition: opacity 0.2s;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
     }
 
     .action-btn:hover {
@@ -118,12 +155,11 @@
     /* Related Tools Section */
     .related-section {
         max-width: 1200px;
-        margin: 80px auto 40px auto;
-        padding: 0 20px;
+        margin: 60px auto 40px auto;
     }
 
     .related-title {
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 800;
         color: #64748b;
         letter-spacing: 1.5px;
@@ -136,65 +172,116 @@
         grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
         gap: 16px;
     }
+
+    .tool-grid-card {
+        background: #131826;
+        border: 1px solid #232a42;
+        border-radius: 14px;
+        padding: 20px;
+        text-decoration: none;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        transition: all 0.2s ease;
+    }
+
+    .tool-grid-card:hover {
+        border-color: #6366f1;
+        background: #161c2e;
+        transform: translateY(-2px);
+    }
+
+    .tool-card-icon {
+        font-size: 20px;
+        width: 40px;
+        height: 40px;
+        background: rgba(99, 102, 241, 0.1);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .tool-card-info h3 {
+        font-size: 15px;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 4px;
+    }
+
+    .tool-card-info p {
+        font-size: 13px;
+        color: #94a3b8;
+        line-height: 1.4;
+    }
 </style>
 
 <div class="tool-page-container">
+    <div class="breadcrumb">
+        <a href="/">All tools</a> &rsaquo; {{ tool.title }}
+    </div>
+
     <div class="tool-box">
-        <h1><span>{{ tool.icon }}</span> {{ tool.title }}</h1>
+        <div class="tool-icon-box">{{ tool.icon }}</div>
+        <h1>{{ tool.title }}</h1>
         <p>{{ tool.desc }}</p>
 
-        <form method="POST" enctype="multipart/form-data">
-            <label class="upload-dropzone" id="dropzone">
-                <input type="file" name="files" accept="{{ tool.accept }}" {% if tool.multiple %}multiple{% endif %} required id="file-input">
-                <div class="upload-text" id="file-label">
-                    📁 Drag & drop files here, or <span style="color: #818cf8;">browse</span>
-                </div>
-            </label>
+        <div class="upload-box">
+            <form method="POST" enctype="multipart/form-data">
+                <label class="upload-dropzone" id="dropzone">
+                    <input type="file" name="files" accept="{{ tool.accept }}" {% if tool.multiple %}multiple{% endif %} required id="file-input">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text" id="file-label">
+                        Drag & drop files here, or <span style="color: #818cf8;">browse</span>
+                    </div>
+                </label>
 
-            {% if tool.fields %}
-            <div class="form-fields">
-                {% for f in tool.fields %}
-                <div class="form-group">
-                    <label>{{ f.label }}</label>
-                    {% if f.type == 'select' %}
-                    <select name="{{ f.name }}">
-                        {% for opt_val, opt_label in f.options %}
-                        <option value="{{ opt_val }}">{{ opt_label }}</option>
-                        {% endfor %}
-                    </select>
-                    {% else %}
-                    <input type="{{ f.type }}" name="{{ f.name }}" placeholder="{{ f.placeholder or '' }}" {% if f.required %}required{% endif %}>
-                    {% endif %}
+                {% if tool.fields %}
+                <div class="form-fields">
+                    {% for f in tool.fields %}
+                    <div class="form-group">
+                        <label>{{ f.label }}</label>
+                        {% if f.type == 'select' %}
+                        <select name="{{ f.name }}">
+                            {% for opt_val, opt_label in f.options %}
+                            <option value="{{ opt_val }}">{{ opt_label }}</option>
+                            {% endfor %}
+                        </select>
+                        {% else %}
+                        <input type="{{ f.type }}" name="{{ f.name }}" placeholder="{{ f.placeholder or '' }}" {% if f.required %}required{% endif %}>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-            </div>
-            {% endif %}
+                {% endif %}
 
-            <button type="submit" class="action-btn">{{ tool.button }}</button>
-        </form>
+                <button type="submit" class="action-default action-btn">{{ tool.button }} →</button>
+            </form>
+        </div>
 
         {% if tool.note %}
         <div class="tool-note">{{ tool.note }}</div>
         {% endif %}
     </div>
-</div>
 
-{% if related %}
-<div class="related-section">
-    <div class="related-title">What else can you do?</div>
-    <div class="related-grid">
-        {% for t in related %}
-        <a href="/{{ t.slug }}" class="tool-grid-card" style="background: #131826; border: 1px solid #232a42; border-radius: 14px; padding: 20px; text-decoration: none; display: flex; align-items: flex-start; gap: 16px;">
-            <div class="tool-card-icon" style="font-size: 20px; width: 40px; height: 40px; background: rgba(99, 102, 241, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">{{ t.icon }}</div>
-            <div class="tool-card-info">
-                <h3 style="font-size: 15px; font-weight: 700; color: #ffffff; margin-bottom: 4px;">{{ t.title }}</h3>
-                <p style="font-size: 13px; color: #94a3b8; line-height: 1.4;">{{ t.desc }}</p>
-            </div>
-        </a>
-        {% endfor %}
+    {% if related %}
+    <div class="related-section">
+        <div class="related-title">What else can you do?</div>
+        <div class="related-grid">
+            {% for t in related %}
+            <a href="/{{ t.slug }}" class="tool-grid-card">
+                <div class="tool-card-icon">{{ t.icon }}</div>
+                <div class="tool-card-info">
+                    <h3>{{ t.title }}</h3>
+                    <p>{{ t.desc }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
     </div>
+    {% endif %}
 </div>
-{% endif %}
 
 <script>
     const fileInput = document.getElementById('file-input');
