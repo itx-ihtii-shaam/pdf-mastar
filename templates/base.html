@@ -5,38 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}PDF MASTAR - Free Online PDF Tools{% endblock %}</title>
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/icon-192.png?v=4">
-    <link rel="shortcut icon" type="image/png" href="/icon-192.png?v=4">
+    <!-- Red Favicon / Search Tab Icons with Cache Buster -->
+    <link rel="icon" type="image/png" href="/icon-192.png?v=3">
+    <link rel="shortcut icon" type="image/png" href="/icon-192.png?v=3">
+    <link rel="apple-touch-icon" href="/icon-192.png?v=3">
+    <link rel="manifest" href="/manifest.webmanifest">
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #2d3748; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f111a; color: #ffffff; min-height: 100vh; }
         
-        .navbar { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 0 40px; position: sticky; top: 0; z-index: 1000; }
+        /* Dark Theme Navbar Background */
+        .navbar { background: #181b2a; border-bottom: 1px solid #272c45; padding: 0 40px; position: sticky; top: 0; z-index: 1000; }
         .nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 70px; }
         
-        .logo { font-size: 22px; font-weight: 900; text-decoration: none; display: flex; align-items: center; gap: 5px; }
-        .logo span { font-weight: 900; color: #2d3748; font-size: 24px; }
-        .logo span span { color: #e74c3c; }
+        /* Logo Styling */
+        .logo { font-size: 22px; font-weight: 900; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-box { background: #e74c3c; color: white; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; }
+        .logo-text { font-weight: 900; color: #ffffff; font-size: 24px; letter-spacing: 0.5px; }
+        .logo-red { color: #e74c3c; }
 
         .nav-menu { display: flex; list-style: none; gap: 0; }
         .nav-item { position: relative; }
-        .nav-link { display: block; padding: 25px 18px; text-decoration: none; color: #4a5568; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.3s; }
+        .nav-link { display: block; padding: 25px 18px; text-decoration: none; color: #94a3b8; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.3s; }
         .nav-link:hover { color: #e74c3c; }
 
-        .mega-menu { position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(-10px); background: white; box-shadow: 0 15px 50px rgba(0,0,0,0.15); border-radius: 10px; padding: 25px 30px; opacity: 0; visibility: hidden; transition: all 0.3s; min-width: 700px; }
+        /* Mega Dropdown Menu (Dark Theme) */
+        .mega-menu { position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(-10px); background: #181b2a; border: 1px solid #272c45; box-shadow: 0 15px 50px rgba(0,0,0,0.5); border-radius: 10px; padding: 25px 30px; opacity: 0; visibility: hidden; transition: all 0.3s; min-width: 600px; }
         .nav-item:hover .mega-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
-        .mega-menu-columns { display: flex; gap: 40px; }
-        .mega-column { flex: 1; min-width: 200px; }
-        .mega-column-title { font-size: 11px; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #edf2f7; }
-        .mega-item { display: flex; align-items: center; gap: 12px; padding: 10px 8px; text-decoration: none; color: #2d3748; font-size: 14px; font-weight: 500; border-radius: 6px; transition: all 0.2s; }
-        .mega-item:hover { background: #f7fafc; color: #e74c3c; padding-left: 12px; }
-        .mega-icon { font-size: 18px; width: 24px; text-align: center; }
+        .mega-menu-columns { display: flex; gap: 30px; }
+        .mega-column { flex: 1; min-width: 180px; }
+        .mega-column-title { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid #272c45; }
+        .mega-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; text-decoration: none; color: #cbd5e1; font-size: 13px; font-weight: 500; border-radius: 6px; transition: all 0.2s; }
+        .mega-item:hover { background: #22273e; color: #e74c3c; }
+        .mega-icon { font-size: 16px; }
 
         .main-content { min-height: calc(100vh - 140px); }
         
-        footer { background: #2d3748; color: #a0aec0; padding: 40px 20px; text-align: center; }
+        footer { background: #181b2a; color: #a0aec0; padding: 30px 20px; text-align: center; border-top: 1px solid #272c45; }
         footer p { font-size: 14px; }
 
         @media (max-width: 900px) { .nav-menu { display: none; } }
@@ -46,7 +52,8 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="/" class="logo">
-                <span>PDF <span>MASTAR</span></span>
+                <div class="logo-box">📄</div>
+                <span class="logo-text">PDF <span class="logo-red">MASTAR</span></span>
             </a>
             <ul class="nav-menu">
                 <li class="nav-item"><a href="/merge" class="nav-link">Merge PDF</a></li>
@@ -83,7 +90,8 @@
     </div>
 
     <footer>
-        <p>&copy; 2024 PDF MASTAR. All rights reserved. | Free Online PDF Tools</p>
+        <p>&copy; PDF MASTAR. All rights reserved. | Free Online PDF Tools</p>
+        <p style="margin-top: 8px; font-size: 13px; color: #64748b;">🔒 Files are processed securely and never stored on our servers</p>
     </footer>
 </body>
 </html>
