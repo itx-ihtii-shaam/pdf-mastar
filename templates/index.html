@@ -1,153 +1,255 @@
 {% extends "base.html" %}
 
-{% block css %}
-.hero{text-align:center;padding:56px 0 28px}
-.hero h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.12;margin:0 0 12px;letter-spacing:-.02em}
-.hero h1 span{background:linear-gradient(135deg,var(--brand),var(--brand2));-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero p{color:var(--muted);font-size:1.1rem;margin:0 auto 24px;max-width:560px}
-.search{max-width:520px;margin:0 auto;position:relative}
-.search input{width:100%;padding:16px 18px 16px 48px;border-radius:16px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:1rem;box-shadow:var(--shadow);font-family:inherit}
-.search input:focus{outline:none;border-color:var(--brand)}
-.search .s{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-size:18px;opacity:.6}
-.search kbd{position:absolute;right:14px;top:50%;transform:translateY(-50%);border:1px solid var(--line);border-radius:6px;padding:1px 7px;color:var(--muted);font-size:.8rem}
-.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:22px 0 26px}
-.chip{border:1px solid var(--line);background:var(--card);color:var(--text);padding:8px 16px;border-radius:99px;cursor:pointer;font-weight:600;font-size:.9rem;font-family:inherit}
-.chip[aria-pressed=true]{background:var(--brand);border-color:var(--brand);color:#fff}
-h2.sec{font-size:1.05rem;margin:0 0 14px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
-#recent{margin-bottom:30px}
-/* hero animation: 3 PDFs ek ho jate hain */
-.demo{position:relative;width:320px;height:112px;margin:0 auto 26px}
-.pg{position:absolute;top:12px;width:64px;height:84px;border-radius:12px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:grid;place-items:end center;padding-bottom:10px;font-weight:800;font-size:.7rem;color:var(--muted);overflow:hidden}
-.pg::before{content:"";position:absolute;left:10px;right:10px;top:12px;height:5px;border-radius:3px;background:var(--accent);box-shadow:0 11px 0 var(--line),0 22px 0 var(--line),0 33px 0 var(--line)}
-.pg.p1{left:0;--dx:128px;--r:-9deg;--accent:#5b5bf0;animation:gather 5.5s ease-in-out infinite}
-.pg.p2{left:38px;--dx:90px;--r:0deg;--accent:#0ea5e9;animation:gather 5.5s ease-in-out infinite}
-.pg.p3{left:76px;--dx:52px;--r:9deg;--accent:#10b981;animation:gather 5.5s ease-in-out infinite}
-.pg.out{left:128px;top:6px;width:68px;height:92px;background:linear-gradient(135deg,var(--brand),var(--brand2));border:0;color:#fff;font-size:.78rem;place-items:center;padding:0;opacity:0;animation:pop 5.5s ease-in-out infinite}
-.pg.out::before{display:none}
-@keyframes gather{
-  0%{opacity:0;transform:translateX(0) rotate(var(--r))}
-  10%,26%{opacity:1;transform:translateX(0) rotate(var(--r))}
-  50%,60%{opacity:1;transform:translateX(var(--dx)) rotate(0)}
-  68%,100%{opacity:0;transform:translateX(var(--dx)) rotate(0) scale(.9)}
-}
-@keyframes pop{
-  0%,58%{opacity:0;transform:scale(.6)}
-  66%{opacity:1;transform:scale(1.12)}
-  72%,92%{opacity:1;transform:scale(1)}
-  100%{opacity:0;transform:scale(1)}
-}
-/* streak + badges */
-.statbar{display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:16px 20px;margin-bottom:26px}
-.statbar .nums{display:flex;gap:22px;flex-wrap:wrap}
-.statbar .n b{display:block;font-size:1.5rem;line-height:1.1}
-.statbar .n span{color:var(--muted);font-size:.82rem}
-.badges2{display:flex;gap:8px;flex-wrap:wrap}
-.bdg{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;font-size:.82rem;font-weight:600;border:1px solid color-mix(in srgb,var(--ok) 40%,transparent);background:color-mix(in srgb,var(--ok) 10%,var(--card))}
-.bdg.locked{filter:grayscale(1);opacity:.45;border-color:var(--line);background:var(--card)}
-.empty{text-align:center;color:var(--muted);padding:40px 0}
-{% endblock %}
-
 {% block content %}
-<div class="wrap">
-  <section class="hero">
-    <div class="demo" aria-hidden="true">
-      <div class="pg p1">PDF</div><div class="pg p2">PDF</div><div class="pg p3">PDF</div>
-      <div class="pg out">1 PDF ✓</div>
-    </div>
-    <h1>Every PDF tool you need, <span>in one place</span></h1>
-    <p>Merge, split, compress, convert and protect your PDFs in seconds. Free, fast and no sign-up.</p>
-    <div class="search">
-      <span class="s">🔍</span>
-      <input id="q" type="search" placeholder="Search tools, e.g. merge, Word, compress…" autocomplete="off" aria-label="Search tools">
-      <kbd>/</kbd>
-    </div>
-    <div class="chips" id="chips">
-      {% for key, label in cats %}
-      <button class="chip" type="button" data-cat="{{ key }}" aria-pressed="{{ 'true' if loop.first else 'false' }}">{{ label }}</button>
-      {% endfor %}
-    </div>
-  </section>
+<style>
+    .hero-section {
+        text-align: center;
+        padding: 50px 20px 40px 20px;
+    }
 
-  <section class="card statbar" id="statbar" hidden>
-    <div class="nums">
-      <div class="n"><b id="stStreak">0</b><span>day streak 🔥</span></div>
-      <div class="n"><b id="stTotal">0</b><span>files processed on this device</span></div>
-    </div>
-    <div class="badges2" id="stBadges"></div>
-  </section>
+    .hero-badge-box {
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 800;
+        color: white;
+        margin: 0 auto 24px auto;
+        box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+    }
 
-  <section id="recent" hidden>
-    <h2 class="sec">Recently used</h2>
-    <div class="grid" id="recentList"></div>
-  </section>
+    .hero-title {
+        font-size: 44px;
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 12px;
+        letter-spacing: -0.5px;
+    }
 
-  <section>
-    <h2 class="sec">All tools</h2>
-    <div class="grid" id="grid">
-      {% for t in tools %}
-      <a class="card tool cat-{{ t.cat }}" href="/{{ t.slug }}" data-slug="{{ t.slug }}" data-cat="{{ t.cat }}" data-search="{{ (t.title ~ ' ' ~ t.desc ~ ' ' ~ t.slug)|lower }}">
-        <div class="ico">{{ t.icon }}</div>
-        <div><h3>{{ t.title }}</h3><p>{{ t.desc }}</p></div>
-      </a>
-      {% endfor %}
+    .hero-title span {
+        color: #a855f7;
+    }
+
+    .hero-subtitle {
+        font-size: 15px;
+        color: #94a3b8;
+        max-width: 600px;
+        margin: 0 auto 32px auto;
+        line-height: 1.5;
+    }
+
+    /* Search Bar */
+    .search-container {
+        max-width: 580px;
+        margin: 0 auto 24px auto;
+        position: relative;
+    }
+
+    .search-input {
+        width: 100%;
+        background: #131826;
+        border: 1px solid #232a42;
+        padding: 16px 20px 16px 48px;
+        border-radius: 50px;
+        color: #ffffff;
+        font-size: 15px;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    .search-input:focus {
+        border-color: #6366f1;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+    }
+
+    .search-shortcut {
+        position: absolute;
+        right: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.08);
+        color: #94a3b8;
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+    }
+
+    /* Filter Pills */
+    .filter-pills {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 50px;
+    }
+
+    .pill-btn {
+        background: #131826;
+        border: 1px solid #232a42;
+        color: #94a3b8;
+        padding: 8px 18px;
+        border-radius: 50px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .pill-btn:hover, .pill-btn.active {
+        background: #6366f1;
+        color: #ffffff;
+        border-color: #6366f1;
+    }
+
+    /* Tools Grid */
+    .tools-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px 60px 20px;
+    }
+
+    .section-title {
+        font-size: 12px;
+        font-weight: 800;
+        color: #64748b;
+        letter-spacing: 1.5px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+    }
+
+    .tools-grid-box {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+        gap: 16px;
+    }
+
+    .tool-grid-card {
+        background: #131826;
+        border: 1px solid #232a42;
+        border-radius: 14px;
+        padding: 24px;
+        text-decoration: none;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        transition: all 0.2s ease;
+    }
+
+    .tool-grid-card:hover {
+        border-color: #6366f1;
+        background: #161c2e;
+        transform: translateY(-2px);
+    }
+
+    .tool-card-icon {
+        font-size: 22px;
+        width: 44px;
+        height: 44px;
+        background: rgba(99, 102, 241, 0.1);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .tool-card-info h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 6px;
+    }
+
+    .tool-card-info p {
+        font-size: 13px;
+        color: #94a3b8;
+        line-height: 1.4;
+    }
+</style>
+
+<div class="hero-section">
+    <div class="hero-badge-box">1 PDF ✓</div>
+    <h1 class="hero-title">Every PDF tool you need, <span>in one place</span></h1>
+    <p class="hero-subtitle">Merge, split, compress, convert and protect your PDFs in seconds. Free, fast and no sign-up.</p>
+
+    <div class="search-container">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="tool-search" class="search-input" placeholder="Search tools, e.g. merge, Word, compress...">
+        <span class="search-shortcut">/</span>
     </div>
-    <div class="empty" id="empty" hidden>No tool matches your search. Try another word.</div>
-  </section>
+
+    <div class="filter-pills">
+        {% for cat_id, cat_name in cats %}
+        <a href="#" class="pill-btn {% if loop.first %}active{% endif %}" data-cat="{{ cat_id }}">{{ cat_name }}</a>
+        {% endfor %}
+    </div>
 </div>
-{% endblock %}
 
-{% block scripts %}
+<div class="tools-wrapper">
+    <div class="section-title">ALL TOOLS</div>
+    <div class="tools-grid-box" id="tools-grid">
+        {% for t in tools %}
+        <a href="/{{ t.slug }}" class="tool-grid-card" data-cat="{{ t.cat }}" data-title="{{ t.title|lower }} {{ t.desc|lower }}">
+            <div class="tool-card-icon">{{ t.icon }}</div>
+            <div class="tool-card-info">
+                <h3>{{ t.title }}</h3>
+                <p>{{ t.desc }}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
 <script>
-(function(){
-  var grid=document.getElementById('grid');
-  var cards=Array.prototype.slice.call(grid.querySelectorAll('.tool'));
-  var q=document.getElementById('q'), cat='all';
+    const searchInput = document.getElementById('tool-search');
+    const pillBtns = document.querySelectorAll('.pill-btn');
+    const toolCards = document.querySelectorAll('.tool-grid-card');
+    let currentCat = 'all';
 
-  function apply(){
-    var s=q.value.trim().toLowerCase(), n=0;
-    cards.forEach(function(c){
-      var ok=(cat==='all'||c.dataset.cat===cat)&&(!s||c.dataset.search.indexOf(s)>-1);
-      c.hidden=!ok; if(ok) n++;
+    function filterTools() {
+        const query = searchInput.value.toLowerCase().trim();
+        toolCards.forEach(card => {
+            const cat = card.getAttribute('data-cat');
+            const titleText = card.getAttribute('data-title');
+            const matchesCat = (currentCat === 'all' || cat === currentCat);
+            const matchesQuery = (titleText.includes(query));
+            if (matchesCat && matchesQuery) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    searchInput.addEventListener('input', filterTools);
+
+    pillBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            pillBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCat = btn.getAttribute('data-cat');
+            filterTools();
+        });
     });
-    document.getElementById('empty').hidden=n>0;
-  }
-  q.addEventListener('input',apply);
-  document.getElementById('chips').addEventListener('click',function(e){
-    var b=e.target.closest('.chip'); if(!b) return;
-    cat=b.dataset.cat;
-    document.querySelectorAll('.chip').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
-    apply();
-  });
-  document.addEventListener('keydown',function(e){
-    if(e.key==='/'&&document.activeElement!==q){e.preventDefault();q.focus();}
-  });
 
-  try{
-    var st=Stats.get();
-    if(st.total>0){
-      document.getElementById('stStreak').textContent=st.streak;
-      document.getElementById('stTotal').textContent=st.total;
-      var bx=document.getElementById('stBadges');
-      Stats.BADGES.forEach(function(b){
-        var el=document.createElement('span'),on=st.badges.indexOf(b.id)>-1;
-        el.className='bdg'+(on?'':' locked');
-        el.title=on?b.name:'Locked: '+b.hint;
-        el.textContent=b.icon+' '+b.name;
-        bx.appendChild(el);
-      });
-      document.getElementById('statbar').hidden=false;
-    }
-  }catch(e){}
-
-  try{
-    var recent=JSON.parse(localStorage.getItem('recent')||'[]');
-    var box=document.getElementById('recentList');
-    var found=recent.map(function(s){return cards.filter(function(c){return c.dataset.slug===s})[0]}).filter(Boolean).slice(0,4);
-    if(found.length){
-      found.forEach(function(c){box.appendChild(c.cloneNode(true))});
-      document.getElementById('recent').hidden=false;
-    }
-  }catch(e){}
-})();
+    window.addEventListener('keydown', (e) => {
+        if (e.key === '/' && document.activeElement !== searchInput) {
+            e.preventDefault();
+            searchInput.focus();
+        }
+    });
 </script>
 {% endblock %}
