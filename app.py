@@ -1,4 +1,4 @@
-"""PDF MASTAR - Flask app (Vercel compatible, koi file disk par save nahi hoti)."""
+"""PDF Master - Flask app (Vercel compatible, koi file disk par save nahi hoti)."""
 import io
 import json
 import os
@@ -12,8 +12,8 @@ from PIL import Image, ImageDraw, ImageOps
 from pypdf import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 
-SITE_NAME = 'PDF MASTAR'
-MAX_MB = 4
+SITE_NAME = 'PDF Master'    # <- updated name as per screenshot
+MAX_MB = 4                  # Vercel ki request limit ~4.5 MB hai
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['MAX_CONTENT_LENGTH'] = MAX_MB * 1024 * 1024
@@ -138,7 +138,7 @@ def do_compress(files, form):
     writer = PdfWriter()
     for page in reader.pages:
         writer.add_page(page)
-    for page in writer.pages:
+    for page in reader.pages:
         try:
             for img in page.images:
                 try:
@@ -489,8 +489,7 @@ def home():
 def make_icon(size):
     img = Image.new('RGB', (size, size))
     px = img.load()
-    # Red Favicon Icon Generator
-    c1, c2 = (231, 76, 60), (192, 57, 43)
+    c1, c2 = (91, 91, 240), (139, 92, 246)
     for y in range(size):
         for x in range(size):
             t = (x + y) / (2 * size)
@@ -501,11 +500,11 @@ def make_icon(size):
     fold = w * 0.3
     d.polygon([(x0, y0), (x0 + w - fold, y0), (x0 + w, y0 + fold), (x0 + w, y0 + h), (x0, y0 + h)],
               fill=(255, 255, 255))
-    d.polygon([(x0 + w - fold, y0), (x0 + w - fold, y0 + fold), (x0 + w, y0 + fold)], fill=(230, 230, 230))
+    d.polygon([(x0 + w - fold, y0), (x0 + w - fold, y0 + fold), (x0 + w, y0 + fold)], fill=(210, 212, 245))
     for i in range(3):
         ly = y0 + h * (0.45 + i * 0.16)
         d.rounded_rectangle([x0 + w * 0.16, ly, x0 + w * 0.84, ly + size * 0.032], radius=size * 0.016,
-                            fill=(231, 76, 60))
+                            fill=(139, 92, 246))
     buf = io.BytesIO()
     img.save(buf, 'PNG', optimize=True)
     return buf.getvalue()
@@ -525,7 +524,7 @@ def manifest():
                  for s in ('merge', 'compress', 'pdf-to-word', 'jpg-to-pdf')]
     data = {
         'name': SITE_NAME, 'short_name': SITE_NAME[:12], 'start_url': '/', 'scope': '/',
-        'display': 'standalone', 'background_color': '#0f111a', 'theme_color': '#e74c3c',
+        'display': 'standalone', 'background_color': '#f6f7fb', 'theme_color': '#5b5bf0',
         'description': 'Merge, split, compress, convert and protect PDFs.',
         'icons': [{'src': '/icon-192.png', 'sizes': '192x192', 'type': 'image/png', 'purpose': 'any maskable'},
                   {'src': '/icon-512.png', 'sizes': '512x512', 'type': 'image/png', 'purpose': 'any maskable'}],
