@@ -30,7 +30,7 @@
         .container { background: white; padding: 50px 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: 100%; max-width: 720px; text-align: center; }
         h2 { color: #2d3748; margin-bottom: 40px; font-size: 28px; font-weight: 700; }
         .upload-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 18px 50px; border-radius: 50px; font-size: 18px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); display: inline-flex; align-items: center; gap: 10px; }
-        .upload-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6); }
+        .upload-btn:hover, .upload-btn.drag-over { transform: translateY(-3px) scale(1.05); box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6); border: 2px dashed #fff; }
         .upload-btn input[type="file"] { display: none; }
         .file-preview { display: none; margin-top: 30px; background: #f7f9fc; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
         .file-card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); max-width: 280px; margin: 0 auto; position: relative; }
@@ -76,14 +76,14 @@
                                 <a href="/jpg-to-pdf" class="mega-item"><span class="mega-icon">🖼️</span> JPG to PDF</a>
                                 <a href="/word-to-pdf" class="mega-item"><span class="mega-icon">📝</span> Word to PDF</a>
                                 <a href="/powerpoint-to-pdf" class="mega-item"><span class="mega-icon">📊</span> PowerPoint to PDF</a>
-                                <a href="/excel-to-pdf" class="mega-item"><span class="mega-icon"></span> Excel to PDF</a>
+                                <a href="/excel-to-pdf" class="mega-item"><span class="mega-icon">📈</span> Excel to PDF</a>
                             </div>
                             <div class="mega-column">
                                 <div class="mega-column-title">Convert from PDF</div>
                                 <a href="/pdf-to-jpg" class="mega-item"><span class="mega-icon">🖼️</span> PDF to JPG</a>
                                 <a href="/pdf-to-word" class="mega-item"><span class="mega-icon">📝</span> PDF to Word</a>
                                 <a href="/pdf-to-powerpoint" class="mega-item"><span class="mega-icon">📊</span> PDF to PowerPoint</a>
-                                <a href="/pdf-to-excel" class="mega-item"><span class="mega-icon"></span> PDF to Excel</a>
+                                <a href="/pdf-to-excel" class="mega-item"><span class="mega-icon">📈</span> PDF to Excel</a>
                                 <a href="/pdf-to-png" class="mega-item"><span class="mega-icon">🎨</span> PDF to PNG</a>
                             </div>
                         </div>
@@ -116,7 +116,7 @@
                                 <a href="/pdf-to-excel" class="mega-item"><span class="mega-icon">📈</span> PDF to Excel</a>
                                 <a href="/pdf-to-powerpoint" class="mega-item"><span class="mega-icon">📊</span> PDF to PPT</a>
                                 <a href="/pdf-to-jpg" class="mega-item"><span class="mega-icon">🖼️</span> PDF to JPG</a>
-                                <a href="/pdf-to-png" class="mega-item"><span class="mega-icon"></span> PDF to PNG</a>
+                                <a href="/pdf-to-png" class="mega-item"><span class="mega-icon">🎨</span> PDF to PNG</a>
                             </div>
                             <div class="mega-column">
                                 <div class="mega-column-title">Edit PDF</div>
@@ -124,7 +124,7 @@
                             </div>
                             <div class="mega-column">
                                 <div class="mega-column-title">PDF Security</div>
-                                <a href="/protect-pdf" class="mega-item"><span class="mega-icon"></span> Protect PDF</a>
+                                <a href="/protect-pdf" class="mega-item"><span class="mega-icon">🔒</span> Protect PDF</a>
                                 <a href="/unlock-pdf" class="mega-item"><span class="mega-icon">🔓</span> Unlock PDF</a>
                             </div>
                         </div>
@@ -145,15 +145,12 @@
                     <p style="color: #4a5568; font-size: 16px; margin-bottom: 30px; line-height: 1.6;">
                         Your file has been successfully converted to <strong>{{ output_format }}</strong>.
                     </p>
-                    
                     <a href="{{ action }}" class="submit-btn" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; width: auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                         <span>🔄</span> Convert Another File
                     </a>
                 </div>
-                
                 {% if auto_download %}
                 <script>
-                    // Auto-download trigger
                     window.addEventListener('load', function() {
                         const downloadLink = document.createElement('a');
                         downloadLink.href = '/download/{{ download_filename }}';
@@ -168,7 +165,7 @@
                 <form action="{{ action }}" method="POST" enctype="multipart/form-data">
                     <label class="upload-btn" id="uploadBtn">
                         <span>📁</span>
-                        <span>Select File</span>
+                        <span>Select or Drop File Here</span>
                         <input type="file" id="fileInput" name="{{ 'pdf_files' if multiple else 'pdf_file' }}" accept="{{ accept }}" {{ 'multiple' if multiple else '' }} required>
                     </label>
 
@@ -188,7 +185,6 @@
 
                     <button type="submit" class="submit-btn" id="submitBtn">{{ button_text or 'Process File' }}</button>
                 </form>
-                
                 <a href="/" class="back-link">← Back to Home</a>
             {% endif %}
         </div>
@@ -207,6 +203,25 @@
         const uploadBtn = document.getElementById('uploadBtn');
         const submitBtn = document.getElementById('submitBtn');
         const removeBtn = document.getElementById('removeBtn');
+
+        // --- NEW: True Drag & Drop Support ---
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadBtn.addEventListener(eventName, preventDefaults, false);
+        });
+        function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadBtn.addEventListener(eventName, () => uploadBtn.classList.add('drag-over'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadBtn.addEventListener(eventName, () => uploadBtn.classList.remove('drag-over'), false);
+        });
+        uploadBtn.addEventListener('drop', handleDrop, false);
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            fileInput.files = dt.files;
+            fileInput.dispatchEvent(new Event('change'));
+        }
+        // -------------------------------------
 
         function formatFileSize(bytes) {
             if (bytes === 0) return '0 Bytes';
