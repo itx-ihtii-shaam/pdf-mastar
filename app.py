@@ -12,8 +12,8 @@ from PIL import Image, ImageDraw, ImageOps
 from pypdf import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 
-SITE_NAME = 'PDF Master'    # <- updated name as per screenshot
-MAX_MB = 4                  # Vercel ki request limit ~4.5 MB hai
+SITE_NAME = 'PDF Master'
+MAX_MB = 4
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['MAX_CONTENT_LENGTH'] = MAX_MB * 1024 * 1024
@@ -21,6 +21,8 @@ app.config['MAX_CONTENT_LENGTH'] = MAX_MB * 1024 * 1024
 API_TOKEN = os.environ.get('CONVERT_API_TOKEN')
 CONVERT_API = 'https://v2.convertapi.com/convert'
 
+# In-memory storage for generated files on Vercel (temporary dictionary for download tokens)
+TEMP_STORAGE = {}
 
 class ToolError(Exception):
     """User ko dikhne wala saaf error."""
@@ -138,7 +140,7 @@ def do_compress(files, form):
     writer = PdfWriter()
     for page in reader.pages:
         writer.add_page(page)
-    for page in reader.pages:
+    for page in writer.pages:
         try:
             for img in page.images:
                 try:
@@ -568,18 +570,28 @@ def service_worker():
     return resp
 
 
+@app.route('/download-result/<file_id>')
+def download_result(file_id):
+    item = TEMP_STORAGE.get(file_id)
+    if not item:
+        return "File expired or not found", 404
+    return send_file(io.BytesIO(item['data']), as_attachment=True, download_name=item['name'])
+
+
 @app.route('/<slug>', methods=['GET', 'POST'])
 def tool_page(slug):
     t = TOOL_MAP.get(slug)
     if not t:
         abort(404)
 
+    priority_slugs = ['word-to-pdf', 'pdf-to-word']
+    related = [x for x in TOOLS if x['slug'] in priority_slugs and x['slug'] != slug]
+    related += [x for x in TOOLS if x['cat'] == t['cat'] and x['slug'] != slug and x['slug'] not in priority_slugs]
+    related += [x for x in TOOLS if x['slug'] != slug and x['slug'] not in priority_slugs and x['cat'] != t['cat']]
+    related = related[:3]
+
     if request.method == 'GET':
-        priority_slugs = ['word-to-pdf', 'pdf-to-word']
-        related = [x for x in TOOLS if x['slug'] in priority_slugs and x['slug'] != slug]
-        related += [x for x in TOOLS if x['cat'] == t['cat'] and x['slug'] != slug and x['slug'] not in priority_slugs]
-        related += [x for x in TOOLS if x['slug'] != slug and x['slug'] not in priority_slugs and x['cat'] != t['cat']]
-        return render_template('tool.html', tool=t, related=related[:3], max_mb=MAX_MB)
+        return render_template('tool.html', tool=t, related=related, max_mb=MAX_MB)
 
     files = [f for f in request.files.getlist('files') if f and f.filename]
     if not files:
@@ -599,10 +611,11 @@ def tool_page(slug):
         app.logger.exception('Tool %s failed', slug)
         return 'Something went wrong while processing your file. Please try again.', 500
 
-    resp = send_file(io.BytesIO(data), as_attachment=True, download_name=name)
-    resp.headers.update(headers)
-    resp.headers['Cache-Control'] = 'no-store'
-    return resp
+    import uuid
+    file_id = uuid.uuid4().hex
+    TEMP_STORAGE[file_id] = {'data': data, 'name': name}
+
+    return render_template('tool.html', tool=t, related=related, max_mb=MAX_MB, success=True, download_url=f'/download-result/{file_id}', download_filename=name)
 
 
 handler = app
