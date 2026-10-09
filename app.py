@@ -594,8 +594,10 @@ def tool_page(slug):
         abort(404)
 
     if request.method == 'GET':
-        related = [x for x in TOOLS if x['cat'] == t['cat'] and x['slug'] != slug]
-        related += [x for x in TOOLS if x['cat'] != t['cat']]
+        # Har tool page ke 'WHAT NEXT?' section mein 'Word to PDF' hamesha show hoga (agar current tool Word to PDF nahi hai)
+        related = [x for x in TOOLS if x['slug'] == 'word-to-pdf' and slug != 'word-to-pdf']
+        related += [x for x in TOOLS if x['cat'] == t['cat'] and x['slug'] != slug and x['slug'] != 'word-to-pdf']
+        related += [x for x in TOOLS if x['cat'] != t['cat'] and x['slug'] != 'word-to-pdf']
         return render_template('tool.html', tool=t, related=related[:3], max_mb=MAX_MB)
 
     files = [f for f in request.files.getlist('files') if f and f.filename]
