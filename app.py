@@ -138,7 +138,7 @@ def do_compress(files, form):
     writer = PdfWriter()
     for page in reader.pages:
         writer.add_page(page)
-    for page in writer.pages:
+    for page in reader.pages:
         try:
             for img in page.images:
                 try:
@@ -489,7 +489,7 @@ def home():
 def make_icon(size):
     img = Image.new('RGB', (size, size))
     px = img.load()
-    # Red (#e74c3c to #c0392b) Gradient for Browser Favicon Tab
+    # Red (#e74c3c to #c0392b) Gradient
     c1, c2 = (231, 76, 60), (192, 57, 43)
     for y in range(size):
         for x in range(size):
@@ -525,7 +525,7 @@ def manifest():
                  for s in ('merge', 'compress', 'pdf-to-word', 'jpg-to-pdf')]
     data = {
         'name': SITE_NAME, 'short_name': SITE_NAME[:12], 'start_url': '/', 'scope': '/',
-        'display': 'standalone', 'background_color': '#f6f7fb', 'theme_color': '#e74c3c',
+        'display': 'standalone', 'background_color': '#0f111a', 'theme_color': '#e74c3c',
         'description': 'Merge, split, compress, convert and protect PDFs.',
         'icons': [{'src': '/icon-192.png', 'sizes': '192x192', 'type': 'image/png', 'purpose': 'any maskable'},
                   {'src': '/icon-512.png', 'sizes': '512x512', 'type': 'image/png', 'purpose': 'any maskable'}],
