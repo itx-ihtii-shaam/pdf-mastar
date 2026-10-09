@@ -6,7 +6,7 @@
 <title>{{ tool.title }} - PDF MASTAR</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;color:#2d3748}
+body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;color:#2d3748}
 .navbar{background:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.08);padding:0 40px;position:sticky;top:0;z-index:1000}
 .nav-container{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:70px}
 .logo{font-size:22px;font-weight:900;text-decoration:none;color:#2d3748}
@@ -22,6 +22,7 @@ h2{color:#2d3748;margin-bottom:10px;font-size:28px;font-weight:700}
 .form-group input,.form-group select{width:100%;padding:10px;border:1px solid #edf2f7;border-radius:6px;font-size:14px}
 .submit-btn{background:linear-gradient(135deg,#48bb78 0%,#38a169 100%);color:#fff;border:none;padding:15px 40px;border-radius:50px;font-size:18px;font-weight:600;cursor:pointer;margin-top:30px;width:100%;display:none}
 .back-link{display:inline-block;margin-top:25px;color:#718096;text-decoration:none;font-size:14px}
+.note{background:#fffaf0;border-left:4px solid #ed8936;padding:15px;margin-top:20px;text-align:left;font-size:13px;color:#744210;border-radius:4px}
 </style>
 </head>
 <body>
@@ -36,14 +37,14 @@ h2{color:#2d3748;margin-bottom:10px;font-size:28px;font-weight:700}
 <p class="desc">{{ tool.desc }}</p>
 <form action="/{{ tool.slug }}" method="POST" enctype="multipart/form-data">
 <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-<div style="font-size:48px;margin-bottom:15px">📁</div>
+<div style="font-size:48px;margin-bottom:15px">&#128193;</div>
 <p style="color:#2d3748;font-weight:600">{% if tool.slug == 'merge' or tool.slug == 'jpg-to-pdf' %}Choose files{% else %}Choose a file{% endif %}</p>
 <p style="color:#718096;font-size:13px;margin-top:5px">Supported files up to {{ max_mb }} MB</p>
 <input type="file" id="fileInput" name="files" {% if tool.slug == 'merge' or tool.slug == 'jpg-to-pdf' %}multiple{% endif %} required style="display:none" onchange="document.getElementById('submitBtn').style.display='block'">
 </div>
 <button type="submit" class="submit-btn" id="submitBtn">Process File</button>
 </form>
-<a href="/" class="back-link">← Back to Home</a>
+<a href="/" class="back-link">&#8592; Back to Home</a>
 </div>
 </div>
 </body>
