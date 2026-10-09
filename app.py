@@ -1,11 +1,9 @@
 import os
 import io
-import json
 import uuid
-import time
 import requests
 import zipfile
-from flask import Flask, render_template, request, send_file, Response, abort
+from flask import Flask, render_template, request, send_file, abort
 from pypdf import PdfReader, PdfWriter
 from PIL import Image, ImageOps
 
@@ -26,13 +24,15 @@ def base_name(filename):
 
 def read_bytes(f):
     data = f.read()
-    if not data: raise ToolError('The uploaded file is empty.')
+    if not data:
+        raise ToolError('The uploaded file is empty.')
     return data
 
 def open_pdf(data):
     try:
         reader = PdfReader(io.BytesIO(data))
-        if reader.is_encrypted and not reader.decrypt(''): raise ToolError('Password-protected PDF.')
+        if reader.is_encrypted and not reader.decrypt(''):
+            raise ToolError('Password-protected PDF.')
         return reader
     except Exception:
         raise ToolError('Invalid PDF.')
@@ -43,9 +43,11 @@ def pdf_bytes(writer):
     return buf.getvalue()
 
 def do_merge(files, form):
-    if len(files) < 2: raise ToolError('Select at least 2 PDFs.')
+    if len(files) < 2:
+        raise ToolError('Select at least 2 PDFs.')
     writer = PdfWriter()
-    for f in files: writer.append(open_pdf(read_bytes(f)))
+    for f in files:
+        writer.append(open_pdf(read_bytes(f)))
     return pdf_bytes(writer), 'merged.pdf', {}
 
 def do_split(files, form):
@@ -54,7 +56,8 @@ def do_split(files, form):
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED) as z:
         for i, page in enumerate(reader.pages, 1):
-            w = PdfWriter(); w.add_page(page)
+            w = PdfWriter()
+            w.add_page(page)
             z.writestr(f'{name}_page_{i}.pdf', pdf_bytes(w))
     return buf.getvalue(), f'{name}_pages.zip', {}
 
@@ -83,16 +86,31 @@ def make_api_handler(default_src, dst):
         data = read_bytes(f)
         src = os.path.splitext(f.filename)[1].lstrip('.').lower() or default_src
         name = base_name(f.filename)
-        r = requests.post(f'{CONVERT_API}/{src}/to/{dst}', headers={'Authorization': f'Bearer {API_TOKEN}'},
-                          files={'File': (f.filename, data)}, data={'StoreFile': 'true'}, timeout=100)
-        if r.status_code != 200: raise ToolError('Conversion failed.')
+        r = requests.post(
+            f'{CONVERT_API}/{src}/to/{dst}',
+            headers={'Authorization': f'Bearer {API_TOKEN}'},
+            files={'File': (f.filename, data)},
+            data={'StoreFile': 'true'},
+            timeout=100
+        )
+        if r.status_code != 200:
+            raise ToolError('Conversion failed.')
         items = r.json().get('Files') or []
-        blobs = [requests.get(item.get('Url') or item.get('url'), timeout=60).content for item in items if item.get('Url') or item.get('url')]
-        if not blobs: raise ToolError('No file returned.')
-        if len(blobs) == 1: return blobs[0], f'{name}.{dst}', {}
+        blobs = []
+        for item in items:
+            url = item.get('Url') or item.get('url')
+            if url:
+                d = requests.get(url, timeout=60)
+                d.raise_for_status()
+                blobs.append(d.content)
+        if not blobs:
+            raise ToolError('No file returned.')
+        if len(blobs) == 1:
+            return blobs[0], f'{name}.{dst}', {}
         buf = io.BytesIO()
         with zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED) as z:
-            for i, blob in enumerate(blobs, 1): z.writestr(f'{name}_{i}.{dst}', blob)
+            for i, blob in enumerate(blobs, 1):
+                z.writestr(f'{name}_{i}.{dst}', blob)
         return buf.getvalue(), f'{name}_{dst}.zip', {}
     return handler
 
@@ -109,15 +127,16 @@ TOOLS = [
 ]
 
 HANDLERS = {
-    'merge': do_merge, 'split': do_split, 'compress': do_compress, 'jpg-to-pdf': do_images_to_pdf,
-    'word-to-pdf': make_api_handler('docx', 'pdf'), 'pdf-to-word': make_api_handler('pdf', 'docx'),
-    'excel-to-pdf': make_api_handler('xlsx', 'pdf'), 'pdf-to-excel': make_api_handler('pdf', 'xlsx'),
+    'merge': do_merge,
+    'split': do_split,
+    'compress': do_compress,
+    'jpg-to-pdf': do_images_to_pdf,
+    'word-to-pdf': make_api_handler('docx', 'pdf'),
+    'pdf-to-word': make_api_handler('pdf', 'docx'),
+    'excel-to-pdf': make_api_handler('xlsx', 'pdf'),
+    'pdf-to-excel': make_api_handler('pdf', 'xlsx'),
     'pdf-to-jpg': make_api_handler('pdf', 'jpg'),
 }
-
-@app.context_processor
-def inject_globals():
-    return {'SITE_NAME': SITE_NAME}
 
 @app.route('/')
 def home():
@@ -126,22 +145,28 @@ def home():
 @app.route('/<slug>', methods=['GET', 'POST'])
 def tool_page(slug):
     tool = next((t for t in TOOLS if t['slug'] == slug), None)
-    if not tool: abort(404)
+    if not tool:
+        abort(404)
     if request.method == 'GET':
         return render_template('tool.html', tool=tool, max_mb=MAX_MB)
     
     files = [f for f in request.files.getlist('files') if f and f.filename]
-    if not files: return 'Please choose a file first.', 400
-    allowed = tuple(tool['slug'].replace('pdf-to-', '').replace('-to-pdf', '').split('-')[0] for _ in [1]) # Simplified check
-    # Better check:
-    ext_check = tool['slug']
-    if 'pdf' in ext_check and 'jpg' in ext_check: allowed = ('.jpg', '.jpeg', '.png', '.pdf')
-    elif 'word' in ext_check: allowed = ('.doc', '.docx', '.pdf')
-    elif 'excel' in ext_check: allowed = ('.xls', '.xlsx', '.pdf')
-    else: allowed = ('.pdf',)
+    if not files:
+        return 'Please choose a file first.', 400
+    
+    slug_check = slug
+    if 'pdf' in slug_check and 'jpg' in slug_check:
+        allowed = ('.jpg', '.jpeg', '.png', '.pdf')
+    elif 'word' in slug_check:
+        allowed = ('.doc', '.docx', '.pdf')
+    elif 'excel' in slug_check:
+        allowed = ('.xls', '.xlsx', '.pdf')
+    else:
+        allowed = ('.pdf',)
     
     for f in files:
-        if not f.filename.lower().endswith(allowed): return f'Not supported. Allowed: {allowed}', 400
+        if not f.filename.lower().endswith(allowed):
+            return f'Not supported. Allowed: {allowed}', 400
     
     try:
         data, name, _ = HANDLERS[slug](files, request.form)
@@ -149,10 +174,12 @@ def tool_page(slug):
         return str(e), 400
     except Exception:
         return 'Something went wrong.', 500
-        
+    
     resp = send_file(io.BytesIO(data), as_attachment=True, download_name=name)
     resp.headers['Cache-Control'] = 'no-store'
     return resp
 
 handler = app
-if __name__ == '__main__': app.run(debug=True)
+
+if __name__ == '__main__':
+    app.run(debug=True)
