@@ -91,7 +91,7 @@
         justify-content: center;
         gap: 8px;
         flex-wrap: wrap;
-        margin-bottom: 50px;
+        margin-bottom: 40px;
     }
 
     .pill-btn {
@@ -197,6 +197,23 @@
     </div>
 </div>
 
+{% if recent_tools %}
+<div class="tools-wrapper" style="padding-bottom: 30px;">
+    <div class="section-title">Recently Used</div>
+    <div class="tools-grid-box">
+        {% for t in recent_tools %}
+        <a href="/{{ t.slug }}" class="tool-grid-card">
+            <div class="tool-card-icon">{{ t.icon }}</div>
+            <div class="tool-card-info">
+                <h3>{{ t.title }}</h3>
+                <p>{{ t.desc }}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
 <div class="tools-wrapper">
     <div class="section-title">ALL TOOLS</div>
     <div class="tools-grid-box" id="tools-grid">
@@ -215,7 +232,7 @@
 <script>
     const searchInput = document.getElementById('tool-search');
     const pillBtns = document.querySelectorAll('.pill-btn');
-    const toolCards = document.querySelectorAll('.tool-grid-card');
+    const toolCards = document.querySelectorAll('.tools-wrapper #tools-grid .tool-grid-card');
     let currentCat = 'all';
 
     function filterTools() {
@@ -233,7 +250,9 @@
         });
     }
 
-    searchInput.addEventListener('input', filterTools);
+    if (searchInput) {
+        searchInput.addEventListener('input', filterTools);
+    }
 
     pillBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -248,7 +267,7 @@
     window.addEventListener('keydown', (e) => {
         if (e.key === '/' && document.activeElement !== searchInput) {
             e.preventDefault();
-            searchInput.focus();
+            if (searchInput) searchInput.focus();
         }
     });
 </script>
