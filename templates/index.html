@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }} - PDF MASTAR</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <title>PDF MASTAR - Free Online PDF Tools</title>
+    <meta name="description" content="Free online PDF tools. Merge, split, compress, and convert PDF files. 100% free, no signup required.">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
@@ -26,35 +26,28 @@
         .mega-menu-large { min-width: 1100px; padding: 30px 35px; }
         .mega-menu-large .mega-menu-columns { gap: 30px; flex-wrap: wrap; }
         .mega-menu-large .mega-column { min-width: 180px; flex: 1 1 180px; }
-        .main-content { display: flex; justify-content: center; align-items: center; padding: 60px 20px; min-height: calc(100vh - 70px); }
-        .container { background: white; padding: 50px 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: 100%; max-width: 720px; text-align: center; }
-        h2 { color: #2d3748; margin-bottom: 40px; font-size: 28px; font-weight: 700; }
-        .upload-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 18px 50px; border-radius: 50px; font-size: 18px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); display: inline-flex; align-items: center; gap: 10px; }
-        .upload-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6); }
-        .upload-btn input[type="file"] { display: none; }
-        .file-preview { display: none; margin-top: 30px; background: #f7f9fc; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        .file-card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); max-width: 280px; margin: 0 auto; position: relative; }
-        .file-info-bar { background: #e2e8f0; color: #4a5568; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; display: inline-block; margin-bottom: 15px; }
-        .file-thumbnail { width: 100%; height: 180px; background: white; border: 1px solid #e2e8f0; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 12px; }
-        .file-thumbnail canvas, .file-thumbnail img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .file-thumbnail .icon-label { font-size: 24px; font-weight: 900; color: white; letter-spacing: 1px; padding: 10px 20px; border-radius: 6px; }
-        .file-thumbnail .icon-pdf { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
-        .file-thumbnail .icon-word { background: linear-gradient(135deg, #2b579a 0%, #1e3f7a 100%); }
-        .file-thumbnail .icon-img { background: linear-gradient(135deg, #27ae60 0%, #1e8449 100%); }
-        .file-thumbnail .icon-excel { background: linear-gradient(135deg, #217346 0%, #185c37 100%); }
-        .file-thumbnail .icon-powerpoint { background: linear-gradient(135deg, #d24726 0%, #b73a1f 100%); }
-        .file-thumbnail .icon-default { background: linear-gradient(135deg, #7f8c8d 0%, #5d6d7e 100%); }
-        .file-name-display { font-size: 13px; color: #2d3748; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .remove-file-btn { position: absolute; top: -10px; right: -10px; background: #e53e3e; color: white; border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; box-shadow: 0 2px 6px rgba(229, 62, 62, 0.4); }
-        .remove-file-btn:hover { transform: scale(1.1); background: #c53030; }
-        .loading-spinner { width: 30px; height: 30px; border: 3px solid #f3f3f3; border-top: 3px solid #e74c3c; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .submit-btn { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: white; border: none; padding: 18px 40px; border-radius: 50px; font-size: 18px; font-weight: 600; cursor: pointer; margin-top: 30px; width: 100%; display: none; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(72, 187, 120, 0.4); }
-        .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(72, 187, 120, 0.6); }
-        .back-link { display: inline-block; margin-top: 25px; color: #718096; text-decoration: none; font-size: 14px; transition: color 0.3s; }
-        .back-link:hover { color: #667eea; }
+        .hero { text-align: center; padding: 80px 20px 60px; color: white; }
+        .hero h1 { font-size: 48px; margin-bottom: 20px; font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .hero p { font-size: 20px; opacity: 0.95; max-width: 600px; margin: 0 auto 30px; }
+        .tools-section { max-width: 1200px; margin: -40px auto 60px; padding: 0 20px; position: relative; z-index: 10; }
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .tool-card { background: white; border-radius: 16px; padding: 35px 30px; text-align: center; text-decoration: none; color: #2d3748; box-shadow: 0 10px 40px rgba(0,0,0,0.15); transition: all 0.3s ease; border: 1px solid #edf2f7; }
+        .tool-card:hover { transform: translateY(-10px); box-shadow: 0 20px 60px rgba(0,0,0,0.2); border-color: #667eea; }
+        .tool-icon { font-size: 48px; margin-bottom: 20px; display: inline-block; }
+        .tool-card h3 { font-size: 20px; margin-bottom: 12px; font-weight: 700; color: #2d3748; }
+        .tool-card p { font-size: 14px; color: #718096; line-height: 1.6; }
+        .features { background: white; padding: 60px 20px; margin-top: 40px; }
+        .features-container { max-width: 1200px; margin: 0 auto; }
+        .features h2 { text-align: center; font-size: 36px; margin-bottom: 50px; color: #2d3748; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+        .feature { text-align: center; padding: 30px; }
+        .feature-icon { font-size: 48px; margin-bottom: 20px; }
+        .feature h3 { font-size: 20px; margin-bottom: 12px; color: #2d3748; }
+        .feature p { font-size: 15px; color: #718096; line-height: 1.6; }
+        footer { background: #2d3748; color: #a0aec0; padding: 40px 20px; text-align: center; }
+        footer p { font-size: 14px; }
         @media (max-width: 1200px) { .mega-menu, .mega-menu-large { min-width: 600px; } .mega-menu-large .mega-menu-columns { gap: 20px; } }
-        @media (max-width: 900px) { .nav-menu { display: none; } .mega-menu, .mega-menu-large { display: none !important; } }
+        @media (max-width: 900px) { .nav-menu { display: none; } .mega-menu, .mega-menu-large { display: none !important; } .hero h1 { font-size: 36px; } .hero p { font-size: 18px; } }
     </style>
 </head>
 <body>
@@ -76,15 +69,15 @@
                                 <a href="/jpg-to-pdf" class="mega-item"><span class="mega-icon">🖼️</span> JPG to PDF</a>
                                 <a href="/word-to-pdf" class="mega-item"><span class="mega-icon">📝</span> Word to PDF</a>
                                 <a href="/powerpoint-to-pdf" class="mega-item"><span class="mega-icon">📊</span> PowerPoint to PDF</a>
-                                <a href="/excel-to-pdf" class="mega-item"><span class="mega-icon"></span> Excel to PDF</a>
+                                <a href="/excel-to-pdf" class="mega-item"><span class="mega-icon">📈</span> Excel to PDF</a>
                             </div>
                             <div class="mega-column">
                                 <div class="mega-column-title">Convert from PDF</div>
                                 <a href="/pdf-to-jpg" class="mega-item"><span class="mega-icon">🖼️</span> PDF to JPG</a>
-                                <a href="/pdf-to-word" class="mega-item"><span class="mega-icon">📝</span> PDF to Word</a>
-                                <a href="/pdf-to-powerpoint" class="mega-item"><span class="mega-icon">📊</span> PDF to PowerPoint</a>
+                                <a href="/pdf-to-word" class="mega-item"><span class="mega-icon"></span> PDF to Word</a>
+                                <a href="/pdf-to-powerpoint" class="mega-item"><span class="mega-icon"></span> PDF to PowerPoint</a>
                                 <a href="/pdf-to-excel" class="mega-item"><span class="mega-icon"></span> PDF to Excel</a>
-                                <a href="/pdf-to-png" class="mega-item"><span class="mega-icon">🎨</span> PDF to PNG</a>
+                                <a href="/pdf-to-png" class="mega-item"><span class="mega-icon"></span> PDF to PNG</a>
                             </div>
                         </div>
                     </div>
@@ -116,7 +109,7 @@
                                 <a href="/pdf-to-excel" class="mega-item"><span class="mega-icon">📈</span> PDF to Excel</a>
                                 <a href="/pdf-to-powerpoint" class="mega-item"><span class="mega-icon">📊</span> PDF to PPT</a>
                                 <a href="/pdf-to-jpg" class="mega-item"><span class="mega-icon">🖼️</span> PDF to JPG</a>
-                                <a href="/pdf-to-png" class="mega-item"><span class="mega-icon"></span> PDF to PNG</a>
+                                <a href="/pdf-to-png" class="mega-item"><span class="mega-icon">🎨</span> PDF to PNG</a>
                             </div>
                             <div class="mega-column">
                                 <div class="mega-column-title">Edit PDF</div>
@@ -124,8 +117,8 @@
                             </div>
                             <div class="mega-column">
                                 <div class="mega-column-title">PDF Security</div>
-                                <a href="/protect-pdf" class="mega-item"><span class="mega-icon"></span> Protect PDF</a>
-                                <a href="/unlock-pdf" class="mega-item"><span class="mega-icon">🔓</span> Unlock PDF</a>
+                                <a href="/protect-pdf" class="mega-item"><span class="mega-icon">🔒</span> Protect PDF</a>
+                                <a href="/unlock-pdf" class="mega-item"><span class="mega-icon"></span> Unlock PDF</a>
                             </div>
                         </div>
                     </div>
@@ -134,196 +127,137 @@
         </div>
     </nav>
 
-    <div class="main-content">
-        <div class="container">
-            <h2>{{ title }}</h2>
-            
-            {% if success %}
-                <div class="success-container" style="text-align: center; padding: 20px;">
-                    <div style="font-size: 64px; margin-bottom: 20px;">🎉</div>
-                    <h3 style="color: #2d3748; margin-bottom: 15px; font-size: 24px;">Conversion Successful!</h3>
-                    <p style="color: #4a5568; font-size: 16px; margin-bottom: 30px; line-height: 1.6;">
-                        Your file has been successfully converted to <strong>{{ output_format }}</strong>.
-                    </p>
-                    
-                    <a href="{{ action }}" class="submit-btn" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; width: auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                        <span>🔄</span> Convert Another File
-                    </a>
-                </div>
-                
-                {% if auto_download %}
-                <script>
-                    // Auto-download trigger
-                    window.addEventListener('load', function() {
-                        const downloadLink = document.createElement('a');
-                        downloadLink.href = '/download/{{ download_filename }}';
-                        downloadLink.download = '{{ download_filename }}';
-                        document.body.appendChild(downloadLink);
-                        downloadLink.click();
-                        document.body.removeChild(downloadLink);
-                    });
-                </script>
-                {% endif %}
-            {% else %}
-                <form action="{{ action }}" method="POST" enctype="multipart/form-data">
-                    <label class="upload-btn" id="uploadBtn">
-                        <span>📁</span>
-                        <span>Select File</span>
-                        <input type="file" id="fileInput" name="{{ 'pdf_files' if multiple else 'pdf_file' }}" accept="{{ accept }}" {{ 'multiple' if multiple else '' }} required>
-                    </label>
+    <div class="hero">
+        <h1>Every tool you need to work with PDFs</h1>
+        <p>100% Free. No signup required. Merge, split, compress, and convert PDFs with just a few clicks.</p>
+    </div>
 
-                    <div class="file-preview" id="filePreview">
-                        <div class="file-card">
-                            <button type="button" class="remove-file-btn" id="removeBtn">×</button>
-                            <div class="file-info-bar" id="fileInfoBar">0 KB</div>
-                            <div class="file-thumbnail" id="fileThumbnail">
-                                <div class="loading-spinner" id="loadingSpinner"></div>
-                                <span class="icon-label" id="iconText" style="display: none;">PDF</span>
-                                <img id="imagePreview" style="display: none;" alt="Preview">
-                                <canvas id="pdfCanvas" style="display: none;"></canvas>
-                            </div>
-                            <div class="file-name-display" id="fileNameDisplay">filename.pdf</div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="submit-btn" id="submitBtn">{{ button_text or 'Process File' }}</button>
-                </form>
-                
-                <a href="/" class="back-link">← Back to Home</a>
-            {% endif %}
+    <div class="tools-section">
+        <div class="tools-grid">
+            <a href="/merge" class="tool-card">
+                <div class="tool-icon">🧩</div>
+                <h3>Merge PDF</h3>
+                <p>Combine multiple PDFs into one unified document. Drag and drop to rearrange pages.</p>
+            </a>
+            <a href="/split" class="tool-card">
+                <div class="tool-icon">️</div>
+                <h3>Split PDF</h3>
+                <p>Extract pages or split every page into separate PDF files instantly.</p>
+            </a>
+            <a href="/compress" class="tool-card">
+                <div class="tool-icon">🗜️</div>
+                <h3>Compress PDF</h3>
+                <p>Reduce PDF file size while maintaining quality. Perfect for email and sharing.</p>
+            </a>
+            <a href="/pdf-to-word" class="tool-card">
+                <div class="tool-icon">📝</div>
+                <h3>PDF to Word</h3>
+                <p>Convert PDF to editable Word documents (DOCX) with formatting intact.</p>
+            </a>
+            <a href="/word-to-pdf" class="tool-card">
+                <div class="tool-icon">📘</div>
+                <h3>Word to PDF</h3>
+                <p>Convert Word documents (DOC, DOCX) to PDF format instantly.</p>
+            </a>
+            <a href="/pdf-to-excel" class="tool-card">
+                <div class="tool-icon">📊</div>
+                <h3>PDF to Excel</h3>
+                <p>Extract tables from PDF and convert to Excel spreadsheets (XLSX).</p>
+            </a>
+            <a href="/excel-to-pdf" class="tool-card">
+                <div class="tool-icon">📈</div>
+                <h3>Excel to PDF</h3>
+                <p>Convert Excel spreadsheets to PDF format while preserving layout.</p>
+            </a>
+            <a href="/pdf-to-jpg" class="tool-card">
+                <div class="tool-icon">🖼️</div>
+                <h3>PDF to JPG</h3>
+                <p>Convert PDF pages to high-quality JPG images. Extract all pages at once.</p>
+            </a>
+            <a href="/jpg-to-pdf" class="tool-card">
+                <div class="tool-icon">🖼️</div>
+                <h3>JPG to PDF</h3>
+                <p>Convert JPG and PNG images to PDF. Combine multiple images into one PDF.</p>
+            </a>
+            <a href="/pdf-to-png" class="tool-card">
+                <div class="tool-icon">🎨</div>
+                <h3>PDF to PNG</h3>
+                <p>Convert PDF pages to PNG images with transparent background support.</p>
+            </a>
+            <a href="/powerpoint-to-pdf" class="tool-card">
+                <div class="tool-icon">📊</div>
+                <h3>PowerPoint to PDF</h3>
+                <p>Convert PowerPoint presentations (PPT, PPTX) to PDF format.</p>
+            </a>
+            <a href="/pdf-to-powerpoint" class="tool-card">
+                <div class="tool-icon">📽️</div>
+                <h3>PDF to PowerPoint</h3>
+                <p>Convert PDF to editable PowerPoint presentations (PPTX).</p>
+            </a>
+            <a href="/rotate-pdf" class="tool-card">
+                <div class="tool-icon">🔄</div>
+                <h3>Rotate PDF</h3>
+                <p>Rotate PDF pages clockwise or counter-clockwise. Fix orientation easily.</p>
+            </a>
+            <a href="/organize-pdf" class="tool-card">
+                <div class="tool-icon">📑</div>
+                <h3>Organize PDF</h3>
+                <p>Reorder, delete, or rearrange PDF pages. Full control over your document.</p>
+            </a>
+            <a href="/protect-pdf" class="tool-card">
+                <div class="tool-icon">🔒</div>
+                <h3>Protect PDF</h3>
+                <p>Add password protection to your PDF files. Secure with AES-256 encryption.</p>
+            </a>
+            <a href="/unlock-pdf" class="tool-card">
+                <div class="tool-icon">🔓</div>
+                <h3>Unlock PDF</h3>
+                <p>Remove password protection from PDF files you own.</p>
+            </a>
         </div>
     </div>
 
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-        const fileInput = document.getElementById('fileInput');
-        const filePreview = document.getElementById('filePreview');
-        const fileInfoBar = document.getElementById('fileInfoBar');
-        const fileNameDisplay = document.getElementById('fileNameDisplay');
-        const iconText = document.getElementById('iconText');
-        const imagePreview = document.getElementById('imagePreview');
-        const pdfCanvas = document.getElementById('pdfCanvas');
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const uploadBtn = document.getElementById('uploadBtn');
-        const submitBtn = document.getElementById('submitBtn');
-        const removeBtn = document.getElementById('removeBtn');
+    <div class="features">
+        <div class="features-container">
+            <h2>Why Choose PDF MASTAR?</h2>
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">🆓</div>
+                    <h3>100% Free</h3>
+                    <p>No hidden fees, no subscriptions. All tools are completely free to use.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Fast & Easy</h3>
+                    <p>Process your files in seconds. No registration or signup required.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure</h3>
+                    <p>Your files are processed securely and automatically deleted after processing.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📱</div>
+                    <h3>Works Everywhere</h3>
+                    <p>Use on any device - desktop, tablet, or mobile. No installation needed.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎯</div>
+                    <h3>High Quality</h3>
+                    <p>Maintain original quality and formatting in all conversions.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🌍</div>
+                    <h3>Always Available</h3>
+                    <p>Access your favorite PDF tools anytime, anywhere, 24/7.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
-        }
-
-        async function renderPDFThumbnail(file) {
-            iconText.style.display = 'none';
-            imagePreview.style.display = 'none';
-            pdfCanvas.style.display = 'none';
-            loadingSpinner.style.display = 'block';
-            try {
-                const arrayBuffer = await file.arrayBuffer();
-                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-                const page = await pdf.getPage(1);
-                const pageCount = pdf.numPages;
-                const fileSize = formatFileSize(file.size);
-                fileInfoBar.textContent = `${fileSize} - ${pageCount} page${pageCount > 1 ? 's' : ''}`;
-                const scale = 2;
-                const viewport = page.getViewport({ scale: scale });
-                pdfCanvas.width = viewport.width;
-                pdfCanvas.height = viewport.height;
-                const context = pdfCanvas.getContext('2d');
-                context.fillStyle = 'white';
-                context.fillRect(0, 0, pdfCanvas.width, pdfCanvas.height);
-                await page.render({ canvasContext: context, viewport: viewport }).promise;
-                loadingSpinner.style.display = 'none';
-                pdfCanvas.style.display = 'block';
-            } catch (error) {
-                loadingSpinner.style.display = 'none';
-                iconText.style.display = 'block';
-                iconText.textContent = 'PDF';
-                iconText.className = 'icon-label icon-pdf';
-            }
-        }
-
-        fileInput.addEventListener('change', function(e) {
-            if (this.files && this.files.length > 0) {
-                filePreview.style.display = 'block';
-                uploadBtn.style.display = 'none';
-                submitBtn.style.display = 'block';
-                if (this.files.length === 1) {
-                    const file = this.files[0];
-                    const ext = file.name.split('.').pop().toLowerCase();
-                    fileNameDisplay.textContent = file.name;
-                    if (ext === 'pdf') {
-                        renderPDFThumbnail(file);
-                    } else if (ext === 'doc' || ext === 'docx') {
-                        loadingSpinner.style.display = 'none';
-                        iconText.style.display = 'block';
-                        imagePreview.style.display = 'none';
-                        pdfCanvas.style.display = 'none';
-                        iconText.textContent = 'DOC';
-                        iconText.className = 'icon-label icon-word';
-                        fileInfoBar.textContent = formatFileSize(file.size);
-                    } else if (ext === 'xls' || ext === 'xlsx') {
-                        loadingSpinner.style.display = 'none';
-                        iconText.style.display = 'block';
-                        imagePreview.style.display = 'none';
-                        pdfCanvas.style.display = 'none';
-                        iconText.textContent = 'XLS';
-                        iconText.className = 'icon-label icon-excel';
-                        fileInfoBar.textContent = formatFileSize(file.size);
-                    } else if (ext === 'ppt' || ext === 'pptx') {
-                        loadingSpinner.style.display = 'none';
-                        iconText.style.display = 'block';
-                        imagePreview.style.display = 'none';
-                        pdfCanvas.style.display = 'none';
-                        iconText.textContent = 'PPT';
-                        iconText.className = 'icon-label icon-powerpoint';
-                        fileInfoBar.textContent = formatFileSize(file.size);
-                    } else if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
-                        loadingSpinner.style.display = 'none';
-                        iconText.style.display = 'none';
-                        pdfCanvas.style.display = 'none';
-                        imagePreview.style.display = 'block';
-                        const reader = new FileReader();
-                        reader.onload = function(e) { imagePreview.src = e.target.result; };
-                        reader.readAsDataURL(file);
-                        fileInfoBar.textContent = formatFileSize(file.size);
-                    } else {
-                        loadingSpinner.style.display = 'none';
-                        iconText.style.display = 'block';
-                        imagePreview.style.display = 'none';
-                        pdfCanvas.style.display = 'none';
-                        iconText.textContent = 'FILE';
-                        iconText.className = 'icon-label icon-default';
-                        fileInfoBar.textContent = formatFileSize(file.size);
-                    }
-                } else {
-                    loadingSpinner.style.display = 'none';
-                    iconText.style.display = 'block';
-                    imagePreview.style.display = 'none';
-                    pdfCanvas.style.display = 'none';
-                    iconText.textContent = '📁';
-                    iconText.className = 'icon-label icon-default';
-                    fileNameDisplay.textContent = `${this.files.length} files selected`;
-                    let totalSize = 0;
-                    for (let f of this.files) totalSize += f.size;
-                    fileInfoBar.textContent = formatFileSize(totalSize);
-                }
-            }
-        });
-
-        removeBtn.addEventListener('click', function() {
-            fileInput.value = '';
-            filePreview.style.display = 'none';
-            uploadBtn.style.display = 'inline-flex';
-            submitBtn.style.display = 'none';
-            iconText.style.display = 'none';
-            imagePreview.style.display = 'none';
-            pdfCanvas.style.display = 'none';
-            loadingSpinner.style.display = 'block';
-        });
-    </script>
+    <footer>
+        <p>&copy; 2024 PDF MASTAR. All rights reserved. | Free Online PDF Tools</p>
+        <p style="margin-top: 10px; font-size: 13px;">🔒 Files are processed securely and never stored on our servers</p>
+    </footer>
 </body>
 </html>
