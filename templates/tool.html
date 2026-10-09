@@ -96,7 +96,6 @@
         font-weight: 500;
     }
 
-    /* Selected File Card style */
     .selected-file-card {
         background: #161c2e;
         border: 1px solid #232a42;
@@ -179,10 +178,13 @@
         cursor: pointer;
         transition: opacity 0.2s;
         box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        text-decoration: none;
+        display: inline-block;
     }
 
     .action-btn:hover {
         opacity: 0.9;
+        color: white;
     }
 
     .tool-note {
@@ -191,7 +193,18 @@
         color: #64748b;
     }
 
-    /* Related Tools Section - 3 items in one line */
+    /* Success Box View */
+    .success-box {
+        text-align: center;
+        padding: 20px 0;
+    }
+
+    .success-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+    }
+
+    /* Related Tools Section */
     .related-section {
         max-width: 1200px;
         margin: 60px auto 40px auto;
@@ -202,14 +215,14 @@
         font-weight: 800;
         color: #64748b;
         letter-spacing: 1.5px;
-        margin-bottom: 20px;
+        margin-bottom: 16px;
         text-transform: uppercase;
     }
 
     .related-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 16px;
+        gap: 14px;
     }
 
     @media (max-width: 900px) {
@@ -221,12 +234,12 @@
     .tool-grid-card {
         background: #131826;
         border: 1px solid #232a42;
-        border-radius: 14px;
-        padding: 20px;
+        border-radius: 12px;
+        padding: 14px 16px;
         text-decoration: none;
         display: flex;
-        align-items: flex-start;
-        gap: 16px;
+        align-items: center;
+        gap: 12px;
         transition: all 0.2s ease;
         position: relative;
         z-index: 10;
@@ -239,11 +252,11 @@
     }
 
     .tool-card-icon {
-        font-size: 20px;
-        width: 40px;
-        height: 40px;
+        font-size: 18px;
+        width: 34px;
+        height: 34px;
         background: rgba(99, 102, 241, 0.1);
-        border-radius: 10px;
+        border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -251,16 +264,10 @@
     }
 
     .tool-card-info h3 {
-        font-size: 15px;
+        font-size: 13px;
         font-weight: 700;
         color: #ffffff;
-        margin-bottom: 4px;
-    }
-
-    .tool-card-info p {
-        font-size: 13px;
-        color: #94a3b8;
-        line-height: 1.4;
+        margin: 0;
     }
 </style>
 
@@ -270,55 +277,81 @@
     </div>
 
     <div class="tool-box">
-        <div class="tool-icon-box">{{ tool.icon }}</div>
-        <h1>{{ tool.title }}</h1>
-        <p>{{ tool.desc }}</p>
+        {% if success %}
+            <div class="success-box">
+                <div class="success-icon">🎉</div>
+                <h1>File Converted Successfully!</h1>
+                <p>Your file <strong>{{ download_filename }}</strong> is ready for download.</p>
 
-        <div class="upload-box">
-            <form method="POST" enctype="multipart/form-data">
-                <!-- Dropzone for choosing / changing file -->
-                <label class="upload-dropzone" id="dropzone">
-                    <input type="file" name="files" accept="{{ tool.accept }}" {% if tool.multiple %}multiple{% endif %} required id="file-input">
-                    <div class="upload-icon">📁</div>
-                    <div class="upload-text" id="file-label">
-                        <strong>Choose a different file</strong><br>
-                        <span style="font-size: 12px; color: #64748b;">{{ tool.accept }} · up to {{ max_mb }} MB</span>
-                    </div>
-                </label>
-
-                <!-- File selected card preview -->
-                <div id="file-preview-card" style="display: none;" class="selected-file-card">
-                    <div class="file-info-left">
-                        <div class="file-ext-badge" id="file-ext">file</div>
-                        <div class="file-name-text" id="file-display-name">filename.ext</div>
+                <div class="upload-box" style="max-width: 500px; margin: 30px auto;">
+                    <a href="{{ download_url }}" class="action-btn" id="auto-download-link">Download Converted File ↓</a>
+                    <div style="margin-top: 16px;">
+                        <a href="/{{ tool.slug }}" style="color: #818cf8; font-size: 14px; text-decoration: none;">Convert another file</a>
                     </div>
                 </div>
+            </div>
 
-                {% if tool.fields %}
-                <div class="form-fields">
-                    {% for f in tool.fields %}
-                    <div class="form-group">
-                        <label>{{ f.label }}</label>
-                        {% if f.type == 'select' %}
-                        <select name="{{ f.name }}">
-                            {% for opt_val, opt_label in f.options %}
-                            <option value="{{ opt_val }}">{{ opt_label }}</option>
-                            {% endfor %}
-                        </select>
-                        {% else %}
-                        <input type="{{ f.type }}" name="{{ f.name }}" placeholder="{{ f.placeholder or '' }}" {% if f.required %}required{% endif %}>
-                        {% endif %}
+            <script>
+                // Auto trigger download
+                window.addEventListener('DOMContentLoaded', () => {
+                    const link = document.getElementById('auto-download-link');
+                    if (link) {
+                        const iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.src = link.href;
+                        document.body.appendChild(iframe);
+                    }
+                });
+            </script>
+        {% else %}
+            <div class="tool-icon-box">{{ tool.icon }}</div>
+            <h1>{{ tool.title }}</h1>
+            <p>{{ tool.desc }}</p>
+
+            <div class="upload-box">
+                <form method="POST" enctype="multipart/form-data">
+                    <label class="upload-dropzone" id="dropzone">
+                        <input type="file" name="files" accept="{{ tool.accept }}" {% if tool.multiple %}multiple{% endif %} required id="file-input">
+                        <div class="upload-icon">📁</div>
+                        <div class="upload-text" id="file-label">
+                            <strong>Choose a different file</strong><br>
+                            <span style="font-size: 12px; color: #64748b;">{{ tool.accept }} · up to {{ max_mb }} MB</span>
+                        </div>
+                    </label>
+
+                    <div id="file-preview-card" style="display: none;" class="selected-file-card">
+                        <div class="file-info-left">
+                            <div class="file-ext-badge" id="file-ext">file</div>
+                            <div class="file-name-text" id="file-display-name">filename.ext</div>
+                        </div>
                     </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
 
-                <button type="submit" class="action-btn">{{ tool.button }} →</button>
-            </form>
-        </div>
+                    {% if tool.fields %}
+                    <div class="form-fields">
+                        {% for f in tool.fields %}
+                        <div class="form-group">
+                            <label>{{ f.label }}</label>
+                            {% if f.type == 'select' %}
+                            <select name="{{ f.name }}">
+                                {% for opt_val, opt_label in f.options %}
+                                <option value="{{ opt_val }}">{{ opt_label }}</option>
+                                {% endfor %}
+                            </select>
+                            {% else %}
+                            <input type="{{ f.type }}" name="{{ f.name }}" placeholder="{{ f.placeholder or '' }}" {% if f.required %}required{% endif %}>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
 
-        {% if tool.note %}
-        <div class="tool-note">{{ tool.note }}</div>
+                    <button type="submit" class="action-btn">{{ tool.button }} →</button>
+                </form>
+            </div>
+
+            {% if tool.note %}
+            <div class="tool-note">{{ tool.note }}</div>
+            {% endif %}
         {% endif %}
     </div>
 
@@ -331,7 +364,6 @@
                 <div class="tool-card-icon">{{ t.icon }}</div>
                 <div class="tool-card-info">
                     <h3>{{ t.title }}</h3>
-                    <p>{{ t.desc }}</p>
                 </div>
             </a>
             {% endfor %}
@@ -342,18 +374,20 @@
 
 <script>
     const fileInput = document.getElementById('file-input');
-    const filePreviewCard = document.getElementById('file-preview-card');
-    const fileDisplayName = document.getElementById('file-display-name');
-    const fileExt = document.getElementById('file-ext');
+    if (fileInput) {
+        const filePreviewCard = document.getElementById('file-preview-card');
+        const fileDisplayName = document.getElementById('file-display-name');
+        const fileExt = document.getElementById('file-ext');
 
-    fileInput.addEventListener('change', () => {
-        if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            fileDisplayName.textContent = file.name;
-            const ext = file.name.split('.').pop();
-            fileExt.textContent = ext || 'file';
-            filePreviewCard.style.display = 'flex';
-        }
-    });
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                fileDisplayName.textContent = file.name;
+                const ext = file.name.split('.').pop();
+                fileExt.textContent = ext || 'file';
+                filePreviewCard.style.display = 'flex';
+            }
+        });
+    }
 </script>
 {% endblock %}
