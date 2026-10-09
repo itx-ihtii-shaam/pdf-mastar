@@ -1,54 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDF MASTAR - Free Online PDF Tools</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#f4f7f6;color:#2d3748;min-height:100vh}
-.navbar{background:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.08);padding:0 40px;position:sticky;top:0;z-index:1000}
-.nav-container{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:70px}
-.logo{font-size:22px;font-weight:900;text-decoration:none;color:#2d3748}
-.logo span{color:#e74c3c}
-.hero{text-align:center;padding:80px 20px 60px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff}
-.hero h1{font-size:48px;margin-bottom:20px;font-weight:800}
-.hero p{font-size:20px;opacity:0.95;max-width:600px;margin:0 auto}
-.tools-section{max-width:1200px;margin:-40px auto 60px;padding:0 20px}
-.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px}
-.tool-card{background:#fff;border-radius:16px;padding:35px 30px;text-align:center;text-decoration:none;color:#2d3748;box-shadow:0 10px 40px rgba(0,0,0,0.15);transition:all 0.3s;border:1px solid #edf2f7}
-.tool-card:hover{transform:translateY(-10px);box-shadow:0 20px 60px rgba(0,0,0,0.2);border-color:#667eea}
-.tool-icon{font-size:48px;margin-bottom:20px}
-.tool-card h3{font-size:20px;margin-bottom:12px;font-weight:700}
-.tool-card p{font-size:14px;color:#718096;line-height:1.6}
-footer{background:#2d3748;color:#a0aec0;padding:40px 20px;text-align:center;margin-top:60px}
-footer p{font-size:14px}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF MASTAR - Free Online PDF Tools</title>
+    <meta name="description" content="Free online PDF tools. Merge, split, compress, and convert PDF files. 100% free, no signup required.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .navbar { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 0 40px; position: sticky; top: 0; z-index: 1000; }
+        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 70px; }
+        .logo { font-size: 22px; font-weight: 900; text-decoration: none; display: flex; align-items: center; gap: 5px; }
+        .nav-menu { display: flex; list-style: none; gap: 0; }
+        .nav-item { position: relative; }
+        .nav-link { display: block; padding: 25px 18px; text-decoration: none; color: #4a5568; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.3s; }
+        .nav-link:hover { color: #e74c3c; }
+        .mega-menu { position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(-10px); background: white; box-shadow: 0 15px 50px rgba(0,0,0,0.15); border-radius: 10px; padding: 25px 30px; opacity: 0; visibility: hidden; transition: all 0.3s; min-width: 700px; }
+        .nav-item:hover .mega-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+        .mega-menu-columns { display: flex; gap: 40px; }
+        .mega-column { flex: 1; min-width: 200px; }
+        .mega-column-title { font-size: 11px; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #edf2f7; }
+        .mega-item { display: flex; align-items: center; gap: 12px; padding: 10px 8px; text-decoration: none; color: #2d3748; font-size: 14px; font-weight: 500; border-radius: 6px; transition: all 0.2s; }
+        .mega-item:hover { background: #f7fafc; color: #e74c3c; padding-left: 12px; }
+        .mega-icon { font-size: 18px; width: 24px; text-align: center; }
+        .mega-menu-large { min-width: 1100px; padding: 30px 35px; }
+        .mega-menu-large .mega-menu-columns { gap: 30px; flex-wrap: wrap; }
+        .mega-menu-large .mega-column { min-width: 180px; flex: 1 1 180px; }
+        .hero { text-align: center; padding: 80px 20px 60px; color: white; }
+        .hero h1 { font-size: 48px; margin-bottom: 20px; font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .hero p { font-size: 20px; opacity: 0.95; max-width: 600px; margin: 0 auto 30px; }
+        .tools-section { max-width: 1200px; margin: -40px auto 60px; padding: 0 20px; position: relative; z-index: 10; }
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .tool-card { background: white; border-radius: 16px; padding: 35px 30px; text-align: center; text-decoration: none; color: #2d3748; box-shadow: 0 10px 40px rgba(0,0,0,0.15); transition: all 0.3s ease; border: 1px solid #edf2f7; }
+        .tool-card:hover { transform: translateY(-10px); box-shadow: 0 20px 60px rgba(0,0,0,0.2); border-color: #667eea; }
+        .tool-icon { font-size: 48px; margin-bottom: 20px; display: inline-block; }
+        .tool-card h3 { font-size: 20px; margin-bottom: 12px; font-weight: 700; color: #2d3748; }
+        .tool-card p { font-size: 14px; color: #718096; line-height: 1.6; }
+        .features { background: white; padding: 60px 20px; margin-top: 40px; }
+        .features-container { max-width: 1200px; margin: 0 auto; }
+        .features h2 { text-align: center; font-size: 36px; margin-bottom: 50px; color: #2d3748; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+        .feature { text-align: center; padding: 30px; }
+        .feature-icon { font-size: 48px; margin-bottom: 20px; }
+        .feature h3 { font-size: 20px; margin-bottom: 12px; color: #2d3748; }
+        .feature p { font-size: 15px; color: #718096; line-height: 1.6; }
+        footer { background: #2d3748; color: #a0aec0; padding: 40px 20px; text-align: center; }
+        footer p { font-size: 14px; }
+        @media (max-width: 1200px) { .mega-menu, .mega-menu-large { min-width: 600px; } .mega-menu-large .mega-menu-columns { gap: 20px; } }
+        @media (max-width: 900px) { .nav-menu { display: none; } .mega-menu, .mega-menu-large { display: none !important; } .hero h1 { font-size: 36px; } .hero p { font-size: 18px; } }
+    </style>
 </head>
 <body>
-<nav class="navbar">
-<div class="nav-container">
-<a href="/" class="logo">PDF <span>MASTAR</span></a>
-</div>
-</nav>
-<div class="hero">
-<h1>Every tool you need to work with PDFs</h1>
-<p>100% Free. No signup required. Merge, split, compress, and convert PDFs.</p>
-</div>
-<div class="tools-section">
-<div class="tools-grid">
-{% for t in tools %}
-<a href="/{{ t.slug }}" class="tool-card">
-<div class="tool-icon">{{ t.icon }}</div>
-<h3>{{ t.title }}</h3>
-<p>{{ t.desc }}</p>
-</a>
-{% endfor %}
-</div>
-</div>
-<footer>
-<p>PDF MASTAR - Free Online PDF Tools</p>
-<p style="margin-top:10px;font-size:13px">Files are processed securely</p>
-</footer>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <span style="font-weight: 900; color: #2d3748; font-size: 24px;">PDF <span style="color: #e74c3c;">MASTAR</span></span>
+            </a>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="/merge" class="nav-link">Merge PDF</a></li>
+                <li class="nav-item"><a href="/split" class="nav-link">Split PDF</a></li>
+                <li class="nav-item"><a href="/compress" class="nav-link">Compress PDF</a></li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Convert PDF ▾</a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-columns">
+                            <div class="mega-column">
+                                <div class="mega-column-title">Convert to PDF</div>
+                                <a href="/jpg-to-pdf" class="mega-item"><span class="mega-icon">🖼️</span> JPG to PDF</a>
+                                <a href="/word-to-pdf" class="mega-item"><span class="mega-icon">📝</span> Word to PDF</a>
+                                <a href="/powerpoint-to-pdf" class="mega-item"><span class="mega-icon">📊</span> PowerPoint to PDF</a>
+                                <a href="/excel-to-pdf" class="mega-item"><span class="mega-icon">📈</span> Excel to PDF</a>
+                            </div>
+                            <div class="mega-column">
+                                <div class="mega-column-title">Convert from PDF</div>
+                                <a href="/pdf-to-jpg" class="mega-item"><span class="mega-icon">🖼️</span> PDF to JPG</a>
+                                <a href="/pdf-to-word" class="mega-item"><span class="mega-icon"></span> PDF to Word</a>
+                                <a href="/pdf-to-powerpoint" class="mega-item"><span class="mega-icon"></span> PDF to PowerPoint</a>
+                                <a href="/pdf-to-excel" class="mega-item"><span class="mega-icon"></span> PDF to Excel</a>
+                                <a href="/pdf-to-png" class="mega-item"><span class="mega-icon"></span> PDF to PNG</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">All PDF Tools ▾</a>
+                    <div class="mega-menu mega-menu-large">
+                        <div class="mega-menu-columns">
+                            <div class="mega-column">
+                                <div class="mega-column-title">Organize PDF</div>
+                                <a href="/merge" class="mega-item"><span class="mega-icon">➕</span> Merge PDF</a>
+                                <a href="/split" class="mega-item"><span class="mega-icon">✂️</span> Split PDF</a>
+                                <a href="/organize-pdf" class="mega-item"><span class="mega-icon">📑</span> Organize PDF</a>
+                            </div>
+                            <div class="mega-column">
+                                <div class="mega-column-title">Optimize PDF</div>
+                                <a href="/compress" class="mega-item"><span class="mega-icon">🗜️</span> Compress PDF</a>
+                            </div>
+                            <div class="mega-column">
+                                <div class="mega-column-title">Convert to PDF</div>
+                                <a href="/jpg-to-pdf" class="mega-item"><span class="mega-icon">🖼️</span> JPG to PDF</a>
+                                <a href="/word-to-pdf" class="mega-item"><span class="mega-icon">📝</span> Word to PDF</a>
+                                <a href="/excel-to-pdf" class="mega-item"><span class="mega-icon">📈</span> Excel to PDF</a>
+                                <a href="/powerpoint-to-pdf" class="mega-item"><span class="mega-icon">📊</span> PowerPoint to PDF</a>
+                            </div>
+                            <div class="mega-column">
+                                <div class="mega-column-title">Convert from PDF</div>
+                                <a href="/pdf-to-word" class="mega-item"><span class="mega-icon">📝</span> PDF to Word</a>
+                                <a href="/pdf-to-excel" class="mega-item"><span class="mega-icon">📈</span> PDF to Excel</a>
+                                <a href="/pdf-to-powerpoint" class="mega-item"><span class="mega-icon">📊</span> PDF to PPT</a>
+                                <a href="/pdf-to-jpg" class="mega-item"><span class="mega-icon">🖼️</span> PDF to JPG</a>
+                                <a href="/pdf-to-png" class="mega-item"><span class="mega-icon">🎨</span> PDF to PNG</a>
+                            </div>
+                            <div class="mega-column">
+                                <div class="mega-column-title">Edit PDF</div>
+                                <a href="/rotate-pdf" class="mega-item"><span class="mega-icon">🔄</span> Rotate PDF</a>
+                            </div>
+                            <div class="mega-column">
+                                <div class="mega-column-title">PDF Security</div>
+                                <a href="/protect-pdf" class="mega-item"><span class="mega-icon">🔒</span> Protect PDF</a>
+                                <a href="/unlock-pdf" class="mega-item"><span class="mega-icon"></span> Unlock PDF</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>Every tool you need to work with PDFs</h1>
+        <p>100% Free. No signup required. Merge, split, compress, and convert PDFs with just a few clicks.</p>
+    </div>
+
+    <div class="tools-section">
+        <div class="tools-grid">
+            <a href="/merge" class="tool-card">
+                <div class="tool-icon">🧩</div>
+                <h3>Merge PDF</h3>
+                <p>Combine multiple PDFs into one unified document. Drag and drop to rearrange pages.</p>
+            </a>
+            <a href="/split" class="tool-card">
+                <div class="tool-icon">️</div>
+                <h3>Split PDF</h3>
+                <p>Extract pages or split every page into separate PDF files instantly.</p>
+            </a>
+            <a href="/compress" class="tool-card">
+                <div class="tool-icon">🗜️</div>
+                <h3>Compress PDF</h3>
+                <p>Reduce PDF file size while maintaining quality. Perfect for email and sharing.</p>
+            </a>
+            <a href="/pdf-to-word" class="tool-card">
+                <div class="tool-icon">📝</div>
+                <h3>PDF to Word</h3>
+                <p>Convert PDF to editable Word documents (DOCX) with formatting intact.</p>
+            </a>
+            <a href="/word-to-pdf" class="tool-card">
+                <div class="tool-icon">📘</div>
+                <h3>Word to PDF</h3>
+                <p>Convert Word documents (DOC, DOCX) to PDF format instantly.</p>
+            </a>
+            <a href="/pdf-to-excel" class="tool-card">
+                <div class="tool-icon">📊</div>
+                <h3>PDF to Excel</h3>
+                <p>Extract tables from PDF and convert to Excel spreadsheets (XLSX).</p>
+            </a>
+            <a href="/excel-to-pdf" class="tool-card">
+                <div class="tool-icon">📈</div>
+                <h3>Excel to PDF</h3>
+                <p>Convert Excel spreadsheets to PDF format while preserving layout.</p>
+            </a>
+            <a href="/pdf-to-jpg" class="tool-card">
+                <div class="tool-icon">🖼️</div>
+                <h3>PDF to JPG</h3>
+                <p>Convert PDF pages to high-quality JPG images. Extract all pages at once.</p>
+            </a>
+            <a href="/jpg-to-pdf" class="tool-card">
+                <div class="tool-icon">🖼️</div>
+                <h3>JPG to PDF</h3>
+                <p>Convert JPG and PNG images to PDF. Combine multiple images into one PDF.</p>
+            </a>
+            <a href="/pdf-to-png" class="tool-card">
+                <div class="tool-icon">🎨</div>
+                <h3>PDF to PNG</h3>
+                <p>Convert PDF pages to PNG images with transparent background support.</p>
+            </a>
+            <a href="/powerpoint-to-pdf" class="tool-card">
+                <div class="tool-icon">📊</div>
+                <h3>PowerPoint to PDF</h3>
+                <p>Convert PowerPoint presentations (PPT, PPTX) to PDF format.</p>
+            </a>
+            <a href="/pdf-to-powerpoint" class="tool-card">
+                <div class="tool-icon">📽️</div>
+                <h3>PDF to PowerPoint</h3>
+                <p>Convert PDF to editable PowerPoint presentations (PPTX).</p>
+            </a>
+            <a href="/rotate-pdf" class="tool-card">
+                <div class="tool-icon">🔄</div>
+                <h3>Rotate PDF</h3>
+                <p>Rotate PDF pages clockwise or counter-clockwise. Fix orientation easily.</p>
+            </a>
+            <a href="/organize-pdf" class="tool-card">
+                <div class="tool-icon">📑</div>
+                <h3>Organize PDF</h3>
+                <p>Reorder, delete, or rearrange PDF pages. Full control over your document.</p>
+            </a>
+            <a href="/protect-pdf" class="tool-card">
+                <div class="tool-icon">🔒</div>
+                <h3>Protect PDF</h3>
+                <p>Add password protection to your PDF files. Secure with AES-256 encryption.</p>
+            </a>
+            <a href="/unlock-pdf" class="tool-card">
+                <div class="tool-icon">🔓</div>
+                <h3>Unlock PDF</h3>
+                <p>Remove password protection from PDF files you own.</p>
+            </a>
+        </div>
+    </div>
+
+    <div class="features">
+        <div class="features-container">
+            <h2>Why Choose PDF MASTAR?</h2>
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">🆓</div>
+                    <h3>100% Free</h3>
+                    <p>No hidden fees, no subscriptions. All tools are completely free to use.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Fast & Easy</h3>
+                    <p>Process your files in seconds. No registration or signup required.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure</h3>
+                    <p>Your files are processed securely and automatically deleted after processing.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📱</div>
+                    <h3>Works Everywhere</h3>
+                    <p>Use on any device - desktop, tablet, or mobile. No installation needed.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎯</div>
+                    <h3>High Quality</h3>
+                    <p>Maintain original quality and formatting in all conversions.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🌍</div>
+                    <h3>Always Available</h3>
+                    <p>Access your favorite PDF tools anytime, anywhere, 24/7.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 PDF MASTAR. All rights reserved. | Free Online PDF Tools</p>
+        <p style="margin-top: 10px; font-size: 13px;">🔒 Files are processed securely and never stored on our servers</p>
+    </footer>
 </body>
 </html>
