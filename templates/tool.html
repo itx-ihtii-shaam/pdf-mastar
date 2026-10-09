@@ -3,77 +3,333 @@
 {% block title %}{{ tool.title }} - {{ SITE_NAME }}{% endblock %}
 
 {% block content %}
-<div class="tool-page container">
-    <div class="breadcrumb mb-4">
+<style>
+    .tool-container {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 20px 16px;
+        color: #ffffff;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .breadcrumb-nav {
+        font-size: 13px;
+        color: #94a3b8;
+        margin-bottom: 24px;
+        text-align: left;
+    }
+
+    .breadcrumb-nav a {
+        color: #94a3b8;
+        text-decoration: none;
+    }
+
+    .breadcrumb-nav a:hover {
+        color: #ffffff;
+    }
+
+    .tool-header-center {
+        text-align: center;
+        margin-bottom: 32px;
+    }
+
+    .tool-badge-icon {
+        width: 56px;
+        height: 56px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin: 0 auto 16px auto;
+    }
+
+    .tool-title-main {
+        font-size: 32px;
+        font-weight: 800;
+        margin: 0 0 8px 0;
+        color: #ffffff;
+    }
+
+    .tool-desc-sub {
+        font-size: 15px;
+        color: #94a3b8;
+        margin: 0;
+    }
+
+    .drop-zone-box {
+        background: #111422;
+        border: 1px dashed #333a56;
+        border-radius: 16px;
+        padding: 40px 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .drop-zone-box:hover {
+        border-color: #6366f1;
+        background: #15182a;
+    }
+
+    .folder-icon-glow {
+        font-size: 36px;
+        margin-bottom: 12px;
+    }
+
+    .upload-heading {
+        font-size: 18px;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0 0 6px 0;
+    }
+
+    .upload-subtext {
+        font-size: 13px;
+        color: #64748b;
+        margin: 0;
+    }
+
+    .file-preview-card-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #181c30;
+        border: 1px solid #272d4a;
+        border-radius: 12px;
+        padding: 14px 18px;
+        margin-top: 16px;
+        box-sizing: border-box;
+    }
+
+    .file-info-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        overflow: hidden;
+    }
+
+    .ext-badge-tag {
+        background: #282f54;
+        color: #818cf8;
+        font-size: 11px;
+        font-weight: 800;
+        padding: 5px 9px;
+        border-radius: 6px;
+        letter-spacing: 0.5px;
+    }
+
+    .file-details-text {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        text-align: left;
+    }
+
+    .file-name-txt {
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 14px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .file-size-txt {
+        color: #94a3b8;
+        font-size: 12px;
+        margin-top: 2px;
+    }
+
+    .remove-file-btn {
+        background: rgba(255, 255, 255, 0.05);
+        border: none;
+        color: #94a3b8;
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background 0.2s;
+    }
+
+    .remove-file-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: #ffffff;
+    }
+
+    .form-options-card {
+        background: #111422;
+        border: 1px solid #272d4a;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 16px;
+        text-align: left;
+    }
+
+    .form-group-item label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #cbd5e1;
+        margin-bottom: 8px;
+    }
+
+    .form-control-custom {
+        width: 100%;
+        background: #181c30;
+        border: 1px solid #272d4a;
+        color: #ffffff;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+        box-sizing: border-box;
+    }
+
+    .form-control-custom:focus {
+        border-color: #6366f1;
+    }
+
+    .submit-btn-glow {
+        background: #6366f1;
+        color: #ffffff;
+        border: none;
+        font-weight: 700;
+        font-size: 15px;
+        padding: 12px 32px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background 0.2s;
+        box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+    }
+
+    .submit-btn-glow:hover {
+        background: #4f46e5;
+    }
+
+    .api-note-text {
+        font-size: 12px;
+        color: #64748b;
+        margin-top: 16px;
+        text-align: center;
+    }
+
+    .what-next-wrapper {
+        margin-top: 56px;
+        text-align: left;
+    }
+
+    .what-next-heading {
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        color: #94a3b8;
+        margin-bottom: 16px;
+        text-transform: uppercase;
+    }
+
+    .related-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+    }
+
+    .related-item-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #111422;
+        border: 1px solid #21263d;
+        border-radius: 12px;
+        padding: 16px 20px;
+        text-decoration: none;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 14px;
+        transition: all 0.2s ease;
+    }
+
+    .related-item-card:hover {
+        border-color: #6366f1;
+        background: #161a2e;
+    }
+
+    .related-item-icon {
+        font-size: 20px;
+    }
+</style>
+
+<div class="tool-container">
+    <div class="breadcrumb-nav">
         <a href="/">All tools</a> &rsaquo; <span>{{ tool.title }}</span>
     </div>
 
-    <div class="tool-header text-center mb-4">
-        <div class="tool-icon-large display-4 mb-2">{{ tool.icon }}</div>
-        <h1 class="tool-title">{{ tool.title }}</h1>
-        <p class="subtitle text-muted">{{ tool.desc }}</p>
+    <div class="tool-header-center">
+        <div class="tool-badge-icon">{{ tool.icon }}</div>
+        <h1 class="tool-title-main">{{ tool.title }}</h1>
+        <p class="tool-desc-sub">{{ tool.desc }}</p>
     </div>
 
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <form id="tool-form" action="/{{ tool.slug }}" method="POST" enctype="multipart/form-data">
-                <div class="upload-box card text-center p-4 border-dashed" id="drop-zone" style="cursor: pointer; background: rgba(255, 255, 255, 0.03); border: 2px dashed rgba(255, 255, 255, 0.15); border-radius: 16px;">
-                    <input type="file" id="file-input" name="files" accept="{{ tool.accept }}" {% if tool.multiple %}multiple{% endif %} style="display: none;">
-                    <div class="upload-content" id="upload-prompt">
-                        <div class="folder-icon display-4 mb-2">📁</div>
-                        <h3 id="upload-label" class="h5 font-weight-bold">Choose a file or drop it here</h3>
-                        <p class="file-limits text-muted small mb-0">{{ tool.accept }} &middot; up to {{ max_mb }} MB</p>
-                    </div>
-                </div>
-
-                <!-- Selected File Preview Container -->
-                <div id="file-preview-list" style="display: none; margin-top: 16px;"></div>
-
-                {% if tool.fields %}
-                <div class="tool-options card p-3 mt-3" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;">
-                    {% for field in tool.fields %}
-                    <div class="form-group mb-3">
-                        <label for="field-{{ field.name }}" class="small text-light">{{ field.label }}</label>
-                        {% if field.type == 'select' %}
-                        <select name="{{ field.name }}" id="field-{{ field.name }}" class="form-control bg-dark text-light border-secondary">
-                            {% for opt_val, opt_lbl in field.options %}
-                            <option value="{{ opt_val }}">{{ opt_lbl }}</option>
-                            {% endfor %}
-                        </select>
-                        {% elif field.type == 'number' %}
-                        <input type="number" name="{{ field.name }}" id="field-{{ field.name }}" class="form-control bg-dark text-light border-secondary" placeholder="{{ field.placeholder or '' }}" {% if field.required %}required{% endif %}>
-                        {% else %}
-                        <input type="{{ field.type }}" name="{{ field.name }}" id="field-{{ field.name }}" class="form-control bg-dark text-light border-secondary" placeholder="{{ field.placeholder or '' }}" {% if field.required %}required{% endif %}>
-                        {% endif %}
-                        {% if field.hint %}
-                        <small class="form-text text-muted">{{ field.hint }}</small>
-                        {% endif %}
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-                <div class="text-center mt-4 mb-3">
-                    <button type="submit" class="btn btn-primary btn-lg px-5 py-2 font-weight-bold" id="submit-btn" style="border-radius: 12px; background: #6366f1; border: none;">
-                        {{ tool.button }} &rarr;
-                    </button>
-                </div>
-            </form>
-
-            {% if tool.note %}
-            <p class="tool-note text-center text-muted small mb-4">{{ tool.note }}</p>
-            {% endif %}
+    <form id="tool-form" action="/{{ tool.slug }}" method="POST" enctype="multipart/form-data">
+        <div class="drop-zone-box" id="drop-zone">
+            <input type="file" id="file-input" name="files" accept="{{ tool.accept }}" {% if tool.multiple %}multiple{% endif %} style="display: none;">
+            <div id="upload-prompt">
+                <div class="folder-icon-glow">📁</div>
+                <h3 id="upload-label" class="upload-heading">Choose a file or drop it here</h3>
+                <p class="upload-subtext">{{ tool.accept }} &middot; up to {{ max_mb }} MB</p>
+            </div>
         </div>
-    </div>
+
+        <div id="file-preview-list" style="display: none;"></div>
+
+        {% if tool.fields %}
+        <div class="form-options-card">
+            {% for field in tool.fields %}
+            <div class="form-group-item mb-3">
+                <label for="field-{{ field.name }}">{{ field.label }}</label>
+                {% if field.type == 'select' %}
+                <select name="{{ field.name }}" id="field-{{ field.name }}" class="form-control-custom">
+                    {% for opt_val, opt_lbl in field.options %}
+                    <option value="{{ opt_val }}">{{ opt_lbl }}</option>
+                    {% endfor %}
+                </select>
+                {% elif field.type == 'number' %}
+                <input type="number" name="{{ field.name }}" id="field-{{ field.name }}" class="form-control-custom" placeholder="{{ field.placeholder or '' }}" {% if field.required %}required{% endif %}>
+                {% else %}
+                <input type="{{ field.type }}" name="{{ field.name }}" id="field-{{ field.name }}" class="form-control-custom" placeholder="{{ field.placeholder or '' }}" {% if field.required %}required{% endif %}>
+                {% endif %}
+                {% if field.hint %}
+                <small style="color: #64748b; font-size: 12px; margin-top: 4px; display: block;">{{ field.hint }}</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div style="text-align: center; margin-top: 24px;">
+            <button type="submit" class="submit-btn-glow" id="submit-btn">
+                {{ tool.button }} &rarr;
+            </button>
+        </div>
+    </form>
+
+    {% if tool.note %}
+    <p class="api-note-text">{{ tool.note }}</p>
+    {% endif %}
 
     {% if related %}
-    <div class="what-next-section mt-5 pt-3 text-center">
-        <h3 class="h6 text-muted mb-3 font-weight-bold" style="letter-spacing: 1px;">WHAT NEXT?</h3>
-        <div class="d-flex justify-content-center flex-wrap gap-3" style="gap: 15px;">
+    <div class="what-next-wrapper">
+        <div class="what-next-heading">WHAT NEXT?</div>
+        <div class="related-cards-grid">
             {% for r in related %}
-            <a href="/{{ r.slug }}" class="related-card btn btn-outline-light d-inline-flex align-items-center px-3 py-2" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: #fff; text-decoration: none;">
-                <span class="related-icon mr-2" style="margin-right: 8px;">{{ r.icon }}</span>
-                <span class="related-title font-weight-bold" style="font-size: 14px;">{{ r.title }}</span>
+            <a href="/{{ r.slug }}" class="related-item-card">
+                <span class="related-item-icon">{{ r.icon }}</span>
+                <span>{{ r.title }}</span>
             </a>
             {% endfor %}
         </div>
@@ -95,12 +351,12 @@ dropZone.addEventListener('dragover', (e) => {
 });
 
 dropZone.addEventListener('dragleave', () => {
-    dropZone.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+    dropZone.style.borderColor = '#333a56';
 });
 
 dropZone.addEventListener('drop', (e) => {
     e.preventDefault();
-    dropZone.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+    dropZone.style.borderColor = '#333a56';
     if (e.dataTransfer.files.length) {
         fileInput.files = e.dataTransfer.files;
         updatePreview();
@@ -128,24 +384,22 @@ function updatePreview() {
     }
 
     uploadLabel.textContent = 'Choose a different file';
-    previewList.style.display = 'flex';
-    previewList.style.flexDirection = 'column';
-    previewList.style.gap = '10px';
+    previewList.style.display = 'block';
 
     Array.from(files).forEach((file, index) => {
         const ext = file.name.split('.').pop().toUpperCase();
         const card = document.createElement('div');
-        card.style.cssText = 'display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 12px; padding: 12px 16px; width: 100%; box-sizing: border-box;';
+        card.className = 'file-preview-card-item';
 
         card.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 12px; overflow: hidden;">
-                <span style="background: rgba(99, 102, 241, 0.3); color: #818cf8; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px;">${ext}</span>
-                <div style="display: flex; flex-direction: column; overflow: hidden; text-align: left;">
-                    <span style="color: #ffffff; font-weight: 600; font-size: 14px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${file.name}</span>
-                    <small style="color: #94a3b8; font-size: 12px;">${formatSize(file.size)}</small>
+            <div class="file-info-left">
+                <span class="ext-badge-tag">${ext}</span>
+                <div class="file-details-text">
+                    <span class="file-name-txt">${file.name}</span>
+                    <span class="file-size-txt">${formatSize(file.size)}</span>
                 </div>
             </div>
-            <button type="button" onclick="removeFile(${index})" style="background: rgba(255,255,255,0.08); border: none; color: #94a3b8; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px;">&times;</button>
+            <button type="button" class="remove-file-btn" onclick="removeFile(${index})">&times;</button>
         `;
         previewList.appendChild(card);
     });
