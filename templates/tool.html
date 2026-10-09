@@ -281,18 +281,17 @@
             <div class="success-box">
                 <div class="success-icon">🎉</div>
                 <h1>File Converted Successfully!</h1>
-                <p>Your file <strong>{{ download_filename }}</strong> is ready for download.</p>
+                <p>Your file <strong>{{ download_filename }}</strong> is ready.</p>
 
                 <div class="upload-box" style="max-width: 500px; margin: 30px auto;">
-                    <a href="{{ download_url }}" class="action-btn" id="auto-download-link">Download Converted File ↓</a>
-                    <div style="margin-top: 16px;">
-                        <a href="/{{ tool.slug }}" style="color: #818cf8; font-size: 14px; text-decoration: none;">Convert another file</a>
+                    <a href="{{ download_url }}" class="action-btn" id="auto-download-link">Download Again ↓</a>
+                    <div style="margin-top: 20px;">
+                        <a href="/{{ tool.slug }}" style="color: #a855f7; font-size: 15px; font-weight: 700; text-decoration: underline; background: rgba(168, 85, 247, 0.1); padding: 10px 20px; border-radius: 8px; display: inline-block;">🔄 Convert another file</a>
                     </div>
                 </div>
             </div>
 
             <script>
-                // Auto trigger download
                 window.addEventListener('DOMContentLoaded', () => {
                     const link = document.getElementById('auto-download-link');
                     if (link) {
