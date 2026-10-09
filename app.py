@@ -1,4 +1,4 @@
-"""PDF Toolkit - Flask app (Vercel compatible, koi file disk par save nahi hoti)."""
+"""PDF Mastar - Flask app (Vercel compatible, koi file disk par save nahi hoti)."""
 import io
 import json
 import os
@@ -12,13 +12,12 @@ from PIL import Image, ImageDraw, ImageOps
 from pypdf import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 
-SITE_NAME = 'PDF Toolkit'   # <- apni site ka naam yahan likhein
-MAX_MB = 4                  # Vercel ki request limit ~4.5 MB hai
+SITE_NAME = 'PDF Mastar'   # Updated site name
+MAX_MB = 4                  # Vercel request limit
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['MAX_CONTENT_LENGTH'] = MAX_MB * 1024 * 1024
 
-# Token sirf environment variable se aayega, code mein kabhi nahi likhna.
 API_TOKEN = os.environ.get('CONVERT_API_TOKEN')
 CONVERT_API = 'https://v2.convertapi.com/convert'
 
@@ -27,9 +26,6 @@ class ToolError(Exception):
     """User ko dikhne wala saaf error."""
 
 
-# --------------------------------------------------------------------------
-# Helpers
-# --------------------------------------------------------------------------
 def base_name(filename):
     name = os.path.splitext(os.path.basename(filename or ''))[0]
     name = re.sub(r'[^\w\- ]+', '_', name, flags=re.UNICODE).strip(' _')
@@ -64,7 +60,6 @@ def open_pdf(data):
 
 
 def parse_pages(spec, total):
-    """'1-3, 7, 10-12' -> [0,1,2,6,9,10,11] (0-based, likhe huye order mein)."""
     spec = (spec or '').replace(' ', '')
     pages = []
     for part in spec.split(','):
@@ -103,9 +98,6 @@ def latin_only(text):
         raise ToolError('Text supports English letters, numbers and common symbols only.')
 
 
-# --------------------------------------------------------------------------
-# Tool handlers: handler(files, form) -> (bytes, download_name, extra_headers)
-# --------------------------------------------------------------------------
 def do_merge(files, form):
     if len(files) < 2:
         raise ToolError('Select at least 2 PDF files to merge.')
@@ -161,7 +153,7 @@ def do_compress(files, form):
     except Exception:
         pass
     out = pdf_bytes(writer)
-    if len(out) >= len(data):          # bari ho gayi to original hi wapas dein
+    if len(out) >= len(data):
         out = data
     saved = round((1 - len(out) / len(data)) * 100)
     headers = {
@@ -339,7 +331,7 @@ def make_api_handler(default_src, dst):
             raise ToolError('The conversion returned no file.')
         if len(blobs) == 1:
             return blobs[0], f'{name}.{dst}', {}
-        buf = io.BytesIO()           # jaise PDF -> JPG mein har page alag image
+        buf = io.BytesIO()
         with zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED) as z:
             for i, blob in enumerate(blobs, 1):
                 z.writestr(f'{name}_{i}.{dst}', blob)
@@ -347,9 +339,6 @@ def make_api_handler(default_src, dst):
     return handler
 
 
-# --------------------------------------------------------------------------
-# Tool catalogue
-# --------------------------------------------------------------------------
 def tool(slug, title, desc, icon, cat, accept, multiple=False, min_files=1, fields=None, note=None):
     return dict(slug=slug, title=title, desc=desc, icon=icon, cat=cat, accept=accept,
                 multiple=multiple, min_files=min_files, fields=fields or [], note=note,
@@ -474,9 +463,6 @@ HANDLERS = {
 }
 
 
-# --------------------------------------------------------------------------
-# Routes
-# --------------------------------------------------------------------------
 @app.context_processor
 def inject_globals():
     return {'SITE_NAME': SITE_NAME}
@@ -589,18 +575,10 @@ def tool_page(slug):
         abort(404)
 
     if request.method == 'GET':
-        # WHAT NEXT? section mein 'Word to PDF' aur 'PDF to Word' ko top priority par lane ka logic
         priority_slugs = ['word-to-pdf', 'pdf-to-word']
-        
-        # 1. Jo priority tools hain aur current page ka tool NAHI hain, unko sabse pehle add karein
         related = [x for x in TOOLS if x['slug'] in priority_slugs and x['slug'] != slug]
-        
-        # 2. Category ke baqi tools add karein
         related += [x for x in TOOLS if x['cat'] == t['cat'] and x['slug'] != slug and x['slug'] not in priority_slugs]
-        
-        # 3. Baqi bache hue tools add karein
         related += [x for x in TOOLS if x['slug'] != slug and x['slug'] not in priority_slugs and x['cat'] != t['cat']]
-        
         return render_template('tool.html', tool=t, related=related[:3], max_mb=MAX_MB)
 
     files = [f for f in request.files.getlist('files') if f and f.filename]
