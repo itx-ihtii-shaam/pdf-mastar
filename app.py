@@ -497,23 +497,29 @@ def home():
 
 @lru_cache(maxsize=4)
 def make_icon(size):
-    # Favicon matching the exact bright purple gradient theme of top-left logo
+    # Professional PDF document style icon matching the app theme
     img = Image.new('RGBA', (size, size), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     
-    # Draw rounded rectangle with purple gradient feel (#6366f1 to #a855f7)
-    for i in range(size):
-        r = int(99 + (168 - 99) * (i / size))
-        g = int(102 + (85 - 102) * (i / size))
-        b = int(241 + (247 - 241) * (i / size))
-        d.line([(i, 0), (i, size)], fill=(r, g, b, 255))
+    # Outer rounded card with primary purple theme (#6366f1)
+    pad = int(size * 0.1)
+    w = size - pad * 2
+    h = size - pad * 2
+    d.rounded_rectangle([pad, pad, pad + w, pad + h], radius=int(size * 0.2), fill=(99, 102, 241, 255))
     
-    # Create mask for rounded corners
-    mask = Image.new('L', (size, size), 0)
-    mask_draw = ImageDraw.Draw(mask)
-    corner_radius = int(size * 0.28)
-    mask_draw.rounded_rectangle([0, 0, size, size], radius=corner_radius, fill=255)
-    img.putalpha(mask)
+    # Inner white document shape representing a PDF page
+    doc_left = int(size * 0.25)
+    doc_top = int(size * 0.22)
+    doc_right = size - doc_left
+    doc_bottom = size - int(size * 0.18)
+    d.rounded_rectangle([doc_left, doc_top, doc_right, doc_bottom], radius=int(size * 0.08), fill=(255, 255, 255, 245))
+    
+    # Document header lines (mimicking text/content inside PDF)
+    line_left = int(size * 0.35)
+    line_right = size - line_left
+    d.rectangle([line_left, int(size * 0.38), line_right, int(size * 0.44)], fill=(99, 102, 241, 255))
+    d.rectangle([line_left, int(size * 0.52), line_right - int(size * 0.1), int(size * 0.58)], fill=(168, 85, 247, 255))
+    d.rectangle([line_left, int(size * 0.66), line_right - int(size * 0.2), int(size * 0.72)], fill=(203, 213, 225, 255))
     
     buf = io.BytesIO()
     img.save(buf, 'PNG', optimize=True)
