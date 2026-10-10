@@ -166,6 +166,7 @@
         border-color: #6366f1;
     }
 
+    /* Primary Action Gradient Style */
     .action-btn {
         background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
         color: white;
@@ -187,10 +188,10 @@
         color: white;
     }
 
-    /* Alag style for Convert Another File button taaki confusion na ho */
+    /* Secondary Dark Style */
     .secondary-action-btn {
         background: #1e293b;
-        color: #38bdf8;
+        color: #ffffff;
         border: 1px solid #334155;
         width: 100%;
         padding: 14px;
@@ -201,13 +202,12 @@
         transition: all 0.2s;
         text-decoration: none;
         display: inline-block;
-        margin-top: 12px;
     }
 
     .secondary-action-btn:hover {
         background: #334155;
         color: #ffffff;
-        border-color: #38bdf8;
+        border-color: #6366f1;
     }
 
     .tool-note {
@@ -307,8 +307,11 @@
                 <p>Your file <strong>{{ download_filename }}</strong> is ready.</p>
 
                 <div class="upload-box" style="max-width: 500px; margin: 30px auto;">
-                    <a href="{{ download_url }}" class="action-btn" id="auto-download-link">Download Again ↓</a>
-                    <a href="/{{ tool.slug }}" class="secondary-action-btn">🔄 Convert Another File</a>
+                    <!-- Download Again uses secondary dark background -->
+                    <a href="{{ download_url }}" class="secondary-action-btn" id="auto-download-link" style="margin-bottom: 12px;">Download Again ↓</a>
+                    
+                    <!-- Convert Another File uses primary purple gradient background -->
+                    <a href="/{{ tool.slug }}" class="action-btn">🔄 Convert Another File</a>
                 </div>
             </div>
 
