@@ -25,7 +25,7 @@
     .hero-title {
         font-size: 44px;
         font-weight: 800;
-        color: #ffffff;
+        color: var(--text-main);
         margin-bottom: 12px;
         letter-spacing: -0.5px;
     }
@@ -36,7 +36,7 @@
 
     .hero-subtitle {
         font-size: 15px;
-        color: #94a3b8;
+        color: var(--text-muted);
         max-width: 600px;
         margin: 0 auto 32px auto;
         line-height: 1.5;
@@ -51,11 +51,11 @@
 
     .search-input {
         width: 100%;
-        background: #131826;
-        border: 1px solid #232a42;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
         padding: 16px 20px 16px 48px;
         border-radius: 50px;
-        color: #ffffff;
+        color: var(--text-main);
         font-size: 15px;
         outline: none;
         transition: border-color 0.2s;
@@ -78,8 +78,8 @@
         right: 18px;
         top: 50%;
         transform: translateY(-50%);
-        background: rgba(255, 255, 255, 0.08);
-        color: #94a3b8;
+        background: var(--border-color);
+        color: var(--text-muted);
         padding: 3px 8px;
         border-radius: 6px;
         font-size: 12px;
@@ -95,9 +95,9 @@
     }
 
     .pill-btn {
-        background: #131826;
-        border: 1px solid #232a42;
-        color: #94a3b8;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        color: var(--text-muted);
         padding: 8px 18px;
         border-radius: 50px;
         font-size: 13px;
@@ -123,7 +123,7 @@
     .section-title {
         font-size: 12px;
         font-weight: 800;
-        color: #64748b;
+        color: var(--text-muted);
         letter-spacing: 1.5px;
         margin-bottom: 20px;
         text-transform: uppercase;
@@ -136,8 +136,8 @@
     }
 
     .tool-grid-card {
-        background: #131826;
-        border: 1px solid #232a42;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
         border-radius: 14px;
         padding: 24px;
         text-decoration: none;
@@ -145,11 +145,12 @@
         align-items: flex-start;
         gap: 16px;
         transition: all 0.2s ease;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
     }
 
     .tool-grid-card:hover {
         border-color: #6366f1;
-        background: #161c2e;
+        background: var(--card-hover);
         transform: translateY(-2px);
     }
 
@@ -157,7 +158,7 @@
         font-size: 22px;
         width: 44px;
         height: 44px;
-        background: rgba(99, 102, 241, 0.1);
+        background: var(--badge-bg);
         border-radius: 10px;
         display: flex;
         align-items: center;
@@ -168,13 +169,13 @@
     .tool-card-info h3 {
         font-size: 16px;
         font-weight: 700;
-        color: #ffffff;
+        color: var(--text-main);
         margin-bottom: 6px;
     }
 
     .tool-card-info p {
         font-size: 13px;
-        color: #94a3b8;
+        color: var(--text-muted);
         line-height: 1.4;
     }
 </style>
@@ -192,7 +193,6 @@
 
     <div class="filter-pills">
         {% for cat_id, cat_name in cats %}
-        <!-- Default active 'convert' par set kiya hai -->
         <a href="#" class="pill-btn {% if cat_id == 'convert' %}active{% endif %}" data-cat="{{ cat_id }}">{{ cat_name }}</a>
         {% endfor %}
     </div>
@@ -236,7 +236,6 @@
     const toolCards = document.querySelectorAll('.tools-wrapper #tools-grid .tool-grid-card');
     const sectionHeading = document.getElementById('section-heading');
     
-    // Default category 'convert' set ki hai page load par
     let currentCat = 'convert';
 
     function filterTools() {
@@ -254,7 +253,6 @@
         });
     }
 
-    // Initial run taaki load hote hi sirf convert tools dikhein
     filterTools();
 
     if (searchInput) {
@@ -268,7 +266,6 @@
             btn.classList.add('active');
             currentCat = btn.getAttribute('data-cat');
             
-            // Section heading update karna
             if (sectionHeading) {
                 sectionHeading.textContent = btn.textContent.toUpperCase() + (btn.textContent.toLowerCase() === 'all tools' ? '' : ' TOOLS');
             }
