@@ -83,17 +83,21 @@
             transform: translateY(1px) scale(0.98);
         }
 
-        /* Yahan favicon wali image ko as a logo set kiya hai */
-        .logo-img { 
-            width: 38px; 
-            height: 38px; 
+        .logo-icon { 
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); 
+            width: 36px; 
+            height: 36px; 
             border-radius: 10px; 
-            object-fit: cover;
-            transition: transform 0.3s ease;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 16px; 
+            color: white; 
             box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            transition: transform 0.3s ease;
         }
 
-        .logo:hover .logo-img {
+        .logo:hover .logo-icon {
             transform: rotate(-6deg) scale(1.05);
         }
 
@@ -137,7 +141,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="/" class="logo">
-                <img src="/icon-192.png" alt="Logo" class="logo-img">
+                <div class="logo-icon">📄</div>
                 <span>{{ SITE_NAME }}</span>
             </a>
             <div class="nav-right">
