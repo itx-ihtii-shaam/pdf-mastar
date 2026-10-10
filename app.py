@@ -441,8 +441,14 @@ for _slug, (_button, _label) in BUTTONS.items():
     TOOL_MAP[_slug]['button'] = _button
     TOOL_MAP[_slug]['label'] = _label
 
-CATS = [('all', 'All tools'), ('organize', 'Organize'), ('edit', 'Edit'),
-        ('secure', 'Security'), ('convert', 'Convert')]
+# Yahan CATS list ko aapki requirement ke mutabiq tarteeb de diya gaya hai:
+CATS = [
+    ('convert', 'Convert'),
+    ('edit', 'Edit'),
+    ('organize', 'Organize'),
+    ('secure', 'Security'),
+    ('all', 'All tools')
+]
 
 HANDLERS = {
     'merge': do_merge,
@@ -614,7 +620,6 @@ def tool_page(slug):
         app.logger.exception('Tool %s failed', slug)
         return 'Something went wrong while processing your file. Please try again.', 500
 
-    # Save to recent tools session
     if 'recent_tools' not in session:
         session['recent_tools'] = []
     if slug in session['recent_tools']:
