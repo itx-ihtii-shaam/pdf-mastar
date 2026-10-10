@@ -6,17 +6,132 @@
     <title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
     <link rel="icon" type="image/png" href="/icon-192.png?v=99">
     <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #131826;
+            --border-color: #232a42;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --nav-bg: #0b0f19;
+            --input-bg: #0b0f19;
+        }
+
+        body.light-theme {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --nav-bg: #ffffff;
+            --input-bg: #f1f5f9;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #0b0f19; color: #ffffff; min-height: 100vh; }
-        .navbar { background: #0b0f19; padding: 0 40px; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .nav-container { max-width: 1300px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 74px; }
-        .logo { font-size: 18px; font-weight: 800; text-decoration: none; display: flex; align-items: center; gap: 10px; color: #ffffff; }
-        .logo-icon { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; color: white; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background: var(--bg-color); 
+            color: var(--text-main); 
+            min-height: 100vh; 
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar { 
+            background: var(--nav-bg); 
+            padding: 0 40px; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            border-bottom: 1px solid var(--border-color); 
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .nav-container { 
+            max-width: 1300px; 
+            margin: 0 auto; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            height: 74px; 
+        }
+
+        /* Animated Logo Style */
+        .logo { 
+            font-size: 18px; 
+            font-weight: 800; 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            color: var(--text-main); 
+            padding: 8px 14px;
+            border-radius: 12px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+        }
+
+        .logo:hover {
+            background: rgba(99, 102, 241, 0.12);
+            border-color: rgba(99, 102, 241, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .logo:active {
+            transform: translateY(1px) scale(0.98);
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.15);
+        }
+
+        .logo-icon { 
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); 
+            width: 36px; 
+            height: 36px; 
+            border-radius: 8px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 14px; 
+            font-weight: 900; 
+            color: white; 
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(-6deg) scale(1.05);
+        }
+
         .nav-right { display: flex; align-items: center; gap: 12px; }
-        .install-btn { background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.3); padding: 8px 16px; border-radius: 50px; font-size: 13px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 6px; }
-        .theme-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; }
+
+        .theme-btn { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border-color); 
+            width: 40px; 
+            height: 40px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            color: var(--text-main); 
+            font-size: 18px;
+            transition: all 0.2s ease;
+        }
+
+        .theme-btn:hover {
+            border-color: #6366f1;
+            transform: scale(1.08);
+        }
+
         .main-content { min-height: calc(100vh - 140px); }
-        footer { background: #0b0f19; color: #64748b; padding: 40px 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
+
+        footer { 
+            background: var(--nav-bg); 
+            color: var(--text-muted); 
+            padding: 40px 20px; 
+            text-align: center; 
+            border-top: 1px solid var(--border-color); 
+            font-size: 13px; 
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -27,8 +142,7 @@
                 <span>{{ SITE_NAME }}</span>
             </a>
             <div class="nav-right">
-                <a href="#" class="install-btn">⬇ Install app</a>
-                <div class="theme-btn">🌓</div>
+                <button class="theme-btn" id="theme-toggle" title="Toggle Light/Dark Theme">🌓</button>
             </div>
         </div>
     </nav>
@@ -40,5 +154,30 @@
     <footer>
         <p>&copy; {{ SITE_NAME }}. All rights reserved.</p>
     </footer>
+
+    <script>
+        // Light & Dark Theme Switch Logic
+        const themeBtn = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme');
+
+        if (currentTheme === 'light') {
+            document.body.classList.add('light-theme');
+            themeBtn.textContent = '☀️';
+        } else {
+            themeBtn.textContent = '🌙';
+        }
+
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            let theme = 'dark';
+            if (document.body.classList.contains('light-theme')) {
+                theme = 'light';
+                themeBtn.textContent = '☀️';
+            } else {
+                themeBtn.textContent = '🌙';
+            }
+            localStorage.setItem('theme', theme);
+        });
+    </script>
 </body>
 </html>
