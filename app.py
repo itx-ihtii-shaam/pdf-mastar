@@ -9,7 +9,7 @@ from functools import lru_cache
 
 import requests
 from flask import Flask, Response, abort, render_template, request, send_file, session
-from PIL import Image, ImageDraw, ImageOps
+from PIL import Image, ImageDraw, ImageOps, ImageFont
 from pypdf import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 
@@ -497,22 +497,30 @@ def home():
 
 @lru_cache(maxsize=4)
 def make_icon(size):
-    # Professional Favicon & Logo generation matching the selected aesthetic style
-    img = Image.new('RGB', (size, size), color=(15, 18, 30))
+    # Favicon generation matching the exact selected professional design (Dark rounded card, white doc, "PDF" text)
+    img = Image.new('RGB', (size, size), color=(11, 15, 25))
     d = ImageDraw.Draw(img)
     
-    # Rounded dark card background with gradient feel
-    margin = int(size * 0.08)
-    d.rounded_rectangle([margin, margin, size - margin, size - margin], radius=int(size * 0.22), fill=(22, 25, 45), outline=(99, 102, 241), width=max(1, int(size * 0.02)))
+    # Outer dark rounded square with purple border/glow
+    margin = int(size * 0.05)
+    d.rounded_rectangle([margin, margin, size - margin, size - margin], radius=int(size * 0.22), fill=(18, 22, 40), outline=(99, 102, 241), width=max(1, int(size * 0.03)))
     
-    # Document shape in the center
-    doc_w, doc_h = int(size * 0.42), int(size * 0.50)
-    dx, dy = (size - doc_w) / 2, size * 0.18
+    # White Document shape in upper section
+    doc_w, doc_h = int(size * 0.44), int(size * 0.42)
+    dx, dy = (size - doc_w) / 2, size * 0.16
     fold = doc_w * 0.32
     
-    # White document polygon with fold corner
     d.polygon([(dx, dy), (dx + doc_w - fold, dy), (dx + doc_w, dy + fold), (dx + doc_w, dy + doc_h), (dx, dy + doc_h)], fill=(255, 255, 255))
-    d.polygon([(dx + doc_w - fold, dy), (dx + doc_w - fold, dy + fold), (dx + doc_w, dy + fold)], fill=(215, 218, 240))
+    d.polygon([(dx + doc_w - fold, dy), (dx + doc_w - fold, dy + fold), (dx + doc_w, dy + fold)], fill=(210, 215, 240))
+    
+    # "PDF" text at the bottom
+    try:
+        font_size = int(size * 0.22)
+        font = ImageFont.load_default()
+    except Exception:
+        font = None
+    
+    d.text((size / 2, size * 0.73), "PDF", fill=(255, 255, 255), anchor="mm", font=font)
     
     buf = io.BytesIO()
     img.save(buf, 'PNG', optimize=True)
