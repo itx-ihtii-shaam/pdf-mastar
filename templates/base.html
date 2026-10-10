@@ -6,24 +6,30 @@
     <title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
     <link rel="icon" type="image/png" href="/icon-192.png?v=99">
     <style>
+        /* Dark Theme Default Variables */
         :root {
             --bg-color: #0b0f19;
             --card-bg: #131826;
+            --card-hover: #161c2e;
             --border-color: #232a42;
             --text-main: #ffffff;
             --text-muted: #94a3b8;
             --nav-bg: #0b0f19;
-            --input-bg: #0b0f19;
+            --input-bg: #131826;
+            --badge-bg: rgba(99, 102, 241, 0.1);
         }
 
+        /* Clean & Beautiful Light Theme Variables */
         body.light-theme {
-            --bg-color: #f8fafc;
+            --bg-color: #f1f5f9;
             --card-bg: #ffffff;
-            --border-color: #e2e8f0;
+            --card-hover: #f8fafc;
+            --border-color: #cbd5e1;
             --text-main: #0f172a;
-            --text-muted: #64748b;
+            --text-muted: #475569;
             --nav-bg: #ffffff;
-            --input-bg: #f1f5f9;
+            --input-bg: #ffffff;
+            --badge-bg: rgba(99, 102, 241, 0.08);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -54,7 +60,6 @@
             height: 74px; 
         }
 
-        /* Animated Logo Style */
         .logo { 
             font-size: 18px; 
             font-weight: 800; 
@@ -78,7 +83,6 @@
 
         .logo:active {
             transform: translateY(1px) scale(0.98);
-            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.15);
         }
 
         .logo-icon { 
@@ -114,6 +118,7 @@
             color: var(--text-main); 
             font-size: 18px;
             transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .theme-btn:hover {
@@ -156,7 +161,6 @@
     </footer>
 
     <script>
-        // Light & Dark Theme Switch Logic
         const themeBtn = document.getElementById('theme-toggle');
         const currentTheme = localStorage.getItem('theme');
 
