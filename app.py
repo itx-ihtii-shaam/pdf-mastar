@@ -9,7 +9,7 @@ from functools import lru_cache
 
 import requests
 from flask import Flask, Response, abort, render_template, request, send_file, session
-from PIL import Image, ImageDraw, ImageOps, ImageFont
+from PIL import Image, ImageDraw, ImageOps
 from pypdf import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 
@@ -497,30 +497,22 @@ def home():
 
 @lru_cache(maxsize=4)
 def make_icon(size):
-    # Favicon generation matching the exact selected professional design (Dark rounded card, white doc, "PDF" text)
-    img = Image.new('RGB', (size, size), color=(11, 15, 25))
+    # Favicon matching the exact bright purple gradient theme of top-left logo
+    img = Image.new('RGBA', (size, size), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     
-    # Outer dark rounded square with purple border/glow
-    margin = int(size * 0.05)
-    d.rounded_rectangle([margin, margin, size - margin, size - margin], radius=int(size * 0.22), fill=(18, 22, 40), outline=(99, 102, 241), width=max(1, int(size * 0.03)))
+    # Draw rounded rectangle with purple gradient feel (#6366f1 to #a855f7)
+    for i in range(size):
+        r = int(99 + (168 - 99) * (i / size))
+        g = int(102 + (85 - 102) * (i / size))
+        b = int(241 + (247 - 241) * (i / size))
+        d.line([(i, 0), (i, size)], fill=(r, g, b, 255))
     
-    # White Document shape in upper section
-    doc_w, doc_h = int(size * 0.44), int(size * 0.42)
-    dx, dy = (size - doc_w) / 2, size * 0.16
-    fold = doc_w * 0.32
-    
-    d.polygon([(dx, dy), (dx + doc_w - fold, dy), (dx + doc_w, dy + fold), (dx + doc_w, dy + doc_h), (dx, dy + doc_h)], fill=(255, 255, 255))
-    d.polygon([(dx + doc_w - fold, dy), (dx + doc_w - fold, dy + fold), (dx + doc_w, dy + fold)], fill=(210, 215, 240))
-    
-    # "PDF" text at the bottom
-    try:
-        font_size = int(size * 0.22)
-        font = ImageFont.load_default()
-    except Exception:
-        font = None
-    
-    d.text((size / 2, size * 0.73), "PDF", fill=(255, 255, 255), anchor="mm", font=font)
+    # Create mask for rounded corners
+    mask = Image.new('L', (size, size), 0; mask_draw = ImageDraw.Draw(mask)
+    corner_radius = int(size * 0.28)
+    mask_draw.rounded_rectangle([0, 0, size, size], radius=corner_radius, fill=255)
+    img.putalpha(mask)
     
     buf = io.BytesIO()
     img.save(buf, 'PNG', optimize=True)
