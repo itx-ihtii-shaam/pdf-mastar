@@ -192,7 +192,8 @@
 
     <div class="filter-pills">
         {% for cat_id, cat_name in cats %}
-        <a href="#" class="pill-btn {% if loop.first %}active{% endif %}" data-cat="{{ cat_id }}">{{ cat_name }}</a>
+        <!-- Default active 'convert' par set kiya hai -->
+        <a href="#" class="pill-btn {% if cat_id == 'convert' %}active{% endif %}" data-cat="{{ cat_id }}">{{ cat_name }}</a>
         {% endfor %}
     </div>
 </div>
@@ -215,7 +216,7 @@
 {% endif %}
 
 <div class="tools-wrapper">
-    <div class="section-title">ALL TOOLS</div>
+    <div class="section-title" id="section-heading">CONVERT TOOLS</div>
     <div class="tools-grid-box" id="tools-grid">
         {% for t in tools %}
         <a href="/{{ t.slug }}" class="tool-grid-card" data-cat="{{ t.cat }}" data-title="{{ t.title|lower }} {{ t.desc|lower }}">
@@ -233,7 +234,10 @@
     const searchInput = document.getElementById('tool-search');
     const pillBtns = document.querySelectorAll('.pill-btn');
     const toolCards = document.querySelectorAll('.tools-wrapper #tools-grid .tool-grid-card');
-    let currentCat = 'all';
+    const sectionHeading = document.getElementById('section-heading');
+    
+    // Default category 'convert' set ki hai page load par
+    let currentCat = 'convert';
 
     function filterTools() {
         const query = searchInput.value.toLowerCase().trim();
@@ -250,6 +254,9 @@
         });
     }
 
+    // Initial run taaki load hote hi sirf convert tools dikhein
+    filterTools();
+
     if (searchInput) {
         searchInput.addEventListener('input', filterTools);
     }
@@ -260,6 +267,12 @@
             pillBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             currentCat = btn.getAttribute('data-cat');
+            
+            // Section heading update karna
+            if (sectionHeading) {
+                sectionHeading.textContent = btn.textContent.toUpperCase() + (btn.textContent.toLowerCase() === 'all tools' ? '' : ' TOOLS');
+            }
+            
             filterTools();
         });
     });
