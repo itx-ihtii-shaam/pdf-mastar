@@ -369,26 +369,26 @@ TOOLS = [
          fields=[dict(name='action', type='select', label='What do you want to do?',
                       options=[('reorder', 'Keep only these pages, in this order'),
                                ('delete', 'Delete these pages')]),
-                 dict(name='pages', type='text', label='Page numbers', placeholder='3, 1, 2   or   1-4',
+                  dict(name='pages', type='text', label='Page numbers', placeholder='3, 1, 2    or    1-4',
                       required=True)]),
     tool('rotate-pdf', 'Rotate PDF', 'Rotate all pages, or only the pages you choose.',
          '🔄', 'organize', '.pdf',
          fields=[dict(name='angle', type='select', label='Rotate by',
                       options=[('90', '90° clockwise'), ('180', '180°'), ('270', '90° counter-clockwise')]),
-                 dict(name='pages', type='text', label='Pages (optional)', placeholder='1-3, 5',
+                  dict(name='pages', type='text', label='Pages (optional)', placeholder='1-3, 5',
                       hint='Leave empty to rotate every page.')]),
     tool('watermark-pdf', 'Add Watermark', 'Stamp text like CONFIDENTIAL or DRAFT across every page.',
          '💧', 'edit', '.pdf',
          fields=[dict(name='text', type='text', label='Watermark text', placeholder='CONFIDENTIAL',
                       required=True),
-                 dict(name='strength', type='select', label='Strength',
+                  dict(name='strength', type='select', label='Strength',
                       options=[('medium', 'Medium'), ('light', 'Light'), ('strong', 'Strong')])]),
     tool('page-numbers', 'Add Page Numbers', 'Number the pages of your PDF in one click.',
          '🔢', 'edit', '.pdf',
          fields=[dict(name='position', type='select', label='Position',
                       options=[('center', 'Bottom center'), ('right', 'Bottom right'),
                                ('left', 'Bottom left')]),
-                 dict(name='start', type='number', label='Start from', placeholder='1')]),
+                  dict(name='start', type='number', label='Start from', placeholder='1')]),
     tool('protect-pdf', 'Protect PDF', 'Lock your PDF with a password (AES-256 encryption).',
          '🔒', 'secure', '.pdf',
          fields=[dict(name='password', type='password', label='Choose a password', required=True,
@@ -509,7 +509,8 @@ def make_icon(size):
         d.line([(i, 0), (i, size)], fill=(r, g, b, 255))
     
     # Create mask for rounded corners
-    mask = Image.new('L', (size, size), 0; mask_draw = ImageDraw.Draw(mask)
+    mask = Image.new('L', (size, size), 0)
+    mask_draw = ImageDraw.Draw(mask)
     corner_radius = int(size * 0.28)
     mask_draw.rounded_rectangle([0, 0, size, size], radius=corner_radius, fill=255)
     img.putalpha(mask)
