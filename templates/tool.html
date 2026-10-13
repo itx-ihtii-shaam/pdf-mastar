@@ -321,9 +321,15 @@
 
                 <div class="upload-box" style="max-width: 500px; margin: 30px auto;">
                     <a href="{{ download_url }}" class="secondary-action-btn" id="auto-download-link" style="margin-bottom: 12px;">Download Again ↓</a>
-                    <a href="/{{ tool.slug }}" class="action-btn">🔄 Convert Another File</a>
+                    <!-- Direct gallery open karne ke liye button aur hidden form -->
+                    <button type="button" onclick="document.getElementById('quick-file-input').click();" class="action-btn">🔄 Convert Another File</button>
                 </div>
             </div>
+
+            <!-- Hidden form jo button click par direct file select karke submit karega -->
+            <form method="POST" enctype="multipart/form-data" id="quick-upload-form" style="display: none;">
+                <input type="file" name="files" accept="{{ tool.accept }}" {% if tool.multiple %}multiple{% endif %} id="quick-file-input">
+            </form>
 
             <script>
                 window.addEventListener('DOMContentLoaded', () => {
@@ -334,6 +340,16 @@
                         iframe.src = link.href;
                         document.body.appendChild(iframe);
                     }
+
+                    // Jaise hi nayi file select ho, form submit ho jaye
+                    const quickInput = document.getElementById('quick-file-input');
+                    if (quickInput) {
+                        quickInput.addEventListener('change', () => {
+                            if (quickInput.files.length > 0) {
+                                document.getElementById('quick-upload-form').submit();
+                            }
+                        });
+                    }
                 });
             </script>
         {% else %}
@@ -343,7 +359,7 @@
 
             <div class="upload-box">
                 <form method="POST" enctype="multipart/form-data">
-                    <!-- Upar wala uploaded file card (Bohot bada aur wazih box) -->
+                    <!-- Upar wala uploaded file card (Bada aur wazih box) -->
                     <div id="file-preview-card" style="display: none;" class="selected-file-card">
                         <div class="file-info-left">
                             <div class="file-ext-badge" id="file-ext">file</div>
