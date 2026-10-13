@@ -88,54 +88,68 @@
     }
 
     .upload-icon {
-        font-size: 20px;
+        font-size: 18px;
         margin-bottom: 4px;
     }
 
     .upload-text {
         color: var(--text-main);
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 500;
     }
 
-    /* Selected file card (Upar wala bada aur wazih box) */
+    /* Selected file card (Upar wala bohot bada aur wazih box) */
     .selected-file-card {
         background: var(--bg-color);
         border: 2px solid #6366f1;
-        border-radius: 14px;
-        padding: 20px 24px;
+        border-radius: 16px;
+        padding: 24px 28px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 20px;
+        margin-bottom: 24px;
         text-align: left;
-        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.15);
+        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.2);
     }
 
     .file-info-left {
         display: flex;
         align-items: center;
-        gap: 16px;
+        gap: 18px;
         overflow: hidden;
+        width: 100%;
     }
 
     .file-ext-badge {
         background: #3b82f6;
         color: white;
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 700;
-        padding: 6px 12px;
-        border-radius: 8px;
+        padding: 8px 14px;
+        border-radius: 10px;
         text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .file-name-container {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
     }
 
     .file-name-text {
         color: var(--text-main);
-        font-size: 16px;
+        font-size: 18px;
         font-weight: 700;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .file-sub-text {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-top: 3px;
     }
 
     .form-fields {
@@ -329,11 +343,14 @@
 
             <div class="upload-box">
                 <form method="POST" enctype="multipart/form-data">
-                    <!-- Upar wala uploaded file card (Bada aur wazih box) -->
+                    <!-- Upar wala uploaded file card (Bohot bada aur wazih box) -->
                     <div id="file-preview-card" style="display: none;" class="selected-file-card">
                         <div class="file-info-left">
                             <div class="file-ext-badge" id="file-ext">file</div>
-                            <div class="file-name-text" id="file-display-name">filename.ext</div>
+                            <div class="file-name-container">
+                                <div class="file-name-text" id="file-display-name">filename.ext</div>
+                                <div class="file-sub-text">Ready for conversion</div>
+                            </div>
                         </div>
                     </div>
 
@@ -343,7 +360,7 @@
                         <div class="upload-icon">📁</div>
                         <div class="upload-text" id="file-label">
                             <strong>Choose a different file</strong><br>
-                            <span style="font-size: 11px; color: var(--text-muted);">{{ tool.accept }} · up to {{ max_mb }} MB</span>
+                            <span style="font-size: 10px; color: var(--text-muted);">{{ tool.accept }} · up to {{ max_mb }} MB</span>
                         </div>
                     </label>
 
