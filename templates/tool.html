@@ -10,19 +10,30 @@
         padding: 0 20px;
     }
 
-    .breadcrumb {
-        font-size: 13px;
-        color: var(--text-muted);
+    .back-btn-container {
         margin-bottom: 24px;
     }
 
-    .breadcrumb a {
-        color: var(--text-muted);
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-main);
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        padding: 8px 16px;
+        border-radius: 10px;
         text-decoration: none;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
     }
 
-    .breadcrumb a:hover {
-        color: var(--text-main);
+    .back-btn:hover {
+        border-color: #6366f1;
+        color: #6366f1;
+        transform: translateX(-2px);
     }
 
     .tool-box {
@@ -333,8 +344,8 @@
 </style>
 
 <div class="tool-page-container">
-    <div class="breadcrumb">
-        <a href="/">All tools</a> &rsaquo; {{ tool.title }}
+    <div class="back-btn-container">
+        <a href="/" class="back-btn">&#8592; Back to Tools</a>
     </div>
 
     <div class="tool-box">
@@ -446,7 +457,6 @@
                                 const sizeMb = (file.size / (1024*1024)).toFixed(2);
                                 dynFileSize.textContent = `Size: ${sizeMb} MB · Ready`;
 
-                                // Read text content preview if text-based file
                                 const reader = new FileReader();
                                 reader.onload = function(e) {
                                     const text = e.target.result;
@@ -568,7 +578,6 @@
                 const sizeMb = (file.size / (1024*1024)).toFixed(2);
                 fileSizeText.textContent = `Size: ${sizeMb} MB · Ready`;
 
-                // Read content preview
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const text = e.target.result;
