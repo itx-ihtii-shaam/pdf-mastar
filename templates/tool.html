@@ -67,10 +67,11 @@
         box-shadow: 0 10px 30px rgba(0,0,0,0.04);
     }
 
+    /* Choose a different file dropzone (Chhota box) */
     .upload-dropzone {
         border: 2px dashed var(--border-color);
         border-radius: 12px;
-        padding: 35px 20px;
+        padding: 15px 15px;
         background: var(--bg-color);
         cursor: pointer;
         display: block;
@@ -87,8 +88,8 @@
     }
 
     .upload-icon {
-        font-size: 32px;
-        margin-bottom: 10px;
+        font-size: 24px;
+        margin-bottom: 6px;
     }
 
     .upload-text {
@@ -97,11 +98,12 @@
         font-weight: 500;
     }
 
+    /* Selected file card (Upar wala bada box) */
     .selected-file-card {
         background: var(--bg-color);
         border: 1px solid var(--border-color);
         border-radius: 12px;
-        padding: 12px 16px;
+        padding: 16px 20px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -326,7 +328,7 @@
 
             <div class="upload-box">
                 <form method="POST" enctype="multipart/form-data">
-                    <!-- Uploaded File Preview Card (Ab upar kar diya gaya hai) -->
+                    <!-- Upar wala uploaded file card (Bada box) -->
                     <div id="file-preview-card" style="display: none;" class="selected-file-card">
                         <div class="file-info-left">
                             <div class="file-ext-badge" id="file-ext">file</div>
@@ -334,13 +336,13 @@
                         </div>
                     </div>
 
-                    <!-- Choose a different file dropzone (Ab niche kar diya gaya hai) -->
+                    <!-- Niche wala dropzone (Chhota box) -->
                     <label class="upload-dropzone" id="dropzone">
                         <input type="file" name="files" accept="{{ tool.accept }}" {% if tool.multiple %}multiple{% endif %} required id="file-input">
                         <div class="upload-icon">📁</div>
                         <div class="upload-text" id="file-label">
                             <strong>Choose a different file</strong><br>
-                            <span style="font-size: 12px; color: var(--text-muted);">{{ tool.accept }} · up to {{ max_mb }} MB</span>
+                            <span style="font-size: 11px; color: var(--text-muted);">{{ tool.accept }} · up to {{ max_mb }} MB</span>
                         </div>
                     </label>
 
