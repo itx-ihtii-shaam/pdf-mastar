@@ -67,11 +67,11 @@
         box-shadow: 0 10px 30px rgba(0,0,0,0.04);
     }
 
-    /* Choose a different file dropzone (Chhota box) */
+    /* Choose a different file dropzone (Niche wala chhota box) */
     .upload-dropzone {
         border: 2px dashed var(--border-color);
-        border-radius: 12px;
-        padding: 15px 15px;
+        border-radius: 10px;
+        padding: 12px 15px;
         background: var(--bg-color);
         cursor: pointer;
         display: block;
@@ -88,50 +88,51 @@
     }
 
     .upload-icon {
-        font-size: 24px;
-        margin-bottom: 6px;
+        font-size: 20px;
+        margin-bottom: 4px;
     }
 
     .upload-text {
         color: var(--text-main);
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 500;
     }
 
-    /* Selected file card (Upar wala bada box) */
+    /* Selected file card (Upar wala bada aur wazih box) */
     .selected-file-card {
         background: var(--bg-color);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        padding: 16px 20px;
+        border: 2px solid #6366f1;
+        border-radius: 14px;
+        padding: 20px 24px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         margin-bottom: 20px;
         text-align: left;
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.15);
     }
 
     .file-info-left {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 16px;
         overflow: hidden;
     }
 
     .file-ext-badge {
         background: #3b82f6;
         color: white;
-        font-size: 11px;
+        font-size: 13px;
         font-weight: 700;
-        padding: 4px 8px;
-        border-radius: 6px;
+        padding: 6px 12px;
+        border-radius: 8px;
         text-transform: uppercase;
     }
 
     .file-name-text {
         color: var(--text-main);
-        font-size: 14px;
-        font-weight: 600;
+        font-size: 16px;
+        font-weight: 700;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -328,7 +329,7 @@
 
             <div class="upload-box">
                 <form method="POST" enctype="multipart/form-data">
-                    <!-- Upar wala uploaded file card (Bada box) -->
+                    <!-- Upar wala uploaded file card (Bada aur wazih box) -->
                     <div id="file-preview-card" style="display: none;" class="selected-file-card">
                         <div class="file-info-left">
                             <div class="file-ext-badge" id="file-ext">file</div>
