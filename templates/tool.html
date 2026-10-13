@@ -28,6 +28,7 @@
         text-decoration: none;
         transition: all 0.2s ease;
         box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        cursor: pointer;
     }
 
     .back-btn:hover {
@@ -345,7 +346,7 @@
 
 <div class="tool-page-container">
     <div class="back-btn-container">
-        <a href="/" class="back-btn">&#8592; Back to Tools</a>
+        <a href="#" onclick="history.back(); return false;" class="back-btn">&#8592; Back</a>
     </div>
 
     <div class="tool-box">
