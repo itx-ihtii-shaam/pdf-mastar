@@ -314,22 +314,74 @@
 
     <div class="tool-box">
         {% if success %}
-            <div class="success-box">
+            <!-- Success Screen Container -->
+            <div class="success-box" id="success-container">
                 <div class="success-icon">🎉</div>
                 <h1>File Converted Successfully!</h1>
                 <p>Your file <strong>{{ download_filename }}</strong> is ready.</p>
 
                 <div class="upload-box" style="max-width: 500px; margin: 30px auto;">
                     <a href="{{ download_url }}" class="secondary-action-btn" id="auto-download-link" style="margin-bottom: 12px;">Download Again ↓</a>
-                    <!-- Direct gallery open karne ke liye button aur hidden form -->
-                    <button type="button" onclick="document.getElementById('quick-file-input').click();" class="action-btn">🔄 Convert Another File</button>
+                    <!-- Button to open gallery directly -->
+                    <button type="button" onclick="document.getElementById('hidden-converter-input').click();" class="action-btn">🔄 Convert Another File</button>
                 </div>
             </div>
 
-            <!-- Hidden form jo button click par direct file select karke submit karega -->
-            <form method="POST" enctype="multipart/form-data" id="quick-upload-form" style="display: none;">
-                <input type="file" name="files" accept="{{ tool.accept }}" {% if tool.multiple %}multiple{% endif %} id="quick-file-input">
-            </form>
+            <!-- Hidden input to trigger gallery from success page -->
+            <input type="file" id="hidden-converter-input" accept="{{ tool.accept }}" {% if tool.multiple %}multiple{% endif %} style="display: none;">
+
+            <!-- Dynamic Form Container that shows up after selecting a file from success screen -->
+            <div id="conversion-form-container" style="display: none;">
+                <div class="tool-icon-box">{{ tool.icon }}</div>
+                <h1>{{ tool.title }}</h1>
+                <p>{{ tool.desc }}</p>
+
+                <div class="upload-box">
+                    <form method="POST" enctype="multipart/form-data" id="dynamic-upload-form">
+                        <!-- Upar wala bada aur wazih file preview card -->
+                        <div id="dyn-file-preview-card" class="selected-file-card">
+                            <div class="file-info-left">
+                                <div class="file-ext-badge" id="dyn-file-ext">file</div>
+                                <div class="file-name-container">
+                                    <div class="file-name-text" id="dyn-file-display-name">filename.ext</div>
+                                    <div class="file-sub-text">Ready for conversion</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Niche wala chhota dropzone / choose another file box -->
+                        <label class="upload-dropzone" id="dyn-dropzone">
+                            <input type="file" name="files" accept="{{ tool.accept }}" {% if tool.multiple %}multiple{% endif %} required id="dyn-file-input">
+                            <div class="upload-icon">📁</div>
+                            <div class="upload-text">
+                                <strong>Choose a different file</strong><br>
+                                <span style="font-size: 10px; color: var(--text-muted);">{{ tool.accept }} · up to {{ max_mb }} MB</span>
+                            </div>
+                        </label>
+
+                        {% if tool.fields %}
+                        <div class="form-fields">
+                            {% for f in tool.fields %}
+                            <div class="form-group">
+                                <label>{{ f.label }}</label>
+                                {% if f.type == 'select' %}
+                                <select name="{{ f.name }}">
+                                    {% for opt_val, opt_label in f.options %}
+                                    <option value="{{ opt_val }}">{{ opt_label }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% else %}
+                                <input type="{{ f.type }}" name="{{ f.name }}" placeholder="{{ f.placeholder or '' }}" {% if f.required %}required{% endif %}>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <button type="submit" class="action-btn">{{ tool.button }} →</button>
+                    </form>
+                </div>
+            </div>
 
             <script>
                 window.addEventListener('DOMContentLoaded', () => {
@@ -341,18 +393,39 @@
                         document.body.appendChild(iframe);
                     }
 
-                    // Jaise hi nayi file select ho, form submit ho jaye
-                    const quickInput = document.getElementById('quick-file-input');
-                    if (quickInput) {
-                        quickInput.addEventListener('change', () => {
-                            if (quickInput.files.length > 0) {
-                                document.getElementById('quick-upload-form').submit();
+                    const hiddenInput = document.getElementById('hidden-converter-input');
+                    const dynInput = document.getElementById('dyn-file-input');
+                    const successContainer = document.getElementById('success-container');
+                    const formContainer = document.getElementById('conversion-form-container');
+                    const dynFileName = document.getElementById('dyn-file-display-name');
+                    const dynFileExt = document.getElementById('dyn-file-ext');
+
+                    if (hiddenInput && dynInput) {
+                        hiddenInput.addEventListener('change', () => {
+                            if (hiddenInput.files.length > 0) {
+                                // Transfer selected files to the main form input using DataTransfer
+                                const dt = new DataTransfer();
+                                for (let i = 0; i < hiddenInput.files.length; i++) {
+                                    dt.items.add(hiddenInput.files[i]);
+                                }
+                                dynInput.files = dt.files;
+
+                                // Update preview UI details
+                                const file = hiddenInput.files[0];
+                                dynFileName.textContent = file.name;
+                                const ext = file.name.split('.').pop();
+                                dynFileExt.textContent = ext || 'file';
+
+                                // Hide success screen and show the preview form state
+                                successContainer.style.display = 'none';
+                                formContainer.style.display = 'block';
                             }
                         });
                     }
                 });
             </script>
         {% else %}
+            <!-- Normal Initial Page State -->
             <div class="tool-icon-box">{{ tool.icon }}</div>
             <h1>{{ tool.title }}</h1>
             <p>{{ tool.desc }}</p>
